@@ -2,8 +2,8 @@
 
 # Overview 
 
-![GNU/Linux](https://github.com/AlexOberhofer/sdl2gnuboy/workflows/GNU/Linux/badge.svg)
-![Windows MinGW-w64](https://github.com/AlexOberhofer/sdl2gnuboy/workflows/Windows%20MinGW-w64/badge.svg)
+![GNU/Linux](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/GNU/Linux/badge.svg)
+![Windows MinGW-w64](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/Windows%20MinGW-w64/badge.svg)
 
 A Multiplatform Gameboy Emulator. Free Software.
 
