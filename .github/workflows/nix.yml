@@ -1,0 +1,23 @@
+name: GNU/Linux
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: update
+      run: 
+        sudo apt-get update
+    - name: install sdl2
+      run:
+        sudo apt-get install libsdl2-dev
+    - name: make
+      run: make

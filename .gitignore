@@ -1,0 +1,12 @@
+lib/sdl2-mingw64
+*.o
+*gnuboy
+Makefile
+*.gb
+sdl2gnuboy
+*gnuboy
+config.*
+*.gbc
+*.exe
+*.dll
+*.zip

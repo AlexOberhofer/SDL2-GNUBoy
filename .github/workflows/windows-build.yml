@@ -1,0 +1,30 @@
+name: Windows MinGW-w64
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: update
+      run: sudo apt-get update
+    - name: toolchain setup
+      run: sudo apt-get install mingw-w64
+    - name: sdl setup script
+      run: ./sdl2-setup.sh
+    - name: Build Windows exe
+      run: make -f makefile.windows
+    - name: Package Windows
+      run: ./package.sh
+    - uses: actions/upload-artifact@v2
+      with:
+        name: sdl2-gnuboy-latest
+        path: ./windows.zip
+      
