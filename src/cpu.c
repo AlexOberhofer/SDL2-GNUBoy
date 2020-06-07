@@ -1,9 +1,6 @@
-
-
-
-
-#include "defs.h"
 //CPU bug fixes ported from: https://github.com/mattkj/super-go-playyy
+#include "defs.h"
+
 #include "regs.h"
 #include "hw.h"
 #include "cpu.h"
