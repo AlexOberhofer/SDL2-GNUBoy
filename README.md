@@ -295,9 +295,13 @@ CTurt - [Github](https://github.com/CTurt)
 
 GNUBoy
 
-* Thank you to the original GNUBoy developers. Please see the history branch for their versions. Legacy documentation can be found in the docs folder.
+Thank you to the original GNUBoy developers. Please see the history branch for their versions. Legacy documentation can be found in the docs folder.
 
 * [Original Forked Repo](https://github.com/AlexOberhofer/sdl2gnuboy)
 
 * [Website](https://sourceforge.net/projects/gnuboy/)
+
+Thanks to rofl0r for xz compression, build fixes, code cleanup, and more. See his code below:
+
+* [Updated GNUBoy Repository] (https://github.com/rofl0r/gnuboy)
 
