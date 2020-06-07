@@ -17,9 +17,9 @@ The scripts in the root directory are used by github actions workflow for buildi
 
 The latest packaged releases are available under the associated workflow. This currently is only for Windows. If you use Linux/MacOS BUILD IT!!!!
 
-Download Versioned Releases: (https://github.com/AlexOberhofer/sdl2gnuboy/releases)
+Download Versioned Releases: (https://github.com/AlexOberhofer/SDL2-GNUBoy/releases)
 
-Builds: (https://github.com/AlexOberhofer/sdl2gnuboy/actions)
+Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions)
 *Note* Builds only provided for windows via mingw64 for each commit
 
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
@@ -36,11 +36,11 @@ v1.0
 
 |  GB | GBC  |
 |---|---|
-| <img alt="Dr Mario" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/drmario.PNG"> | <img alt="Lemmings" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/lemmings.PNG"> |
-|<img alt="Ms Pac Man" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/mspacman.PNG">|<img alt="Pacman" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/pacman.PNG">| 
-|<img alt="Super Mario :amd" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/supermarioland.PNG">|<img alt="Pokemon Yellow" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/pkmnyellow.PNG">| 
-|   <img alt="Tetris" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/tetris.PNG">|<img alt="Pokemom Crystal" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/pkmncrystal.PNG">|
-|<img alt="Zelda" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/zelda.PNG"> |<img alt="Super Mario Deluxe" src="https://github.com/AlexOberhofer/gnuboy/raw/refactor/docs/supermariodeluxe.PNG"> |
+| <img alt="Dr Mario" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/drmario.PNG"> | <img alt="Lemmings" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/lemmings.PNG"> |
+|<img alt="Ms Pac Man" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/mspacman.PNG">|<img alt="Pacman" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pacman.PNG">| 
+|<img alt="Super Mario :amd" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/supermarioland.PNG">|<img alt="Pokemon Yellow" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pkmnyellow.PNG">| 
+|   <img alt="Tetris" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/tetris.PNG">|<img alt="Pokemom Crystal" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pkmncrystal.PNG">|
+|<img alt="Zelda" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/zelda.PNG"> |<img alt="Super Mario Deluxe" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/supermariodeluxe.PNG"> |
 
 </div>
 
@@ -54,7 +54,7 @@ A number of cpu buxfixes were ported from [here](https://github.com/mattkj/super
 
 The emulator currently fails only one CPU instruction via blarggs test rom (Windows executable running in wine on Linux):
 
-<img align="center" src="https://github.com/AlexOberhofer/gnuboy/raw/master/docs/blargg.PNG">
+<img align="center" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blargg.PNG">
 
 ## SDL2GNUBoy v1.1.0 Metrics
 
@@ -66,9 +66,9 @@ Here are a few demos running game intro loops and a unix process monitor (htop):
 
 *Note:* Captures are from a Manjaro VM running on VMWare on Windows 10 <br>
 <center> <h4>Classic Gameboy: Pokemon Red</h4><br>
-<img alt="Zelda" src="https://github.com/AlexOberhofer/gnuboy/raw/master/docs/red.gif"></center><br>
+<img alt="Zelda" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/red.gif"></center><br>
 <center> <h4>Gameboy Color: Pokemon Crystal</h4><br>
-<img alt="Zelda" src="https://github.com/AlexOberhofer/gnuboy/raw/master/docs/crystal.gif"></center><br>
+<img alt="Zelda" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/crystal.gif"></center><br>
 
 
 
@@ -124,6 +124,12 @@ A working SDL2 build can be generated from the provided makefile. This is the bu
 
 - SDL Keys rewrite (To support key rebinding)
 
+- Fullscreen support
+
+- GTK/QT? Backend
+
+- Fix Sound MacOS
+
 
 # Building
 
@@ -144,7 +150,7 @@ $ apt-get install libsdl2-dev
 Clone github repository: 
 
 ```
-$ git clone https://github.com/AlexOberhofer/gnuboy.git
+$ git clone https://github.com/AlexOberhofer/SDL2-GNUBoy.git
 ```
 
 Enter project directory:
@@ -189,7 +195,7 @@ $ yay mingw-w64-sdl2
 Clone github repository: 
 
 ```
-$ git clone https://github.com/AlexOberhofer/gnuboy.git
+$ git clone https://github.com/AlexOberhofer/SDL2-GNUBoy.git
 ```
 
 Enter project directory:
@@ -283,12 +289,15 @@ Cinoop Project
 
 CTurt - [Github](https://github.com/CTurt)
 
-* [Github] (https://github.com/CTurt/Cinoop) 
+* [Github](https://github.com/CTurt/Cinoop) 
 
-* [Website] (https://cturt.github.io/cinoop.html)
+* [Website](https://cturt.github.io/cinoop.html)
 
 GNUBoy
 
 * Thank you to the original GNUBoy developers. Please see the history branch for their versions. Legacy documentation can be found in the docs folder.
 
-* [Website] (https://sourceforge.net/projects/gnuboy/)
+* [Original Forked Repo](https://github.com/AlexOberhofer/sdl2gnuboy)
+
+* [Website](https://sourceforge.net/projects/gnuboy/)
+
