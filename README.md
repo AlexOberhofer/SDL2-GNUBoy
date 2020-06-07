@@ -2,8 +2,9 @@
 
 # Overview 
 
-![GNU/Linux](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/GNU/Linux/badge.svg)
-![Windows MinGW-w64](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/Windows%20MinGW-w64/badge.svg)
+![GNU/Linux](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/GNU/Linux/badge.svg)<br>
+![OSX](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/OSX/badge.svg)<br>
+![Windows MinGW-w64](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/Windows%20MinGW-w64/badge.svg)<br>
 
 A Multiplatform Gameboy Emulator. Free Software.
 
@@ -295,9 +296,13 @@ CTurt - [Github](https://github.com/CTurt)
 
 GNUBoy
 
-* Thank you to the original GNUBoy developers. Please see the history branch for their versions. Legacy documentation can be found in the docs folder.
+Thank you to the original GNUBoy developers. Please see the history branch for their versions. Legacy documentation can be found in the docs folder.
 
 * [Original Forked Repo](https://github.com/AlexOberhofer/sdl2gnuboy)
 
 * [Website](https://sourceforge.net/projects/gnuboy/)
+
+Thanks to rofl0r for xz compression, build fixes, code cleanup, and more. See his code below:
+
+* [Updated GNUBoy Repository] (https://github.com/rofl0r/gnuboy)
 
