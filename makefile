@@ -13,7 +13,7 @@ ASFLAGS = $(CFLAGS)
 
 TARGETS =  sdl2gnuboy
 
-SYS_DEFS = -DIS_LITTLE_ENDIAN  -DIS_LINUX
+SYS_DEFS = -DIS_LITTLE_ENDIAN  -DIS_LINUX -DSOUND
 SYS_OBJS = sys/nix/nix.o
 SYS_INCS = -I/usr/local/include  -I./sys/nix
 

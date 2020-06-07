@@ -14,7 +14,7 @@ ASFLAGS = $(CFLAGS)
 
 TARGETS =  sdl2gnuboy.exe
 
-SYS_DEFS = -DIS_LITTLE_ENDIAN  -DALT_PATH_SEP
+SYS_DEFS = -DIS_LITTLE_ENDIAN  -DALT_PATH_SEP -DSOUND
 
 SYS_OBJS = sys/windows/windows.o sys/windows/resource.o
 SYS_INCS = -I/usr/local/include  -I./sys/windows -I./lib/sdl2-mingw64/SDL2-2.0.12/x86_64-w64-mingw32/include 

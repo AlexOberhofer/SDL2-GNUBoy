@@ -19,8 +19,13 @@
 
 struct pcm pcm;
 
+#ifdef SILENT
+static int sound = 0;
+#endif
 
+#ifdef SOUND
 static int sound = 1;
+#endif
 static int samplerate = 44100;
 static int stereo = 1;
 static volatile int audio_done;
@@ -36,13 +41,16 @@ rcvar_t pcm_exports[] =
 
 static void audio_callback(void *blah, byte *stream, int len)
 {
+	#ifdef SOUND
 	memcpy(stream, pcm.buf, len);
+	#endif
 	audio_done = 1;
 }
 
 
 void pcm_init()
 {
+	#ifdef SOUND
 	int i;
 	SDL_AudioSpec as;
 
@@ -66,24 +74,28 @@ void pcm_init()
 	pcm.buf = malloc(pcm.len);
 	pcm.pos = 0;
 	memset(pcm.buf, 0, pcm.len);
-	
+	#endif
 	SDL_PauseAudio(0);
 }
 
 int pcm_submit()
 {
+	#ifdef SOUND
 	if (!pcm.buf) return 0;
 	if (pcm.pos < pcm.len) return 1;
 	while (!audio_done)
 		SDL_Delay(4);
 	audio_done = 0;
 	pcm.pos = 0;
+	#endif
 	return 1;
 }
 
 void pcm_close()
 {
+	#ifdef SOUND
 	if (sound) SDL_CloseAudio();
+	#endif
 }
 
 
