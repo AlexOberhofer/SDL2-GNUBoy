@@ -25,6 +25,19 @@ SDL_Surface *window_surface;
 SDL_Texture *texture;
 SDL_Renderer *renderer;
 
+/**Joystick code from legacy sdl.c
+static int use_joy = 1, sdl_joy_num;
+static SDL_Joystick * sdl_joy = NULL;
+static const int joy_commit_range = 3276;
+static char Xstatus, Ystatus;
+
+rcvar_t joy_exports[] =
+{
+	RCV_BOOL("joy", &use_joy),
+	RCV_END
+};
+*/
+
 struct fb fb;
 
 static int vmode[3] = { 0, 0, 16 };
@@ -44,6 +57,7 @@ void vid_init()
 		vmode[1] = 144;
 	}
 
+	//joy_init();
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
         printf("SDL_Init failed: %s\n", SDL_GetError());
@@ -155,8 +169,201 @@ void vid_end()
 	SDL_RenderPresent(renderer);	
 }
 
+/*static void joy_init()
+{
+	int i;
+	int joy_count;
+	
+	// Initilize the Joystick, and disable all later joystick code if an error occured 
+	if (!use_joy) return;
+	
+	if (SDL_InitSubSystem(SDL_INIT_JOYSTICK))
+		return;
+	
+	joy_count = SDL_NumJoysticks();
+	
+	if (!joy_count)
+		return;
 
+	// now try and open one. If, for some reason it fails, move on to the next one 
+	for (i = 0; i < joy_count; i++)
+	{
+		sdl_joy = SDL_JoystickOpen(i);
+		if (sdl_joy)
+		{
+			sdl_joy_num = i;
+			break;
+		}	
+	}
+	
+	//make sure that Joystick event polling is a go 
+	SDL_JoystickEventState(SDL_ENABLE);
+}*/
 
+/*void ev_poll()
+{
+	event_t ev;
+	SDL_Event event;
+	int axisval;
+
+	while (SDL_PollEvent(&event))
+	{
+		switch(event.type)
+		{
+		case SDL_ACTIVEEVENT:
+			if (event.active.state == SDL_APPACTIVE)
+				fb.enabled = event.active.gain;
+			break;
+		case SDL_KEYDOWN:
+			if ((event.key.keysym.sym == SDLK_RETURN) && (event.key.keysym.mod & KMOD_ALT))
+				SDL_WM_ToggleFullScreen(screen);
+			ev.type = EV_PRESS;
+			ev.code = mapscancode(event.key.keysym.sym);
+			ev_postevent(&ev);
+			break;
+		case SDL_KEYUP:
+			ev.type = EV_RELEASE;
+			ev.code = mapscancode(event.key.keysym.sym);
+			ev_postevent(&ev);
+			break;
+		case SDL_JOYAXISMOTION:
+			switch (event.jaxis.axis)
+			{
+			case 0: // X axis 
+				axisval = event.jaxis.value;
+				if (axisval > joy_commit_range)
+				{
+					if (Xstatus==2) break;
+					
+					if (Xstatus==0)
+					{
+						ev.type = EV_RELEASE;
+						ev.code = K_JOYLEFT;
+        			  		ev_postevent(&ev);				 		
+					}
+					
+					ev.type = EV_PRESS;
+					ev.code = K_JOYRIGHT;
+					ev_postevent(&ev);
+					Xstatus=2;
+					break;
+				}	   				   
+				
+				if (axisval < -(joy_commit_range))
+				{
+					if (Xstatus==0) break;
+					
+					if (Xstatus==2)
+					{
+						ev.type = EV_RELEASE;
+						ev.code = K_JOYRIGHT;
+        			  		ev_postevent(&ev);				 		
+					}
+					
+					ev.type = EV_PRESS;
+					ev.code = K_JOYLEFT;
+					ev_postevent(&ev);
+					Xstatus=0;
+					break;
+				}	   				   
+				
+				// if control reaches here, the axis is centered,
+				//so just send a release signal if necisary 
+				
+				if (Xstatus==2)
+				{
+					ev.type = EV_RELEASE;
+					ev.code = K_JOYRIGHT;
+					ev_postevent(&ev);
+				}
+				
+				if (Xstatus==0)
+				{
+					ev.type = EV_RELEASE;
+					ev.code = K_JOYLEFT;
+					ev_postevent(&ev);
+				}	       
+				Xstatus=1;
+				break;
+				
+			case 1: //Y axis
+				axisval = event.jaxis.value;
+				if (axisval > joy_commit_range)
+				{
+					if (Ystatus==2) break;
+					
+					if (Ystatus==0)
+					{
+						ev.type = EV_RELEASE;
+						ev.code = K_JOYUP;
+        			  		ev_postevent(&ev);				 		
+					}
+					
+					ev.type = EV_PRESS;
+					ev.code = K_JOYDOWN;
+					ev_postevent(&ev);
+					Ystatus=2;
+					break;
+				}	   				   
+				
+				if (axisval < -joy_commit_range)
+				{
+					if (Ystatus==0) break;
+					
+					if (Ystatus==2)
+					{
+						ev.type = EV_RELEASE;
+						ev.code = K_JOYDOWN;
+        			  		ev_postevent(&ev);
+					}
+					
+					ev.type = EV_PRESS;
+					ev.code = K_JOYUP;
+					ev_postevent(&ev);
+					Ystatus=0;
+					break;
+				}	   				   
+				
+				//if control reaches here, the axis is centered,
+				//so just send a release signal if necisary 
+				
+				if (Ystatus==2)
+				{
+					ev.type = EV_RELEASE;
+					ev.code = K_JOYDOWN;
+					ev_postevent(&ev);
+				}
+				
+				if (Ystatus==0)
+				{
+					ev.type = EV_RELEASE;
+					ev.code = K_JOYUP;
+					ev_postevent(&ev);
+				}
+				Ystatus=1;
+				break;
+			}
+			break;
+		case SDL_JOYBUTTONUP:
+			if (event.jbutton.button>15) break;
+			ev.type = EV_RELEASE;
+			ev.code = K_JOY0 + event.jbutton.button;
+			ev_postevent(&ev);
+			break;
+		case SDL_JOYBUTTONDOWN:
+			if (event.jbutton.button>15) break;
+			ev.type = EV_PRESS;
+			ev.code = K_JOY0+event.jbutton.button;
+			ev_postevent(&ev);
+			break;
+		case SDL_QUIT:
+			exit(1);
+			break;
+		default:
+			break;
+		}
+	}
+}*/
 
 
 
