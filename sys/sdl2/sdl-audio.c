@@ -11,7 +11,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef USE_MIXER
+#include <SDL/SDL_mixer.h>
+#endif 
+
+#ifndef USE_MIXER
 #include <SDL2/SDL.h>
+#endif
 
 #include "rc.h"
 #include "pcm.h"
@@ -54,9 +60,10 @@ void pcm_init()
 	int i;
 	SDL_AudioSpec as;
 
-	if (!sound) return;
-	
+	#ifndef USE_MIXER
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
+	#endif
+
 	as.freq = samplerate;
 	as.format = AUDIO_U8;
 	as.channels = 1 + stereo;
