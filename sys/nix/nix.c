@@ -49,7 +49,6 @@ void sys_sleep(int us)
 
 void sys_checkdir(char *path, int wr)
 {
-	printf("Enter sys_checkdir()\n");
 	char *p;
 	if (access(path, X_OK | (wr ? W_OK : 0)))
 	{
@@ -63,12 +62,10 @@ void sys_checkdir(char *path, int wr)
 		if (mkdir(path, 0777))
 			die("cannot create %s: %s\n", path, strerror(errno));
 	}
-	printf("Exit sys_checkdir()\n");
 }
 
 void sys_initpath()
 {
-	printf("Enter sys_initpath()\n");
 	char *buf, *home = getenv("HOME");
 	if (!home)
 	{
@@ -83,7 +80,6 @@ void sys_initpath()
 	sprintf(buf, "%s/" DOTDIR "/saves" , home);
 	rc_setvar("savedir", 1, &buf);
 	free(buf);
-	printf("Exi sys_initpath()\n");
 }
 
 void sys_sanitize(char *s)
