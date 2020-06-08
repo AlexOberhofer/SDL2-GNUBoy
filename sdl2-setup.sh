@@ -1,3 +1,9 @@
+#########
+# SDL2 Setup Script for Windows build and executable
+# (C) 2020 Alex Oberhofer
+# GPLv2
+#########
+
 #!/bin/bash
 
 echo "Downloading SDL2-mingw32 cross-compiler libraries..."

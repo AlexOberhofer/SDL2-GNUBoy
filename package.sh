@@ -1,3 +1,10 @@
+#########
+# Package Script for Github build processes
+# (C) 2020 Alex Oberhofer
+# GPLv2
+#########
+
+
 #!/bin/bash
 
 echo "Package Windows"
