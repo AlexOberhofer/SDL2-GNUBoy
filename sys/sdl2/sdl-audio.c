@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #ifdef USE_MIXER
-#include <SDL/SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 #endif 
 
 #ifndef USE_MIXER
