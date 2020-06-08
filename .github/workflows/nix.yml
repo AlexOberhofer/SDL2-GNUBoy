@@ -19,5 +19,8 @@ jobs:
     - name: install sdl2
       run:
         sudo apt-get install libsdl2-dev
+    - name: install sdl2 mixer
+      run:
+        sudo apt-get install libsdl2-mixer-dev
     - name: make
       run: make
