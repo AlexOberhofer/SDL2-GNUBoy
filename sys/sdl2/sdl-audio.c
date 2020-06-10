@@ -15,9 +15,7 @@
 #include <SDL2/SDL_mixer.h>
 #endif 
 
-#ifndef USE_MIXER
 #include <SDL2/SDL.h>
-#endif
 
 #include "rc.h"
 #include "pcm.h"

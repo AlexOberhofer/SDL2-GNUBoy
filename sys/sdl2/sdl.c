@@ -24,6 +24,7 @@ SDL_Window *window;
 SDL_Surface *window_surface;
 SDL_Texture *texture;
 SDL_Renderer *renderer;
+int fullscreen = 1;
 
 /**Joystick code from legacy sdl.c
 static int use_joy = 1, sdl_joy_num;
@@ -51,11 +52,16 @@ void vid_init()
 	if (!vmode[0] || !vmode[1])
 	{
 		int scale = rc_getint("scale");
+		fullscreen = rc_getint("fullscreen");
 		if (scale < 1) scale = 1;
 		window_scale = scale;
 		vmode[0] = 160;
 		vmode[1] = 144;
 	}
+
+	uint32_t flags;
+
+	if(fullscreen) {flags |= SDL_WINDOW_FULLSCREEN; }
 
 	//joy_init();
 
@@ -63,7 +69,7 @@ void vid_init()
         printf("SDL_Init failed: %s\n", SDL_GetError());
         exit(1);
     } else {
-        window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, NULL);
+        window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, flags);
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
         texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
@@ -106,7 +112,8 @@ void ev_poll()
 
         switch(key)
         {
-            case SDL_SCANCODE_RETURN: ev.type = EV_PRESS; ev.code = K_ENTER; ev_postevent(&ev); break;  
+        	case SDL_SCANCODE_RETURN: ev.type = EV_PRESS; ev.code = K_ENTER; ev_postevent(&ev); break;
+			case SDL_SCANCODE_ESCAPE: die("Escape Pressed\n"); break;    
 			case SDL_SCANCODE_A: ev.type = EV_PRESS; ev.code = K_LEFT; ev_postevent(&ev); break; 
 			case SDL_SCANCODE_D: ev.type = EV_PRESS; ev.code = K_RIGHT; ev_postevent(&ev); break; 
 			case SDL_SCANCODE_S: ev.type = EV_PRESS; ev.code = K_DOWN; ev_postevent(&ev); break; 
@@ -121,7 +128,8 @@ void ev_poll()
         
         switch(key)
         {
-            case SDL_SCANCODE_RETURN: ev.type = EV_RELEASE; ev.code = K_ENTER; ev_postevent(&ev); break; 
+        	case SDL_SCANCODE_RETURN: ev.type = EV_RELEASE; ev.code = K_ENTER; ev_postevent(&ev); break;
+			case SDL_SCANCODE_ESCAPE: die("Escape Pressed\n"); break;    
 			case SDL_SCANCODE_A: ev.type = EV_RELEASE; ev.code = K_LEFT; ev_postevent(&ev); break; 
 			case SDL_SCANCODE_D: ev.type = EV_RELEASE; ev.code = K_RIGHT; ev_postevent(&ev); break;
 			case SDL_SCANCODE_S: ev.type = EV_RELEASE; ev.code = K_DOWN; ev_postevent(&ev); break;

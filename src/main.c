@@ -51,6 +51,7 @@ static char *defaultconfig[] =
 	"bind ins savestate",
 	"bind del loadstate",
 	"set scale 2",
+	"set density 4"
 	"source gnuboy.rc",
 	NULL
 };
