@@ -17,7 +17,7 @@ SYS_DEFS = -DIS_LITTLE_ENDIAN  -DIS_LINUX -DSOUND -DUSE_MIXER
 SYS_OBJS = sys/nix/nix.o
 SYS_INCS = -I/usr/local/include  -I./sys/nix
 
-SDL_OBJS = sys/sdl2/sdl.o sys/sdl2/sdl-audio.o
+SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o
 SDL_LIBS = -L/usr/lib -lSDL2 -lpthread -lSDL2_mixer
 SDL_CFLAGS = -I/usr/include/SDL2 -D_GNU_SOURCE=1 -D_REENTRANT `sdl2-config --cflags --libs`
 
@@ -48,19 +48,12 @@ main.o: Version
 sdl2gnuboy: $(OBJS) $(SYS_OBJS) $(SDL_OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) $(SYS_OBJS) $(SDL_OBJS) -o $@ $(SDL_LIBS)
 
-sys/sdl2/sdl.o: sys/sdl2/sdl.c
-	$(MYCC) $(SDL_CFLAGS) -c $< -o $@
-
-
 install: all
 	$(INSTALL) -d $(bindir)
 	$(INSTALL) -m 755 $(TARGETS) $(bindir)
 
 clean:
 	rm -f *gnuboy gnuboy.exe gmon.out *.o sys/*.o sys/*/*.o asm/*/*.o $(OBJS)
-
-distclean: clean
-	rm -f config.* sys/nix/config.h Makefile
 
 
 

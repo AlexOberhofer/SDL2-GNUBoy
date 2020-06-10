@@ -208,7 +208,7 @@ void vid_end()
 	SDL_JoystickEventState(SDL_ENABLE);
 }*/
 
-/*void ev_poll()
+/*void joy_poll()
 {
 	event_t ev;
 	SDL_Event event;
