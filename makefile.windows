@@ -19,7 +19,7 @@ SYS_DEFS = -DIS_LITTLE_ENDIAN  -DALT_PATH_SEP -DSOUND
 SYS_OBJS = sys/windows/windows.o sys/windows/resource.o
 SYS_INCS = -I/usr/local/include  -I./sys/windows -I./lib/sdl2-mingw64/SDL2-2.0.12/x86_64-w64-mingw32/include 
 
-SDL_OBJS = sys/sdl2/sdl.o sys/sdl2/sdl-audio.o
+SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o
 SDL_LIBS = -L/usr/lib -L./lib/sdl2-mingw64/SDL2-2.0.12/x86_64-w64-mingw32/lib -lSDL2 -lpthread
 SDL_CFLAGS = -I/usr/include/SDL2 
 
@@ -49,19 +49,8 @@ main.o: Version
 sdl2gnuboy.exe: $(OBJS) $(SYS_OBJS) $(SDL_OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) $(SYS_OBJS) $(SDL_OBJS) -o $@ $(SDL_LIBS)
 
-sys/sdl2/sdl.o: sys/sdl2/sdl.c
-	$(MYCC) $(SDL_CFLAGS) -c $< -o $@
-
-
-install: all
-	$(INSTALL) -d $(bindir)
-	$(INSTALL) -m 755 $(TARGETS) $(bindir)
-
 clean:
 	rm -f *gnuboy *.exe gmon.out *.o sys/*.o sys/*/*.o asm/*/*.o $(OBJS)
-
-distclean: clean
-	rm -f config.* sys/nix/config.h Makefile
 
 
 
