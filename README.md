@@ -10,8 +10,6 @@ A Multiplatform Gameboy Emulator. Free Software.
 
 My personal fork for experimentation. Based on GNUBoy and licensed under GNU GPLv2
 
-SDL2 port now working on Linux and Windows
-
 The scripts in the root directory are used by github actions workflow for building this repository. Read the code before you execute it...
 
 # Releases
@@ -26,7 +24,10 @@ Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions)
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
 
 v1.1.0 (Coming soon)
- - Added Windows cross compilation
+ - Builds for more platforms
+ - CPU logic fixes
+ - Packaging + install scripts
+ - SDL2 hardware rendering + scaling
 
 v1.0
  - Supports Linux only
@@ -276,7 +277,9 @@ ENTER - START
 ```
 BACKSPACE - SELECT
 ```
+## Porting
 
+The GNUBoy core is extremely fast and portable. Porting documentation can be found in the docs folder.
 
 ## Developers
 
