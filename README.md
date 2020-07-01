@@ -118,7 +118,7 @@ A working SDL2 build can be generated from the provided makefile. This is the bu
 
 ## Todo
 
-- Porting: The codebase is currently buildable on Windows/MacOS/*nix. I have built the SDL2 version of the codebase on each of those platforms, but I have not yet provided build scripts or releases for multiplatform. The SDL2 version only currently works on linux.
+- Porting: The codebase is currently buildable on Windows/MacOS/*nix. Emscripten next?
 
 - Joystick / Controller Support
 
