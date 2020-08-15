@@ -26,7 +26,7 @@ SDL_Texture *texture;
 SDL_Renderer *renderer;
 int fullscreen = 1;
 
-/**Joystick code from legacy sdl.c
+
 static int use_joy = 1, sdl_joy_num;
 static SDL_Joystick * sdl_joy = NULL;
 static const int joy_commit_range = 3276;
@@ -37,7 +37,6 @@ rcvar_t joy_exports[] =
 	RCV_BOOL("joy", &use_joy),
 	RCV_END
 };
-*/
 
 struct fb fb;
 
