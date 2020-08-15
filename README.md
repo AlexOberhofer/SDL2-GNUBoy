@@ -23,7 +23,11 @@ Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions)
 
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
 
-v1.1.0 (Coming soon)
+v1.1.1
+
+-Joystick Support
+
+v1.1.0
  - Builds for more platforms
  - CPU logic fixes
  - Packaging + install scripts
