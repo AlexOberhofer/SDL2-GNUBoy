@@ -21,14 +21,6 @@ tar -xvzf SDL2-devel-2.0.12-mingw.tar.gz
 
 rm SDL2-devel-2.0.12-mingw.tar.gz
 
-#mingw mixer headers
-
-wget https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-mingw.tar.gz
-
-tar -xvzf SDL2_mixer-devel-2.0.4-mingw.tar.gz
-
-rm SDL2_mixer-devel-2.0.4-mingw.tar.gz
-
 cd ../..
 
 #SDL dll

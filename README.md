@@ -8,9 +8,10 @@
 
 A Multiplatform Gameboy Emulator. Free Software.
 
-My personal fork for experimentation. Based on GNUBoy and licensed under GNU GPLv2
+GNUBoy is a cool, old piece of software. This fork focuses on a multiplatform SDL 2 port.
 
-The scripts in the root directory are used by github actions workflow for building this repository. Read the code before you execute it...
+Fork or contribute! Based on GNUBoy and licensed under GNU GPLv2
+
 
 # Releases
 
@@ -26,7 +27,7 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 
 v1.1.1
 
--Joystick Support
+- Joystick Support
 
 v1.1.0
  - Builds for more platforms
@@ -114,7 +115,7 @@ Version 1.1 cutoff has been done. Investigating other SDL features I can add in 
 
 - Cross compiles on Linux into a Windows executable
 
-- SDL2 control implementation (currently not rebindable)
+- SDL2 key implementation (currently not rebindable)
 
 - SDL1.2 rendering ported to SDL2 (Now uses gpu if possible and supports scaling)
 
@@ -135,7 +136,7 @@ Version 1.1 cutoff has been done. Investigating other SDL features I can add in 
 
 - GTK/QT? Backend
 
-- Fix Sound MacOS
+- Fix Sound MacOS (I doubt this gets done unless someone with a Mac can debug/fix the SDL sound on osx)
 
 
 # Building
