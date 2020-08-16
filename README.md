@@ -105,7 +105,7 @@ slower than these numbers suggest.
 
 # Status
 
-A working SDL2 build can be generated from the provided makefile. This is the build file I use for linux
+Version 1.1 cutoff has been done. Investigating other SDL features I can add in a new release.
 
 ## Whats been done
 
@@ -311,5 +311,5 @@ Thank you to the original GNUBoy developers. Please see the history branch for t
 
 Thanks to rofl0r for xz compression, build fixes, code cleanup, and more. See his code below:
 
-* [Updated GNUBoy Repository] (https://github.com/rofl0r/gnuboy)
+* [Updated GNUBoy Repository](https://github.com/rofl0r/gnuboy)
 
