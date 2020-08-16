@@ -20,6 +20,7 @@ Download Versioned Releases: (https://github.com/AlexOberhofer/SDL2-GNUBoy/relea
 
 Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions)
 *Note* Builds only provided for windows via mingw64 for each commit
+*Note* The stability of these builds may vary
 
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
 
