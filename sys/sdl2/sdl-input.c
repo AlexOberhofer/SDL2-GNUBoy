@@ -12,7 +12,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "fb.h"
 #include "input.h"
 #include "rc.h"
 
@@ -160,7 +159,7 @@ void ev_poll()
             case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
                 printf("You released Right\n"); break;
             default:
-                printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
+                printf("SDL_JOYBUTTONUP: joystick: %d button: %d state: %d\n",
                     event.jbutton.which, event.jbutton.button, event.jbutton.state);
                 break;
 

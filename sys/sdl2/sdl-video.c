@@ -15,7 +15,6 @@
 #include <SDL2/SDL.h>
 
 #include "fb.h"
-#include "input.h"
 #include "rc.h"
 
 
