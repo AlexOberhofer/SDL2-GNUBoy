@@ -82,6 +82,7 @@ void ev_poll()
             exit(1);
         }
 
+        /* Keyboard */
         if (event.type == SDL_KEYDOWN)
         {
 
@@ -177,20 +178,28 @@ void ev_poll()
             }
         }
 
+
+        
+        /*
+        * This is probably going to get messy. This impl maps using an xbox360 pad
+        * Gamepad button mapping
+        */
         if (event.type == SDL_JOYBUTTONDOWN)
         {
             switch (event.jbutton.button)
             {
+            //note: sdl assumes xbox360 style controller... so I've reversed A + B for now.
+            //reversed as in... reverse on 360 pads... correct on the rest of my controllers
             case SDL_CONTROLLER_BUTTON_A:
-                printf("You pressed A\n");
-                ev.type = EV_PRESS;
-                ev.code = 'q';
-                ev_postevent(&ev);
-                break;
-            case SDL_CONTROLLER_BUTTON_B:
                 printf("You pressed B\n");
                 ev.type = EV_PRESS;
                 ev.code = 'e';
+                ev_postevent(&ev);
+                break;
+            case SDL_CONTROLLER_BUTTON_B:
+                printf("You pressed A\n");
+                ev.type = EV_PRESS;
+                ev.code = 'q';
                 ev_postevent(&ev);
                 break;
             case 7:
@@ -217,15 +226,15 @@ void ev_poll()
             switch (event.jbutton.button)
             {
             case SDL_CONTROLLER_BUTTON_A:
-                printf("You released A\n");
-                ev.type = EV_RELEASE;
-                ev.code = 'q';
-                ev_postevent(&ev);
-                break;
-            case SDL_CONTROLLER_BUTTON_B:
                 printf("You released B\n");
                 ev.type = EV_RELEASE;
                 ev.code = 'e';
+                ev_postevent(&ev);
+                break;
+            case SDL_CONTROLLER_BUTTON_B:
+                printf("You released A\n");
+                ev.type = EV_RELEASE;
+                ev.code = 'q';
                 ev_postevent(&ev);
                 break;
             case 7:
@@ -247,6 +256,7 @@ void ev_poll()
             }
         }
 
+        //I dont even know
         if (event.type == SDL_CONTROLLERBUTTONDOWN)
         {
             printf("SDL_CONTROLLERBUTTONDOWN controller: %d button: %s state: %d\n",
@@ -271,9 +281,10 @@ void ev_poll()
                    event.caxis.value);
         }
 
+        //note: this can probably be common to each controller setup
+        //dpad when its a "hat" and not 4 buttons
         if (event.type == SDL_JOYHATMOTION)
         {
-            //TODO: DPAD for xbox controller to go here
             //printf("SDL_JOYHATMOTION: joystick: %d hat: %d value: %d\n",
             //               event.jhat.which, event.jhat.hat, event.jhat.value);
 
