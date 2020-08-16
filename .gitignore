@@ -5,9 +5,10 @@ lib/sdl2-mingw64
 Makefile
 *.gb
 sdl2gnuboy
-*gnuboy
 config.*
 *.gbc
 *.exe
 *.dll
 *.zip
+*.sav
+*.rtc

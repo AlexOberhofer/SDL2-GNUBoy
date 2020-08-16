@@ -66,18 +66,57 @@ void joy_close()
     sdl_joy = NULL;
 }
 
-void joy_poll()
+/* TODO: Really need to clean this up - this will break if you rebind the keys.*/
+void ev_poll()
 {
-    event_t ev;
+	event_t ev;
 	SDL_Event event;
 
-    while(SDL_PollEvent(&event))
-    {
-        if (ev.type == SDL_QUIT) exit(1);
+	while (SDL_PollEvent(&event)){
 
-        if(ev.type == SDL_JOYBUTTONDOWN)
+    	if (event.type == SDL_QUIT){
+        	exit(1);
+    	}
+    
+
+	if(event.type == SDL_KEYDOWN){
+
+        uint32_t key = event.key.keysym.scancode;
+
+        switch(key)
         {
-            printf("button down!\n");
+        	case SDL_SCANCODE_RETURN: ev.type = EV_PRESS; ev.code = K_ENTER; ev_postevent(&ev); break;
+			case SDL_SCANCODE_ESCAPE: die("Escape Pressed\n"); break;    
+			case SDL_SCANCODE_A: ev.type = EV_PRESS; ev.code = K_LEFT; ev_postevent(&ev); break; 
+			case SDL_SCANCODE_D: ev.type = EV_PRESS; ev.code = K_RIGHT; ev_postevent(&ev); break; 
+			case SDL_SCANCODE_S: ev.type = EV_PRESS; ev.code = K_DOWN; ev_postevent(&ev); break; 
+			case SDL_SCANCODE_W: ev.type = EV_PRESS; ev.code = K_UP; ev_postevent(&ev); break; 
+			case SDL_SCANCODE_Q: ev.type = EV_PRESS; ev.code = 'q'; ev_postevent(&ev); break;
+			case SDL_SCANCODE_E: ev.type = EV_PRESS; ev.code = 'e'; ev_postevent(&ev); break;  
+        }
+
+    } else if (event.type == SDL_KEYUP){
+        
+        uint32_t key = event.key.keysym.scancode;
+        
+        switch(key)
+        {
+        	case SDL_SCANCODE_RETURN: ev.type = EV_RELEASE; ev.code = K_ENTER; ev_postevent(&ev); break;
+			case SDL_SCANCODE_ESCAPE: die("Escape Pressed\n"); break;    
+			case SDL_SCANCODE_A: ev.type = EV_RELEASE; ev.code = K_LEFT; ev_postevent(&ev); break; 
+			case SDL_SCANCODE_D: ev.type = EV_RELEASE; ev.code = K_RIGHT; ev_postevent(&ev); break;
+			case SDL_SCANCODE_S: ev.type = EV_RELEASE; ev.code = K_DOWN; ev_postevent(&ev); break;
+			case SDL_SCANCODE_W: ev.type = EV_RELEASE; ev.code = K_UP; ev_postevent(&ev); break;   
+			case SDL_SCANCODE_Q: ev.type = EV_RELEASE; ev.code = 'q'; ev_postevent(&ev); break; 
+			case SDL_SCANCODE_E: ev.type = EV_RELEASE; ev.code = 'e'; ev_postevent(&ev); break;
         }
     }
+
+    if(event.type == SDL_JOYBUTTONDOWN || event.type == SDL_JOYBUTTONUP)
+    {
+        printf("Joystick button event\n"); //TODO: Map buttons and send events to the queue
+    }
+
+}
+		
 }

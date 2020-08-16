@@ -81,59 +81,6 @@ void vid_init()
 	joy_init();
 }
 
-
-/* TODO: Really need to clean this up - this will break if you rebind the keys.*/
-void ev_poll()
-{
-	event_t ev;
-	SDL_Event event;
-
-	while (SDL_PollEvent(&event)){
-
-    	if (event.type == SDL_QUIT){
-        	exit(1);
-    	}
-    
-
-	if(event.type == SDL_KEYDOWN){
-
-        uint32_t key = event.key.keysym.scancode;
-
-        switch(key)
-        {
-        	case SDL_SCANCODE_RETURN: ev.type = EV_PRESS; ev.code = K_ENTER; ev_postevent(&ev); break;
-			case SDL_SCANCODE_ESCAPE: die("Escape Pressed\n"); break;    
-			case SDL_SCANCODE_A: ev.type = EV_PRESS; ev.code = K_LEFT; ev_postevent(&ev); break; 
-			case SDL_SCANCODE_D: ev.type = EV_PRESS; ev.code = K_RIGHT; ev_postevent(&ev); break; 
-			case SDL_SCANCODE_S: ev.type = EV_PRESS; ev.code = K_DOWN; ev_postevent(&ev); break; 
-			case SDL_SCANCODE_W: ev.type = EV_PRESS; ev.code = K_UP; ev_postevent(&ev); break; 
-			case SDL_SCANCODE_Q: ev.type = EV_PRESS; ev.code = 'q'; ev_postevent(&ev); break;
-			case SDL_SCANCODE_E: ev.type = EV_PRESS; ev.code = 'e'; ev_postevent(&ev); break;  
-        }
-
-    } else if (event.type == SDL_KEYUP){
-        
-        uint32_t key = event.key.keysym.scancode;
-        
-        switch(key)
-        {
-        	case SDL_SCANCODE_RETURN: ev.type = EV_RELEASE; ev.code = K_ENTER; ev_postevent(&ev); break;
-			case SDL_SCANCODE_ESCAPE: die("Escape Pressed\n"); break;    
-			case SDL_SCANCODE_A: ev.type = EV_RELEASE; ev.code = K_LEFT; ev_postevent(&ev); break; 
-			case SDL_SCANCODE_D: ev.type = EV_RELEASE; ev.code = K_RIGHT; ev_postevent(&ev); break;
-			case SDL_SCANCODE_S: ev.type = EV_RELEASE; ev.code = K_DOWN; ev_postevent(&ev); break;
-			case SDL_SCANCODE_W: ev.type = EV_RELEASE; ev.code = K_UP; ev_postevent(&ev); break;   
-			case SDL_SCANCODE_Q: ev.type = EV_RELEASE; ev.code = 'q'; ev_postevent(&ev); break; 
-			case SDL_SCANCODE_E: ev.type = EV_RELEASE; ev.code = 'e'; ev_postevent(&ev); break;
-        }
-    }
-
-	//poll the joystick controller
-	joy_poll();
-}
-		
-}
-
 void vid_setpal(int i, int r, int g, int b)
 {
 
