@@ -53,7 +53,7 @@ install: all
 	$(INSTALL) -m 755 $(TARGETS) $(bindir)
 
 clean:
-	rm -f *gnuboy gnuboy.exe gmon.out *.o sys/*.o sys/*/*.o asm/*/*.o $(OBJS)
+	rm -f *gnuboy sdl2gnuboy.exe gmon.out *.o sys/*.o sys/*/*.o $(OBJS)
 
 
 

@@ -17,7 +17,6 @@
 #include "fb.h"
 #include "rc.h"
 
-
 SDL_Surface *surface;
 SDL_Window *window;
 SDL_Surface *window_surface;
@@ -27,7 +26,7 @@ int fullscreen = 1;
 
 struct fb fb;
 
-static int vmode[3] = { 0, 0, 16 };
+static int vmode[3] = {0, 0, 16};
 
 static byte pix[160 * 144 * 4];
 
@@ -40,7 +39,8 @@ void vid_init()
 	{
 		int scale = rc_getint("scale");
 		fullscreen = rc_getint("fullscreen");
-		if (scale < 1) scale = 1;
+		if (scale < 1)
+			scale = 1;
 		window_scale = scale;
 		vmode[0] = 160;
 		vmode[1] = 144;
@@ -48,19 +48,25 @@ void vid_init()
 
 	uint32_t flags;
 
-	if(fullscreen) {flags |= SDL_WINDOW_FULLSCREEN; }
+	if (fullscreen)
+	{
+		flags |= SDL_WINDOW_FULLSCREEN;
+	}
 
 	//joy_init();
 
-	if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
-        printf("SDL_Init failed: %s\n", SDL_GetError());
-        exit(1);
-    } else {
-        window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, flags);
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
-    }
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	{
+		printf("SDL_Init failed: %s\n", SDL_GetError());
+		exit(1);
+	}
+	else
+	{
+		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, flags);
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
+	}
 
 	fb.w = vmode[0];
 	fb.h = vmode[1];
@@ -82,7 +88,6 @@ void vid_init()
 
 void vid_setpal(int i, int r, int g, int b)
 {
-
 }
 
 void vid_preinit()
@@ -99,7 +104,6 @@ void vid_close()
 
 void vid_settitle(char *title)
 {
-	
 }
 
 void vid_begin()
@@ -113,10 +117,5 @@ void vid_end()
 	SDL_RenderClear(renderer);
 	SDL_UpdateTexture(texture, NULL, pix, vmode[0] * 4);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);	
+	SDL_RenderPresent(renderer);
 }
-
-
-
-
-
