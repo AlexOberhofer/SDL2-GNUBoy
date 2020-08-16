@@ -25,6 +25,9 @@ static SDL_Joystick *sdl_joy = NULL;
 static const int joy_commit_range = 3276;
 static char Xstatus, Ystatus;
 
+/* Store which direction hat value was sent to the event queue on the last iteraon */
+static int hat_pressed = 0;
+
 void joy_init()
 {
     //we obviously have no business being in here
@@ -180,15 +183,27 @@ void ev_poll()
             {
             case SDL_CONTROLLER_BUTTON_A:
                 printf("You pressed A\n");
+                ev.type = EV_PRESS;
+                ev.code = 'q';
+                ev_postevent(&ev);
                 break;
             case SDL_CONTROLLER_BUTTON_B:
                 printf("You pressed B\n");
+                ev.type = EV_PRESS;
+                ev.code = 'e';
+                ev_postevent(&ev);
                 break;
             case 7:
                 printf("You pressed Start\n");
+                ev.type = EV_PRESS;
+                ev.code = K_ENTER;
+                ev_postevent(&ev);
                 break;
             case 6:
-                printf("You pressed Back\n");
+                printf("You pressed Back\n"); //TODO: CALL SELECT IDIOT
+                ev.type = EV_PRESS;
+                ev.code = 'tab';
+                //ev_postevent(&ev);
                 break;
             default:
                 printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
@@ -203,15 +218,27 @@ void ev_poll()
             {
             case SDL_CONTROLLER_BUTTON_A:
                 printf("You released A\n");
+                ev.type = EV_RELEASE;
+                ev.code = 'q';
+                ev_postevent(&ev);
                 break;
             case SDL_CONTROLLER_BUTTON_B:
                 printf("You released B\n");
+                ev.type = EV_RELEASE;
+                ev.code = 'e';
+                ev_postevent(&ev);
                 break;
             case 7:
                 printf("You released start\n");
+                ev.type = EV_RELEASE;
+                ev.code = K_ENTER;
+                ev_postevent(&ev);
                 break;
             case 6:
                 printf("You released Back\n");
+                ev.type = EV_RELEASE;
+                ev.code = 'tab';
+                //ev_postevent(&ev);
                 break;
             default:
                 printf("SDL_JOYBUTTONUP: joystick: %d button: %d state: %d\n",
@@ -252,18 +279,47 @@ void ev_poll()
 
             if(event.jhat.value == 1) {
                 printf("Up\n");
+                ev.type = EV_PRESS;
+                ev.code = K_UP;
+                ev_postevent(&ev);
+                hat_pressed = 1;
             }
 
             if(event.jhat.value == 2) {
                 printf("Right\n");
+                ev.type = EV_PRESS;
+                ev.code = K_RIGHT;
+                ev_postevent(&ev);
+                hat_pressed = 2;
             }
 
             if(event.jhat.value == 4) {
                 printf("Down\n");
+                ev.type = EV_PRESS;
+                ev.code = K_DOWN;
+                ev_postevent(&ev);
+                hat_pressed = 4;
             }
 
             if(event.jhat.value == 8) {
                 printf("Left\n");
+                ev.type = EV_PRESS;
+                ev.code = K_LEFT;
+                ev_postevent(&ev);
+                hat_pressed = 8;
+            }
+
+            if(event.jhat.value == 0) { //release whatever direction we hit on the last run
+                printf("Release %d\n", hat_pressed);
+                ev.type = EV_RELEASE;
+                switch (hat_pressed) {
+                    case 1: ev.code = K_UP; break;
+                    case 2: ev.code = K_RIGHT; break;
+                    case 4: ev.code = K_DOWN; break;
+                    case 8: ev.code = K_LEFT; break;
+                }
+
+                ev_postevent(&ev);
             }
         }
     }
