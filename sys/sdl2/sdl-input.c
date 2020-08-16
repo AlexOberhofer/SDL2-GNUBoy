@@ -112,9 +112,59 @@ void ev_poll()
         }
     }
 
-    if(event.type == SDL_JOYBUTTONDOWN || event.type == SDL_JOYBUTTONUP)
+    if(event.type == SDL_JOYBUTTONDOWN)
+    {      
+        switch(event.jbutton.button) {
+            case SDL_CONTROLLER_BUTTON_A:
+                printf("You pressed A\n"); break;
+            case SDL_CONTROLLER_BUTTON_B:
+                printf("You pressed B\n"); break;
+            case SDL_CONTROLLER_BUTTON_START:
+                printf("You pressed Back\n"); break;
+            case SDL_CONTROLLER_BUTTON_BACK:
+                printf("You pressed Back\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_UP:
+                printf("You pressed Down\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                printf("You pressed Up\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                printf("You pressed Left\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                printf("You pressed Right\n"); break;
+            default:
+                printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
+                    event.jbutton.which, event.jbutton.button, event.jbutton.state);
+                break;
+
+        }
+        
+    }
+
+    if(event.type == SDL_JOYBUTTONUP)
     {
-        printf("Joystick button event\n"); //TODO: Map buttons and send events to the queue
+        switch(event.jbutton.button) {
+            case SDL_CONTROLLER_BUTTON_A:
+                printf("You released A\n"); break;
+            case SDL_CONTROLLER_BUTTON_B:
+                printf("You released B\n"); break;
+            case SDL_CONTROLLER_BUTTON_START:
+                printf("You released Back\n"); break;
+            case SDL_CONTROLLER_BUTTON_BACK:
+                printf("You released Back\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_UP:
+                printf("You released Down\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                printf("You released Up\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                printf("You released Left\n"); break;
+            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                printf("You released Right\n"); break;
+            default:
+                printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
+                    event.jbutton.which, event.jbutton.button, event.jbutton.state);
+                break;
+
+        }
     }
 
 }
