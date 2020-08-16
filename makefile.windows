@@ -19,7 +19,7 @@ SYS_DEFS = -DIS_LITTLE_ENDIAN  -DALT_PATH_SEP -DSOUND
 SYS_OBJS = sys/windows/windows.o sys/windows/resource.o
 SYS_INCS = -I/usr/local/include  -I./sys/windows -I./lib/sdl2-mingw64/SDL2-2.0.12/x86_64-w64-mingw32/include 
 
-SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o sys/sdl2/sdl-joy.o
+SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o sys/sdl2/sdl-input.o
 SDL_LIBS = -L/usr/lib -L./lib/sdl2-mingw64/SDL2-2.0.12/x86_64-w64-mingw32/lib -lSDL2 -lpthread
 SDL_CFLAGS = -I/usr/include/SDL2 
 

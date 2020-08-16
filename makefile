@@ -17,7 +17,7 @@ SYS_DEFS = -DIS_LITTLE_ENDIAN  -DIS_LINUX -DSOUND
 SYS_OBJS = sys/nix/nix.o
 SYS_INCS = -I/usr/local/include  -I./sys/nix
 
-SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o sys/sdl2/sdl-joy.o
+SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o sys/sdl2/sdl-input.o
 SDL_LIBS = -L/usr/lib -lSDL2 -lpthread
 SDL_CFLAGS = -I/usr/include/SDL2 -D_GNU_SOURCE=1 -D_REENTRANT `sdl2-config --cflags --libs`
 
