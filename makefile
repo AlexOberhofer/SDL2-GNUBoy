@@ -7,7 +7,7 @@ LD = $(CC)
 AS = $(CC)
 INSTALL = /usr/bin/install -c
 
-CFLAGS =  -Wall -O3 -I./include
+CFLAGS =  -std=c99 -Wall -O3 -I./include
 LDFLAGS = $(CFLAGS)  -s `sdl2-config --cflags --libs`
 ASFLAGS = $(CFLAGS)
 

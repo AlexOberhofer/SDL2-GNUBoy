@@ -53,6 +53,7 @@ static char *defaultconfig[] =
 	"set scale 2",
 	"set density 4"
 	"source gnuboy.rc",
+	"set filterdmg 0",
 	NULL
 };
 
