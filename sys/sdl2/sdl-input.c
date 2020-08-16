@@ -118,18 +118,10 @@ void ev_poll()
                 printf("You pressed A\n"); break;
             case SDL_CONTROLLER_BUTTON_B:
                 printf("You pressed B\n"); break;
-            case SDL_CONTROLLER_BUTTON_START:
+            case 7:
+                printf("You pressed Start\n"); break;
+            case 6:
                 printf("You pressed Back\n"); break;
-            case SDL_CONTROLLER_BUTTON_BACK:
-                printf("You pressed Back\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_UP:
-                printf("You pressed Down\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-                printf("You pressed Up\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                printf("You pressed Left\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                printf("You pressed Right\n"); break;
             default:
                 printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
                     event.jbutton.which, event.jbutton.button, event.jbutton.state);
@@ -146,18 +138,10 @@ void ev_poll()
                 printf("You released A\n"); break;
             case SDL_CONTROLLER_BUTTON_B:
                 printf("You released B\n"); break;
-            case SDL_CONTROLLER_BUTTON_START:
+            case 7:
+                printf("You released start\n"); break;
+            case 6:
                 printf("You released Back\n"); break;
-            case SDL_CONTROLLER_BUTTON_BACK:
-                printf("You released Back\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_UP:
-                printf("You released Down\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-                printf("You released Up\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                printf("You released Left\n"); break;
-            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                printf("You released Right\n"); break;
             default:
                 printf("SDL_JOYBUTTONUP: joystick: %d button: %d state: %d\n",
                     event.jbutton.which, event.jbutton.button, event.jbutton.state);
@@ -165,6 +149,37 @@ void ev_poll()
 
         }
     }
+
+    if(event.type == SDL_CONTROLLERBUTTONDOWN)
+    {
+        printf("SDL_CONTROLLERBUTTONDOWN controller: %d button: %s state: %d\n",
+                event.cbutton.which,
+                SDL_GameControllerGetStringForButton(event.cbutton.button),
+                event.cbutton.state);
+    } 
+
+    if(event.type == SDL_CONTROLLERBUTTONUP) 
+    {
+        printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
+                event.cbutton.which,
+                SDL_GameControllerGetStringForButton(event.cbutton.button),
+                event.cbutton.state);
+    }
+
+    if(event.type == SDL_CONTROLLERAXISMOTION)
+    {
+        printf("SDL_CONTROLLERAXISMOTION controller: %d axis: %-12s value: %d\n",
+            event.caxis.which,
+            SDL_GameControllerGetStringForAxis(event.caxis.axis),
+            event.caxis.value);
+    }
+
+    if(event.type == SDL_JOYHATMOTION)
+    {
+        //TODO: DPAD for xbox controller to go here
+        printf("Joy hat movement\n");
+    }
+
 
 }
 		
