@@ -30,21 +30,25 @@ static char Xstatus, Ystatus;
 
 void joy_init() 
 {
-	//Initialize SDL
+	//we obviously have no business being in here
+    if (!use_joy) return;
+    
+    //init joystick subsystem
     if( SDL_Init(SDL_INIT_JOYSTICK < 0 ))
     {
         printf( "SDL could not initialize Joystick! SDL Error: %s\n", SDL_GetError() );
 		exit(1);
     }
 
-	//Check for joysticks
+	//Check for a joystick
     if( SDL_NumJoysticks() < 1 )
     {
         printf( "Warning: No joysticks connected!\n" );
     } else 
 	{
-		//Load joystick
+        //open the gamepad
         sdl_joy = SDL_JoystickOpen( 0 );
+        printf("%d:%s\n", 1, SDL_JoystickNameForIndex(0));
         if( sdl_joy == NULL )
         {
             printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
@@ -57,7 +61,23 @@ void joy_init()
 
 void joy_close()
 {
-	//Close game controller
+	//free the controller
     SDL_JoystickClose(sdl_joy);
     sdl_joy = NULL;
+}
+
+void joy_poll()
+{
+    event_t ev;
+	SDL_Event event;
+
+    while(SDL_PollEvent(&event))
+    {
+        if (ev.type == SDL_QUIT) exit(1);
+
+        if(ev.type == SDL_JOYBUTTONDOWN)
+        {
+            printf("button down!\n");
+        }
+    }
 }
