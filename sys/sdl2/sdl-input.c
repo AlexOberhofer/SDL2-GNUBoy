@@ -247,8 +247,24 @@ void ev_poll()
         if (event.type == SDL_JOYHATMOTION)
         {
             //TODO: DPAD for xbox controller to go here
-            printf("SDL_JOYHATMOTION: joystick: %d hat: %d value: %d\n",
-                            event.jhat.which, event.jhat.hat, event.jhat.value);
+            //printf("SDL_JOYHATMOTION: joystick: %d hat: %d value: %d\n",
+            //               event.jhat.which, event.jhat.hat, event.jhat.value);
+
+            if(event.jhat.value == 1) {
+                printf("Up\n");
+            }
+
+            if(event.jhat.value == 2) {
+                printf("Right\n");
+            }
+
+            if(event.jhat.value == 4) {
+                printf("Down\n");
+            }
+
+            if(event.jhat.value == 8) {
+                printf("Left\n");
+            }
         }
     }
 }
