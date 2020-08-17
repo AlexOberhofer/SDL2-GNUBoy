@@ -18,4 +18,4 @@ jobs:
     - name: sdl2 install
       run: brew install sdl2
     - name: make
-      run: make -f makefile.osx
+      run: make osx

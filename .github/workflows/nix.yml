@@ -23,4 +23,4 @@ jobs:
       run:
         sudo apt-get install libsdl2-mixer-dev
     - name: make
-      run: make
+      run: make linux
