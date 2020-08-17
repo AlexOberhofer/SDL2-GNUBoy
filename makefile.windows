@@ -32,7 +32,7 @@ OBJS = ./src/lcd.o ./src/refresh.o ./src/lcdc.o ./src/palette.o ./src/cpu.o ./sr
 	./src/events.o ./src/keytable.o \
 	./src/loader.o ./src/save.o ./src/debug.o ./src/emu.o ./src/main.o \
 	./src/rccmds.o ./src/rckeys.o ./src/rcvars.o ./src/rcfile.o ./src/exports.o \
-	./src/split.o ./src/path.o ./src/inflate.o $(XZ_OBJS)
+	./src/split.o ./src/path.o ./lib/gz/inflate.o $(XZ_OBJS)
 
 INCS = -I.
 
