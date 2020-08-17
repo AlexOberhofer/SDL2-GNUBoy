@@ -27,7 +27,8 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 
 v1.1.1
 
-- Joystick Support
+- Joystick/Gamepad Support
+- New GB classic pallettes
 
 v1.1.0
  - Builds for more platforms

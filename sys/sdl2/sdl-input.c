@@ -15,6 +15,8 @@
 #include "input.h"
 #include "rc.h"
 
+
+
 rcvar_t joy_exports[] =
     {
         RCV_BOOL("joy", 1),
@@ -24,6 +26,8 @@ static int use_joy = 1, sdl_joy_num;
 static SDL_Joystick *sdl_joy = NULL;
 static const int joy_commit_range = 3276;
 static char Xstatus, Ystatus;
+
+const int JOYSTICK_DEAD_ZONE = 8000;
 
 /* Store which direction hat value was sent to the event queue on the last iteraon */
 static int hat_pressed = 0;
@@ -333,5 +337,49 @@ void ev_poll()
                 ev_postevent(&ev);
             }
         }
+
+        /* Joypad */
+        //TODO: When you write this... make sure you send the corresponding key release when a joypad event 
+        //sends a key stroke to the event queue
+        if(event.type == SDL_JOYAXISMOTION )
+        {
+            //X axis motion
+            if( event.jaxis.axis == 0 )
+            { 
+                //Left of dead zone
+                if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
+                {
+                 printf("Joy Left\n");
+                }
+                else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
+                {
+                    printf("Joy Right\n");
+                }
+                else
+                {
+                    printf("Reset Joystick L/R\n");
+                }
+            }
+            
+            //Y axis motion
+            if( event.jaxis.axis == 1 )
+            { 
+                //Left of dead zone
+                if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
+                {
+                    printf("Joy Up\n");
+                }
+                else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
+                {
+                    printf("Joy Down\n");
+                }
+                else
+                {
+                    printf("Reset Joystick U/D\n");
+                }
+            }
+        }
+
+        
     }
 }
