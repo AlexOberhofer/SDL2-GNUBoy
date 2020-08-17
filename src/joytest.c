@@ -6,25 +6,33 @@
 #include "events.c"
 #include "keytable.c"
 #include <stdio.h>
-#include <unistd.h>
 
-int main() {
+static const char* evt_str[] = { [EV_NONE] = "none", [EV_PRESS] = "press",
+								 [EV_RELEASE]  = "release", [EV_REPEAT] = "repeat", [EV_MOUSE] = "mouse", };
+
+int main() 
+{
+	/*TODO: Joystick init will need to be updated to give more debug info on subsystem start */
 	joy_init();
 	event_t e;
 	while(1) {
+		/* Event Poll will trace the SDL joystick/keyboard/gamepad/mouse information */
 		ev_poll();
-		if(ev_getevent(&e)) {
-			static const char* evt_str[] = {
-				[EV_NONE] = "none",
-				[EV_PRESS] = "press",
-				[EV_RELEASE]  = "release",
-				[EV_REPEAT] = "repeat",
-				[EV_MOUSE] = "mouse",
-			};
+		if(ev_getevent(&e)) 
+		{
+
+			/* Here we get the output of what is recieved by the event queue */
 			printf("%s: %s\n", evt_str[e.type], k_keyname(e.code));
 		} else {
 			sys_sleep(3000); //amo: idk... 3000?
 		}
 	}
+	return 0;
+}
+
+int WinMain()
+{
+	main();
+	return 0;
 }
 
