@@ -17,12 +17,15 @@
 #include "fb.h"
 #include "rc.h"
 
+/* Set to 1 enable debug tracing for rendering */
+#define RENDERTRACE 0
+
 SDL_Surface *surface;
 SDL_Window *window;
 SDL_Surface *window_surface;
 SDL_Texture *texture;
 SDL_Renderer *renderer;
-int fullscreen = 1;
+static int fullscreen = 0;
 
 struct fb fb;
 
@@ -30,9 +33,16 @@ static int vmode[3] = {0, 0, 16};
 
 static byte pix[160 * 144 * 4];
 
+rcvar_t vid_exports[] =
+{
+	RCV_VECTOR("vmode", &vmode, 3),
+	RCV_BOOL("fullscreen", &fullscreen),
+	RCV_END
+};
+
 void vid_init()
 {
-	printf("vid_init\n");
+	if(RENDERTRACE) printf("vid_init start\n");
 	int window_scale = 0;
 
 	if (!vmode[0] || !vmode[1])
@@ -46,15 +56,6 @@ void vid_init()
 		vmode[1] = 144;
 	}
 
-	uint32_t flags;
-
-	if (fullscreen)
-	{
-		flags |= SDL_WINDOW_FULLSCREEN;
-	}
-
-	//joy_init();
-
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		printf("SDL_Init failed: %s\n", SDL_GetError());
@@ -62,7 +63,12 @@ void vid_init()
 	}
 	else
 	{
-		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, flags);
+		if(fullscreen) {
+			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_FULLSCREEN);
+		} else {
+			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_RESIZABLE);
+		}
+		
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
@@ -82,6 +88,8 @@ void vid_init()
 
 	fb.enabled = 1;
 	fb.dirty = 0;
+
+	if(RENDERTRACE) printf("vid_init end\n");
 
 	joy_init();
 }

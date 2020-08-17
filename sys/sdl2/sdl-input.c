@@ -15,7 +15,8 @@
 #include "input.h"
 #include "rc.h"
 
-
+/* Set to 1 enable debug tracing for input */
+#define JOYTRACE 1
 
 rcvar_t joy_exports[] =
     {
@@ -52,6 +53,7 @@ void joy_init()
     }
     else
     {
+        printf("Found %d joysticks\n", SDL_NumJoysticks());
         //open the gamepad
         sdl_joy = SDL_JoystickOpen(0);
         printf("%d:%s\n", 1, SDL_JoystickNameForIndex(0));
@@ -62,7 +64,7 @@ void joy_init()
         }
     }
 
-    printf("Joystick initialized Succesfully\n");
+    if(JOYTRACE) printf("Joystick initialized Succesfully\n");
 }
 
 void joy_close()
@@ -195,31 +197,31 @@ void ev_poll()
             //note: sdl assumes xbox360 style controller... so I've reversed A + B for now.
             //reversed as in... reverse on 360 pads... correct on the rest of my controllers
             case SDL_CONTROLLER_BUTTON_A:
-                printf("You pressed B\n");
+                if(JOYTRACE) printf("You pressed B\n");
                 ev.type = EV_PRESS;
                 ev.code = 'e';
                 ev_postevent(&ev);
                 break;
             case SDL_CONTROLLER_BUTTON_B:
-                printf("You pressed A\n");
+                if(JOYTRACE) printf("You pressed A\n");
                 ev.type = EV_PRESS;
                 ev.code = 'q';
                 ev_postevent(&ev);
                 break;
             case 7:
-                printf("You pressed Start\n");
+                if(JOYTRACE) printf("You pressed Start\n");
                 ev.type = EV_PRESS;
                 ev.code = K_ENTER;
                 ev_postevent(&ev);
                 break;
             case 6:
-                printf("You pressed Back\n"); //TODO: CALL SELECT IDIOT
+                if(JOYTRACE) printf("You pressed Back\n"); //TODO: CALL SELECT IDIOT
                 ev.type = EV_PRESS;
                 ev.code = 'tab';
                 //ev_postevent(&ev);
                 break;
             default:
-                printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
+                if(JOYTRACE) printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
                        event.jbutton.which, event.jbutton.button, event.jbutton.state);
                 break;
             }
@@ -230,31 +232,31 @@ void ev_poll()
             switch (event.jbutton.button)
             {
             case SDL_CONTROLLER_BUTTON_A:
-                printf("You released B\n");
+                if(JOYTRACE) printf("You released B\n");
                 ev.type = EV_RELEASE;
                 ev.code = 'e';
                 ev_postevent(&ev);
                 break;
             case SDL_CONTROLLER_BUTTON_B:
-                printf("You released A\n");
+                if(JOYTRACE) printf("You released A\n");
                 ev.type = EV_RELEASE;
                 ev.code = 'q';
                 ev_postevent(&ev);
                 break;
             case 7:
-                printf("You released start\n");
+                if(JOYTRACE) printf("You released start\n");
                 ev.type = EV_RELEASE;
                 ev.code = K_ENTER;
                 ev_postevent(&ev);
                 break;
             case 6:
-                printf("You released Back\n");
+                if(JOYTRACE) printf("You released Back\n");
                 ev.type = EV_RELEASE;
                 ev.code = 'tab';
                 //ev_postevent(&ev);
                 break;
             default:
-                printf("SDL_JOYBUTTONUP: joystick: %d button: %d state: %d\n",
+                if(JOYTRACE) printf("SDL_JOYBUTTONUP: joystick: %d button: %d state: %d\n",
                        event.jbutton.which, event.jbutton.button, event.jbutton.state);
                 break;
             }
@@ -263,7 +265,7 @@ void ev_poll()
         //I dont even know
         if (event.type == SDL_CONTROLLERBUTTONDOWN)
         {
-            printf("SDL_CONTROLLERBUTTONDOWN controller: %d button: %s state: %d\n",
+            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONDOWN controller: %d button: %s state: %d\n",
                    event.cbutton.which,
                    SDL_GameControllerGetStringForButton(event.cbutton.button),
                    event.cbutton.state);
@@ -271,7 +273,7 @@ void ev_poll()
 
         if (event.type == SDL_CONTROLLERBUTTONUP)
         {
-            printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
+            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
                    event.cbutton.which,
                    SDL_GameControllerGetStringForButton(event.cbutton.button),
                    event.cbutton.state);
@@ -279,7 +281,7 @@ void ev_poll()
 
         if (event.type == SDL_CONTROLLERAXISMOTION)
         {
-            printf("SDL_CONTROLLERAXISMOTION controller: %d axis: %-12s value: %d\n",
+            if(JOYTRACE) printf("SDL_CONTROLLERAXISMOTION controller: %d axis: %-12s value: %d\n",
                    event.caxis.which,
                    SDL_GameControllerGetStringForAxis(event.caxis.axis),
                    event.caxis.value);
@@ -293,7 +295,7 @@ void ev_poll()
             //               event.jhat.which, event.jhat.hat, event.jhat.value);
 
             if(event.jhat.value == 1) {
-                printf("Up\n");
+                if(JOYTRACE) printf("Pad Up\n");
                 ev.type = EV_PRESS;
                 ev.code = K_UP;
                 ev_postevent(&ev);
@@ -301,7 +303,7 @@ void ev_poll()
             }
 
             if(event.jhat.value == 2) {
-                printf("Right\n");
+                if(JOYTRACE) printf("Pad Right\n");
                 ev.type = EV_PRESS;
                 ev.code = K_RIGHT;
                 ev_postevent(&ev);
@@ -309,7 +311,7 @@ void ev_poll()
             }
 
             if(event.jhat.value == 4) {
-                printf("Down\n");
+                if(JOYTRACE) printf("Pad Down\n");
                 ev.type = EV_PRESS;
                 ev.code = K_DOWN;
                 ev_postevent(&ev);
@@ -317,7 +319,7 @@ void ev_poll()
             }
 
             if(event.jhat.value == 8) {
-                printf("Left\n");
+                if(JOYTRACE) printf("Pad Left\n");
                 ev.type = EV_PRESS;
                 ev.code = K_LEFT;
                 ev_postevent(&ev);
@@ -325,7 +327,7 @@ void ev_poll()
             }
 
             if(event.jhat.value == 0) { //release whatever direction we hit on the last run
-                printf("Release %d\n", hat_pressed);
+                if(JOYTRACE) printf("Release %d\n", hat_pressed);
                 ev.type = EV_RELEASE;
                 switch (hat_pressed) {
                     case 1: ev.code = K_UP; break;
@@ -349,15 +351,15 @@ void ev_poll()
                 //Left of dead zone
                 if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
                 {
-                 printf("Joy Left\n");
+                    if(JOYTRACE) printf("Joy Left\n");
                 }
                 else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
                 {
-                    printf("Joy Right\n");
+                    if(JOYTRACE) printf("Joy Right\n");
                 }
                 else
                 {
-                    printf("Reset Joystick L/R\n");
+                    if(JOYTRACE) printf("Reset Joystick L/R\n");
                 }
             }
             
@@ -367,15 +369,15 @@ void ev_poll()
                 //Left of dead zone
                 if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
                 {
-                    printf("Joy Up\n");
+                    if(JOYTRACE) printf("Joy Up\n");
                 }
                 else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
                 {
-                    printf("Joy Down\n");
+                    if(JOYTRACE) printf("Joy Down\n");
                 }
                 else
                 {
-                    printf("Reset Joystick U/D\n");
+                    if(JOYTRACE) printf("Reset Joystick U/D\n");
                 }
             }
         }
