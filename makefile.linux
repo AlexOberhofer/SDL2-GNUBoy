@@ -1,26 +1,25 @@
-
 prefix = /usr/local
 exec_prefix = ${prefix}
 bindir = ${exec_prefix}/bin
 
-CC = clang
+CC = gcc
 LD = $(CC)
 AS = $(CC)
 INSTALL = /usr/bin/install -c
 
 CFLAGS =  -std=c99 -Wall -O3 -I./include
-LDFLAGS = $(CFLAGS)  -s
+LDFLAGS = $(CFLAGS)  -s `sdl2-config --cflags --libs`
 ASFLAGS = $(CFLAGS)
 
-TARGETS =  mac-sdl2gnuboy
+TARGETS =  sdl2gnuboy
 
-SYS_DEFS = -DIS_LITTLE_ENDIAN -DSILENT 
+SYS_DEFS = -DIS_LITTLE_ENDIAN  -DIS_LINUX -DSOUND
 SYS_OBJS = sys/nix/nix.o
 SYS_INCS = -I/usr/local/include  -I./sys/nix
 
 SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o sys/sdl2/sdl-input.o
 SDL_LIBS = -L/usr/lib -lSDL2 -lpthread
-SDL_CFLAGS = -I/usr/include/SDL2 -D_REENTRANT
+SDL_CFLAGS = -I/usr/include/SDL2 -D_GNU_SOURCE=1 -D_REENTRANT `sdl2-config --cflags --libs`
 
 
 all: $(TARGETS)
@@ -43,7 +42,10 @@ main.o: Version
 .c.o:
 	$(MYCC) -c $< -o $@
 
-mac-sdl2gnuboy: $(OBJS) $(SYS_OBJS) $(SDL_OBJS)
+.s.o:
+	$(MYAS) -c $< -o $@
+
+sdl2gnuboy: $(OBJS) $(SYS_OBJS) $(SDL_OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) $(SYS_OBJS) $(SDL_OBJS) -o $@ $(SDL_LIBS)
 
 install: all
@@ -51,8 +53,7 @@ install: all
 	$(INSTALL) -m 755 $(TARGETS) $(bindir)
 
 clean:
-	rm -f *gnuboy gnuboy.exe gmon.out *.o sys/*.o sys/*/*.o asm/*/*.o $(OBJS)
-
+	rm -f *gnuboy sdl2gnuboy.exe gmon.out *.o sys/*.o sys/*/*.o $(OBJS)
 
 
 
