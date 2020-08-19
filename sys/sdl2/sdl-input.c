@@ -25,7 +25,6 @@ rcvar_t joy_exports[] =
 
 static int use_joy = 1, sdl_joy_num;
 static SDL_Joystick *sdl_joy = NULL;
-static const int joy_commit_range = 3276;
 static char Xstatus, Ystatus;
 
 const int JOYSTICK_DEAD_ZONE = 8000;
@@ -33,6 +32,7 @@ const int JOYSTICK_DEAD_ZONE = 8000;
 /* Store which direction hat value was sent to the event queue on the last iteraon */
 static int hat_pressed = 0;
 
+/* used to track what joystick direction to release */
 static int last_joy_sent = -1;
 
 void joy_init()
@@ -57,9 +57,8 @@ void joy_init()
     {
         printf("Found %d joysticks\n", SDL_NumJoysticks());
         //open the gamepad
-        //sdl_joy = SDL_JoystickOpen(0);
         sdl_joy = SDL_GameControllerOpen(0);
-        printf("%d:%s\n", 1, SDL_JoystickNameForIndex(0));
+        printf("%d:%s\n", 1, SDL_GameControllerNameForIndex(0));
         if (sdl_joy == NULL)
         {
             printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
@@ -73,7 +72,6 @@ void joy_init()
 void joy_close()
 {
     //free the controller
-    //SDL_JoystickClose(sdl_joy);
     SDL_GameControllerClose(sdl_joy);
     sdl_joy = NULL;
 }
