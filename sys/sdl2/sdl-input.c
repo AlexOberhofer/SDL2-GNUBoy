@@ -33,6 +33,8 @@ const int JOYSTICK_DEAD_ZONE = 8000;
 /* Store which direction hat value was sent to the event queue on the last iteraon */
 static int hat_pressed = 0;
 
+static int last_joy_sent = -1;
+
 void joy_init()
 {
     //we obviously have no business being in here
@@ -56,6 +58,7 @@ void joy_init()
         printf("Found %d joysticks\n", SDL_NumJoysticks());
         //open the gamepad
         sdl_joy = SDL_JoystickOpen(0);
+        //sdl_joy = SDL_GameControllerOpen(0);
         printf("%d:%s\n", 1, SDL_JoystickNameForIndex(0));
         if (sdl_joy == NULL)
         {
@@ -70,7 +73,8 @@ void joy_init()
 void joy_close()
 {
     //free the controller
-    SDL_JoystickClose(sdl_joy);
+    //SDL_JoystickClose(sdl_joy);
+    SDL_GameControllerClose(sdl_joy);
     sdl_joy = NULL;
 }
 
@@ -262,37 +266,12 @@ void ev_poll()
             }
         }
 
-        //I dont even know
-        if (event.type == SDL_CONTROLLERBUTTONDOWN)
-        {
-            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONDOWN controller: %d button: %s state: %d\n",
-                   event.cbutton.which,
-                   SDL_GameControllerGetStringForButton(event.cbutton.button),
-                   event.cbutton.state);
-        }
-
-        if (event.type == SDL_CONTROLLERBUTTONUP)
-        {
-            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
-                   event.cbutton.which,
-                   SDL_GameControllerGetStringForButton(event.cbutton.button),
-                   event.cbutton.state);
-        }
-
-        if (event.type == SDL_CONTROLLERAXISMOTION)
-        {
-            if(JOYTRACE) printf("SDL_CONTROLLERAXISMOTION controller: %d axis: %-12s value: %d\n",
-                   event.caxis.which,
-                   SDL_GameControllerGetStringForAxis(event.caxis.axis),
-                   event.caxis.value);
-        }
-
         //note: this can probably be common to each controller setup
         //dpad when its a "hat" and not 4 buttons
         if (event.type == SDL_JOYHATMOTION)
         {
-            //printf("SDL_JOYHATMOTION: joystick: %d hat: %d value: %d\n",
-            //               event.jhat.which, event.jhat.hat, event.jhat.value);
+            if(JOYTRACE) printf("SDL_JOYHATMOTION: joystick: %d hat: %d value: %d\n",
+                           event.jhat.which, event.jhat.hat, event.jhat.value);
 
             if(event.jhat.value == 1) {
                 if(JOYTRACE) printf("Pad Up\n");
@@ -341,8 +320,7 @@ void ev_poll()
         }
 
         /* Joypad */
-        //TODO: When you write this... make sure you send the corresponding key release when a joypad event 
-        //sends a key stroke to the event queue
+        //Probably going to have to do a separate gamepad impl
         if(event.type == SDL_JOYAXISMOTION )
         {
             //X axis motion
@@ -352,14 +330,40 @@ void ev_poll()
                 if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
                 {
                     if(JOYTRACE) printf("Joy Left\n");
+                    if(last_joy_sent != -1) 
+                    {
+                        ev.type = EV_RELEASE;
+                        ev.code = last_joy_sent;
+                        ev_postevent(&ev);
+                    }
+                    ev.type = EV_PRESS;
+                    ev.code = K_LEFT;
+                    last_joy_sent = K_LEFT;
+                    ev_postevent(&ev);
                 }
                 else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
                 {
                     if(JOYTRACE) printf("Joy Right\n");
+                    if(last_joy_sent != -1) 
+                    {
+                        ev.type = EV_RELEASE;
+                        ev.code = last_joy_sent;
+                        ev_postevent(&ev);
+                    }
+                    ev.type = EV_PRESS;
+                    ev.code = K_RIGHT;
+                    last_joy_sent = K_RIGHT;
+                    ev_postevent(&ev);
                 }
                 else
                 {
                     if(JOYTRACE) printf("Reset Joystick L/R\n");
+                    if(last_joy_sent != -1) 
+                    {
+                        ev.type = EV_RELEASE;
+                        ev.code = last_joy_sent;
+                        ev_postevent(&ev);
+                    }
                 }
             }
             
@@ -370,16 +374,67 @@ void ev_poll()
                 if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
                 {
                     if(JOYTRACE) printf("Joy Up\n");
+                    if(last_joy_sent != -1) 
+                    {
+                        ev.type = EV_RELEASE;
+                        ev.code = last_joy_sent;
+                        ev_postevent(&ev);
+                    }
+                    ev.type = EV_PRESS;
+                    ev.code = K_UP;
+                    ev_postevent(&ev);
+                    last_joy_sent = K_UP;
                 }
                 else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
                 {
                     if(JOYTRACE) printf("Joy Down\n");
+                    if(last_joy_sent != -1) 
+                    {
+                        ev.type = EV_RELEASE;
+                        ev.code = last_joy_sent;
+                        ev_postevent(&ev);
+                    }
+                    ev.type = EV_PRESS;
+                    ev.code = K_DOWN;
+                    ev_postevent(&ev);
+                    last_joy_sent = K_DOWN;
                 }
                 else
                 {
                     if(JOYTRACE) printf("Reset Joystick U/D\n");
+                    /*if(last_joy_sent != -1) {
+                        ev.type = EV_RELEASE;
+                        ev.code = last_joy_sent;
+                        ev_postevent(&ev);
+                    }*/
+
                 }
             }
+        }
+
+        //I dont even know - ok now I know... add option to change between gamepad impl and joystick impl... probably a define...
+        if (event.type == SDL_CONTROLLERBUTTONDOWN)
+        {
+            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONDOWN controller: %d button: %s state: %d\n",
+                   event.cbutton.which,
+                   SDL_GameControllerGetStringForButton(event.cbutton.button),
+                   event.cbutton.state);
+        }
+
+        if (event.type == SDL_CONTROLLERBUTTONUP)
+        {
+            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
+                   event.cbutton.which,
+                   SDL_GameControllerGetStringForButton(event.cbutton.button),
+                   event.cbutton.state);
+        }
+
+        if (event.type == SDL_CONTROLLERAXISMOTION)
+        {
+            if(JOYTRACE) printf("SDL_CONTROLLERAXISMOTION controller: %d axis: %-12s value: %d\n",
+                   event.caxis.which,
+                   SDL_GameControllerGetStringForAxis(event.caxis.axis),
+                   event.caxis.value);
         }
 
         
