@@ -7,8 +7,7 @@
 #include "keytable.c"
 #include <stdio.h>
 
-static const char* evt_str[] = { [EV_NONE] = "none", [EV_PRESS] = "press",
-								 [EV_RELEASE]  = "release", [EV_REPEAT] = "repeat", [EV_MOUSE] = "mouse", };
+static const char* evt_str[] = { [EV_NONE] = "none", [EV_PRESS] = "press", [EV_RELEASE]  = "release", [EV_REPEAT] = "repeat", [EV_MOUSE] = "mouse", };
 
 int main() 
 {

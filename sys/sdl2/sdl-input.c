@@ -57,8 +57,8 @@ void joy_init()
     {
         printf("Found %d joysticks\n", SDL_NumJoysticks());
         //open the gamepad
-        sdl_joy = SDL_JoystickOpen(0);
-        //sdl_joy = SDL_GameControllerOpen(0);
+        //sdl_joy = SDL_JoystickOpen(0);
+        sdl_joy = SDL_GameControllerOpen(0);
         printf("%d:%s\n", 1, SDL_JoystickNameForIndex(0));
         if (sdl_joy == NULL)
         {
@@ -212,16 +212,16 @@ void ev_poll()
                 ev.code = 'q';
                 ev_postevent(&ev);
                 break;
-            case 7:
+            case SDL_CONTROLLER_BUTTON_DPAD_UP: //??wtf
                 if(JOYTRACE) printf("You pressed Start\n");
                 ev.type = EV_PRESS;
                 ev.code = K_ENTER;
                 ev_postevent(&ev);
                 break;
-            case 6:
-                if(JOYTRACE) printf("You pressed Back\n"); //TODO: CALL SELECT IDIOT
+            case SDL_CONTROLLER_BUTTON_BACK:
+                if(JOYTRACE) printf("You pressed Back\n"); 
                 ev.type = EV_PRESS;
-                ev.code = 'tab';
+                ev.code = 'space';
                 //ev_postevent(&ev);
                 break;
             default:
@@ -247,7 +247,7 @@ void ev_poll()
                 ev.code = 'q';
                 ev_postevent(&ev);
                 break;
-            case 7:
+            case SDL_CONTROLLER_BUTTON_DPAD_UP: //??wtf
                 if(JOYTRACE) printf("You released start\n");
                 ev.type = EV_RELEASE;
                 ev.code = K_ENTER;
@@ -256,7 +256,7 @@ void ev_poll()
             case 6:
                 if(JOYTRACE) printf("You released Back\n");
                 ev.type = EV_RELEASE;
-                ev.code = 'tab';
+                ev.code = 'space';
                 //ev_postevent(&ev);
                 break;
             default:
