@@ -1,10 +1,9 @@
 /*
- * sdl.c
+ * sdl-video.c
  * sdl 2 interfaces -- based on sdl.c 
  *
  * (C) 2001 Damian Gryski <dgryski@uwaterloo.ca>
  * (C) 2020 Alex Oberhofer <alexmoberhofer@gmail.com>
- * Joystick code contributed by David Lau
  *
  * Licensed under the GPLv2, or later.
  */
@@ -63,7 +62,7 @@ void vid_init()
 	}
 	else
 	{
-		if(fullscreen) {
+		if(fullscreen > 0) {
 			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_FULLSCREEN);
 		} else {
 			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_RESIZABLE);

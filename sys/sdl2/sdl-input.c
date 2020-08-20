@@ -1,9 +1,10 @@
 /*
- * sdl.c
+ * sdl-input.c
  * sdl 2 joystick interfaces
  *
- * (C) 2001 Damian Gryski <dgryski@uwaterloo.ca>
  * Based on SDL Joystick code contributed by David Lau
+ * 
+ * (C) 2020 Alex Oberhofer <alexmoberhofer@gmail.com>
  *
  * Licensed under the GPLv2, or later.
  */
@@ -18,16 +19,16 @@
 /* Set to 1 enable debug tracing for input */
 #define JOYTRACE 1
 
-rcvar_t joy_exports[] =
-    {
-        RCV_BOOL("joy", 1),
-        RCV_END};
 
+/* Joystick vars */
 static int use_joy = 1, sdl_joy_num;
 static SDL_Joystick *sdl_joy = NULL;
-static char Xstatus, Ystatus;
-
 const int JOYSTICK_DEAD_ZONE = 8000;
+
+rcvar_t joy_exports[] =
+    {
+        RCV_BOOL("joy", &use_joy),
+        RCV_END};
 
 /* Store which direction hat value was sent to the event queue on the last iteraon */
 static int hat_pressed = 0;
@@ -52,6 +53,7 @@ void joy_init()
     if (SDL_NumJoysticks() < 1)
     {
         printf("Warning: No joysticks connected!\n");
+        return;
     }
     else
     {
@@ -210,7 +212,7 @@ void ev_poll()
                 ev.code = 'q';
                 ev_postevent(&ev);
                 break;
-            case SDL_CONTROLLER_BUTTON_DPAD_UP: //??wtf
+            case 7: //??wtf
                 if(JOYTRACE) printf("You pressed Start\n");
                 ev.type = EV_PRESS;
                 ev.code = K_ENTER;
@@ -245,7 +247,7 @@ void ev_poll()
                 ev.code = 'q';
                 ev_postevent(&ev);
                 break;
-            case SDL_CONTROLLER_BUTTON_DPAD_UP: //??wtf
+            case 7: //??wtf
                 if(JOYTRACE) printf("You released start\n");
                 ev.type = EV_RELEASE;
                 ev.code = K_ENTER;
