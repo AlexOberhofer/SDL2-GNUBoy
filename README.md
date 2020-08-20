@@ -6,6 +6,10 @@
 ![OSX](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/OSX/badge.svg)<br>
 ![Windows MinGW-w64](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/Windows%20MinGW-w64/badge.svg)<br>
 
+<div align="center">
+    <img alt="Blue" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blue.PNG">
+</div>
+
 A Multiplatform Gameboy Emulator. Free Software.
 
 GNUBoy is a cool, old piece of software. This fork focuses on a multiplatform SDL 2 port.
@@ -28,7 +32,7 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 v1.1.1
 
 - Joystick/Gamepad Support
-- New GB classic pallettes
+- New GB classic pallette
 
 v1.1.0
  - Builds for more platforms
@@ -67,7 +71,19 @@ The emulator currently fails only one CPU instruction via blarggs test rom (Wind
 
 ## SDL2GNUBoy v1.1.0 Metrics
 
-Coming Soon (Windows)
+GNUboy performs well on modern x86 processors, and thanks to SDL, it uses your graphics card for the rendering.
+
+Less than 1% CPU usage on my Ryzen 3600x in Linux or Windows.
+
+Roughly 30% CPU usage on my Raspberry Pi 4
+
+SDL2GNUBoy has been compiled and tested on the following platforms:
+
+- Windows
+- Mac
+- Linux (x86)
+- Linux (ARM)
+- WSL (Support is not great as the SDL timing functionality doesnt seem to work)
 
 ## SDL2GNUBoy v1.0 Metrics
 
@@ -118,6 +134,8 @@ Version 1.1 cutoff has been done. Investigating other SDL features I can add in 
 
 - SDL2 key implementation (currently not rebindable)
 
+- SDL2 Gamepad rough implementation
+
 - SDL1.2 rendering ported to SDL2 (Now uses gpu if possible and supports scaling)
 
 - SDL1.2 sound ported to SDL2 (Needs a bit of work but its functional)
@@ -127,15 +145,11 @@ Version 1.1 cutoff has been done. Investigating other SDL features I can add in 
 
 - Porting: The codebase is currently buildable on Windows/MacOS/*nix. Emscripten next?
 
-- Joystick / Controller Support
-
 - SDL Sound rewrite
 
 - SDL Keys rewrite (To support key rebinding)
 
-- Fullscreen support
-
-- GTK/QT? Backend
+- Fix fullscreen flag
 
 - Fix Sound MacOS (I doubt this gets done unless someone with a Mac can debug/fix the SDL sound on osx)
 
