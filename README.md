@@ -6,9 +6,6 @@
 ![OSX](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/OSX/badge.svg)<br>
 ![Windows MinGW-w64](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/Windows%20MinGW-w64/badge.svg)<br>
 
-<div align="center">
-    <img alt="Blue" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blue.PNG">
-</div>
 
 A Multiplatform Gameboy Emulator. Free Software.
 
@@ -16,6 +13,9 @@ GNUBoy is a cool, old piece of software. This fork focuses on a multiplatform SD
 
 Fork or contribute! Based on GNUBoy and licensed under GNU GPLv2
 
+<div align="center">
+    <img alt="Blue" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blue.PNG">
+</div>
 
 # Releases
 
