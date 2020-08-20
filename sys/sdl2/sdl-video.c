@@ -17,14 +17,12 @@
 #include "rc.h"
 
 /* Set to 1 enable debug tracing for rendering */
-#define RENDERTRACE 0
+#define RENDERTRACE 1
 
-SDL_Surface *surface;
-SDL_Window *window;
-SDL_Surface *window_surface;
-SDL_Texture *texture;
-SDL_Renderer *renderer;
-static int fullscreen = 0;
+static SDL_Window *window;
+static SDL_Texture *texture;
+static SDL_Renderer *renderer;
+int fullscreen = 0; //set to 1 if you want fullscreen
 
 struct fb fb;
 
@@ -47,7 +45,7 @@ void vid_init()
 	if (!vmode[0] || !vmode[1])
 	{
 		int scale = rc_getint("scale");
-		fullscreen = rc_getint("fullscreen");
+		if (RENDERTRACE) printf("Fullscreen rc returned: %d\n", rc_getint("fullscreen")); //I dont get why this doesnt work
 		if (scale < 1)
 			scale = 1;
 		window_scale = scale;
@@ -62,7 +60,9 @@ void vid_init()
 	}
 	else
 	{
-		if(fullscreen > 0) {
+		if (RENDERTRACE) printf("Fullscreen set to: %d\n", fullscreen);
+		if(fullscreen > 0) 
+		{
 			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_FULLSCREEN);
 		} else {
 			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_RESIZABLE);
@@ -111,6 +111,7 @@ void vid_close()
 
 void vid_settitle(char *title)
 {
+	SDL_SetWindowTitle(window, title);
 }
 
 void vid_begin()
@@ -121,8 +122,12 @@ void vid_begin()
 void vid_end()
 {
 	fb.ptr = pix;
-	SDL_RenderClear(renderer);
-	SDL_UpdateTexture(texture, NULL, pix, vmode[0] * 4);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);
+	if(fb.enabled)
+	{
+		SDL_RenderClear(renderer);
+		SDL_UpdateTexture(texture, NULL, pix, vmode[0] * 4);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderPresent(renderer);
+	}
+
 }
