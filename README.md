@@ -31,7 +31,7 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 
 v1.1.1
 
-- Joystick/Gamepad Support
+- Joystick/Gamepad Support (Now somewhat supported)
 - New GB classic pallette
 
 v1.1.0
@@ -50,10 +50,8 @@ v1.0
 |  GB | GBC  |
 |---|---|
 | <img alt="Dr Mario" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/drmario.PNG"> | <img alt="Lemmings" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/lemmings.PNG"> |
-|<img alt="Ms Pac Man" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/mspacman.PNG">|<img alt="Pacman" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pacman.PNG">| 
 |<img alt="Super Mario :amd" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/supermarioland.PNG">|<img alt="Pokemon Yellow" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pkmnyellow.PNG">| 
 |   <img alt="Tetris" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/tetris.PNG">|<img alt="Pokemom Crystal" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pkmncrystal.PNG">|
-|<img alt="Zelda" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/zelda.PNG"> |<img alt="Super Mario Deluxe" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/supermariodeluxe.PNG"> |
 
 </div>
 
