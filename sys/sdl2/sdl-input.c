@@ -17,7 +17,7 @@
 #include "rc.h"
 
 /* Set to 1 enable debug tracing for input */
-#define JOYTRACE 1
+#define JOYTRACE 0
 
 
 /* Joystick vars */
@@ -191,12 +191,12 @@ void ev_poll()
 
         
         /*
-        * This is probably going to get messy. This impl maps using an xbox360 pad
-        * Gamepad button mapping
+        * The joystick impl sucks compared to the gamepad... Maybe I add this back in as a define for 
+        * compatability with older joysticks or gamepads?
         */
         if (event.type == SDL_JOYBUTTONDOWN)
         {
-            switch (event.jbutton.button)
+            /*switch (event.jbutton.button)
             {
             //note: sdl assumes xbox360 style controller... so I've reversed A + B for now.
             //reversed as in... reverse on 360 pads... correct on the rest of my controllers
@@ -228,10 +228,10 @@ void ev_poll()
                 if(JOYTRACE) printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
                        event.jbutton.which, event.jbutton.button, event.jbutton.state);
                 break;
-            }
+            }*/
         }
 
-        if (event.type == SDL_JOYBUTTONUP)
+        /*if (event.type == SDL_JOYBUTTONUP)
         {
             switch (event.jbutton.button)
             {
@@ -264,7 +264,7 @@ void ev_poll()
                        event.jbutton.which, event.jbutton.button, event.jbutton.state);
                 break;
             }
-        }
+        }*/
 
         //note: this can probably be common to each controller setup
         //dpad when its a "hat" and not 4 buttons
@@ -415,20 +415,77 @@ void ev_poll()
         //I dont even know - ok now I know... add option to change between gamepad impl and joystick impl... probably a define...
         if (event.type == SDL_CONTROLLERBUTTONDOWN)
         {
-            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONDOWN controller: %d button: %s state: %d\n",
+            char *buttonstring = SDL_GameControllerGetStringForButton(event.cbutton.button);
+            
+            if((strcmp(buttonstring, "start")) == 0) 
+            {
+                if(JOYTRACE) printf("You pressed Start\n");
+                ev.type = EV_PRESS;
+                ev.code = K_ENTER;
+                ev_postevent(&ev);
+            } else if((strcmp(buttonstring, "b")) == 0)
+            {
+                if(JOYTRACE) printf("You released B\n");
+                ev.type = EV_PRESS;
+                ev.code = 'e';
+                ev_postevent(&ev);
+            } else if((strcmp(buttonstring, "a")) == 0)
+            {
+                if(JOYTRACE) printf("You released A\n");
+                ev.type = EV_PRESS;
+                ev.code = 'q';
+                ev_postevent(&ev);
+            } else if((strcmp(buttonstring, "back")) == 0)
+            {
+                if(JOYTRACE) printf("You released Back\n");
+                ev.type = EV_PRESS;
+                ev.code = 'space';
+                //ev_postevent(&ev);
+            } else {
+                if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
                    event.cbutton.which,
                    SDL_GameControllerGetStringForButton(event.cbutton.button),
                    event.cbutton.state);
+            }         
         }
 
         if (event.type == SDL_CONTROLLERBUTTONUP)
         {
-            if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
+            char *buttonstring = SDL_GameControllerGetStringForButton(event.cbutton.button);
+
+            if((strcmp(buttonstring, "start")) == 0) 
+            {
+                if(JOYTRACE) printf("You released Start\n");
+                ev.type = EV_RELEASE;
+                ev.code = K_ENTER;
+                ev_postevent(&ev);
+            } else if((strcmp(buttonstring, "b")) == 0)
+            {
+                if(JOYTRACE) printf("You released B\n");
+                ev.type = EV_RELEASE;
+                ev.code = 'e';
+                ev_postevent(&ev);
+            } else if((strcmp(buttonstring, "a")) == 0)
+            {
+                if(JOYTRACE) printf("You released A\n");
+                ev.type = EV_RELEASE;
+                ev.code = 'q';
+                ev_postevent(&ev);
+            } else if((strcmp(buttonstring, "back")) == 0)
+            {
+                if(JOYTRACE) printf("You released Back\n");
+                ev.type = EV_RELEASE;
+                ev.code = 'space';
+                //ev_postevent(&ev);
+            } else {
+                if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
                    event.cbutton.which,
                    SDL_GameControllerGetStringForButton(event.cbutton.button),
                    event.cbutton.state);
+            }
         }
 
+        /* :\ */
         if (event.type == SDL_CONTROLLERAXISMOTION)
         {
             if(JOYTRACE) printf("SDL_CONTROLLERAXISMOTION controller: %d axis: %-12s value: %d\n",
