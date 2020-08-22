@@ -33,7 +33,8 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 v1.1.1
 
 - Joystick/Gamepad Support 
-- New GB classic pallette
+- New GB classic pallette (Can be changed with rc file)
+- Renderer + Keyboard bugfixes
 
 v1.1.0
  - Builds for more platforms
@@ -309,15 +310,15 @@ Joy/Pad Up - UP
 ```
 
 ```
-Joy/Pad Up - DOWN
+Joy/Pad Down - DOWN
 ```
 
 ```
-Joy/Pad Up - LEFT 
+Joy/Pad Left - LEFT 
 ```
 
 ```
-Joy/Pad Up - RIGHT 
+Joy/Pad Right - RIGHT 
 ```
 
 ```
