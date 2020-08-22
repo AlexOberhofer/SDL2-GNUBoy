@@ -297,7 +297,7 @@ ENTER - START
 ```
 
 ```
-BACKSPACE - SELECT
+X - SELECT
 ```
 
 # Controls (Gamepad)

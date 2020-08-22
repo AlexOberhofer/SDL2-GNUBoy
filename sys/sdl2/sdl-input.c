@@ -105,6 +105,11 @@ void ev_poll()
                 ev.code = K_ENTER;
                 ev_postevent(&ev);
                 break;
+            case SDL_SCANCODE_X:
+                ev.type = EV_PRESS;
+                ev.code = 'x';
+                ev_postevent(&ev);
+                break;
             case SDL_SCANCODE_ESCAPE:
                 die("Escape Pressed\n");
                 break;
@@ -150,6 +155,11 @@ void ev_poll()
             case SDL_SCANCODE_RETURN:
                 ev.type = EV_RELEASE;
                 ev.code = K_ENTER;
+                ev_postevent(&ev);
+                break;
+            case SDL_SCANCODE_X:
+                ev.type = EV_RELEASE;
+                ev.code = 'x';
                 ev_postevent(&ev);
                 break;
             case SDL_SCANCODE_ESCAPE:
