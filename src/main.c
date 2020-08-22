@@ -28,7 +28,7 @@ static char *defaultconfig[] =
 	"bind q +a",
 	"bind e +b",
 	"bind enter +start",
-	"bind space +select",
+	"bind x +select",
 	"bind tab +select",
 	"bind joyup +up",
 	"bind joydown +down",

@@ -9,7 +9,8 @@
 
 A Multiplatform Gameboy Emulator. Free Software.
 
-GNUBoy is a cool, old piece of software. This fork focuses on a multiplatform SDL 2 port.
+GNUBoy is a cool, old piece of software. This fork focuses on a multiplatform SDL 2 port. Hopefully this codebase can be helpful to someone in the future
+or someone interested in learning about C, SDL, or emulator development.
 
 Fork or contribute! Based on GNUBoy and licensed under GNU GPLv2
 
@@ -31,7 +32,7 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 
 v1.1.1
 
-- Joystick/Gamepad Support (Now somewhat supported)
+- Joystick/Gamepad Support 
 - New GB classic pallette
 
 v1.1.0
@@ -151,6 +152,8 @@ Version 1.1 cutoff has been done. Investigating other SDL features I can add in 
 
 - Fix Sound MacOS (I doubt this gets done unless someone with a Mac can debug/fix the SDL sound on osx)
 
+- Add handler for zip files
+
 
 # Building
 
@@ -249,7 +252,7 @@ Run (cmd):
 $ ./sdl2gnuboy.exe ./rom
 ```
 
-# Controls
+# Controls (Keyboard)
 
 Controls are as follows:
 
@@ -296,6 +299,43 @@ ENTER - START
 ```
 BACKSPACE - SELECT
 ```
+
+# Controls (Gamepad)
+
+Controls are as follows (Based on Xbox 360 controller layout):
+
+```
+Joy/Pad Up - UP
+```
+
+```
+Joy/Pad Up - DOWN
+```
+
+```
+Joy/Pad Up - LEFT 
+```
+
+```
+Joy/Pad Up - RIGHT 
+```
+
+```
+B - A
+```
+
+```
+A - B
+```
+
+```
+Start - START
+```
+
+```
+Back - SELECT
+```
+
 ## Porting
 
 The GNUBoy core is extremely fast and portable. Porting documentation can be found in the docs folder.

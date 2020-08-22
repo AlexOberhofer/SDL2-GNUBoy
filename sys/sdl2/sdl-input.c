@@ -437,10 +437,10 @@ void ev_poll()
                 ev_postevent(&ev);
             } else if((strcmp(buttonstring, "back")) == 0)
             {
-                if(JOYTRACE) printf("You released Back\n");
+                if(JOYTRACE) printf("You pressed Back\n");
                 ev.type = EV_PRESS;
-                ev.code = 'space';
-                //ev_postevent(&ev);
+                ev.code = 'x';
+                ev_postevent(&ev);
             } else {
                 if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
                    event.cbutton.which,
@@ -475,8 +475,8 @@ void ev_poll()
             {
                 if(JOYTRACE) printf("You released Back\n");
                 ev.type = EV_RELEASE;
-                ev.code = 'space';
-                //ev_postevent(&ev);
+                ev.code = 'x';
+                ev_postevent(&ev);
             } else {
                 if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
                    event.cbutton.which,
