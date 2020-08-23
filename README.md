@@ -24,9 +24,9 @@ The latest packaged releases are available under the associated workflow. This c
 
 Download Versioned Releases: (https://github.com/AlexOberhofer/SDL2-GNUBoy/releases)
 
-Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions)
-*Note* Builds only provided for windows via mingw64 for each commit
-*Note* The stability of these builds may vary
+Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions) <br>
+*Note* Builds only provided for windows via mingw64 for each commit <br>
+*Note* The stability of these builds may vary <br>
 
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
 
@@ -181,7 +181,7 @@ $ git clone https://github.com/AlexOberhofer/SDL2-GNUBoy.git
 Enter project directory:
 
 ```
-$ cd gnuboy
+$ cd sdl2-gnuboy
 ```
 
 Build:
@@ -226,7 +226,7 @@ $ git clone https://github.com/AlexOberhofer/SDL2-GNUBoy.git
 Enter project directory:
 
 ```
-$ cd gnuboy
+$ cd sdl2-gnuboy
 ```
 
 Build:

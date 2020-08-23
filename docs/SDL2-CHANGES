@@ -1,0 +1,18 @@
+This document outlines the changes present in this fork.
+
+The main purpose of this port/project has been to port the Gnuboy SDL feature 
+set to SDL2 and provide modern builds and build files for GNUBoy. GNUBoy was introduced
+to me via an arduino port, so getting the old codebase working on modern Linux, then
+Mac and Windows. I have ported the SDL rendering and joystick code, with small changes to
+the SDL sound engine. 
+
+The original documentation is included in this repository, and is still semi valid. As this program
+comes with no warranty or support, you are on your own if you have issues. Hopefully these legacy
+documents can help in that case.
+
+KNOWN ISSUES:
+- Enabling fullscreen requires a recompile.
+- Keys are not rebindable. Submit a pull request!
+- Scale only works in 1x, 2x, 3x
+
+Feel free to fork or contribute!
