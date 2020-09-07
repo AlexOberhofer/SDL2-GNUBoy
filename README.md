@@ -187,7 +187,7 @@ $ cd sdl2-gnuboy
 Build:
 
 ```
-$ make 
+$ make linux
 ```
 
 Run:
@@ -232,7 +232,7 @@ $ cd sdl2-gnuboy
 Build:
 
 ```
-$ make -f makefile.windows
+$ make windows
 ```
 
 Run  

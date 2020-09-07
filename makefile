@@ -1,14 +1,14 @@
 .PHONY: all
 .PHONY: clean
 
-.PHONY: windows
-windows:
-	make -f makefile.windows
-	rm -f sys/*/*.o src/*.o
-
 .PHONY: linux
 linux:
 	make -f makefile.linux
+	rm -f sys/*/*.o src/*.o
+
+.PHONY: windows
+windows:
+	make -f makefile.windows
 	rm -f sys/*/*.o src/*.o
 
 .PHONY: osx
