@@ -68,7 +68,9 @@ static int rgb332;
 static int sprsort = 1;
 static int sprdebug;
 
- static int dmg_pal[4][4] = {GB_AMO_PAL, GB_AMO_PAL, GB_AMO_PAL, GB_AMO_PAL }; /* amo: finally restored my favorite green filter! :D*/
+static int pal_id = 0; //pallette id
+
+static int dmg_pal[4][4] = {GB_AMO_PAL, GB_AMO_PAL, GB_AMO_PAL, GB_AMO_PAL }; /* amo: finally restored my favorite green filter! :D*/
 
 static int usefilter, filterdmg;
 static int filter[3][4] = {
@@ -81,6 +83,7 @@ rcvar_t lcd_exports[] =
 {
 	RCV_INT("scale", &scale),
 	RCV_INT("density", &density),
+	RCV_INT("palid", &pal_id),
 	RCV_BOOL("rgb332", &rgb332),
 	RCV_VECTOR("dmg_bgp", dmg_pal[0], 4),
 	RCV_VECTOR("dmg_wndp", dmg_pal[1], 4),
@@ -104,10 +107,6 @@ static byte *vdest;
 #define MEMCPY8(d, s) memcpy((d), (s), 8)
 #endif
 
-
-
-
-#ifndef ASM_UPDATEPATPIX
 void updatepatpix()
 {
 	int i, j, k;
@@ -147,8 +146,6 @@ void updatepatpix()
 	}
 	anydirty = 0;
 }
-#endif /* ASM_UPDATEPATPIX */
-
 
 
 void tilebuf()
@@ -862,6 +859,7 @@ void pal_dirty()
 
 void lcd_reset()
 {
+	//TODO: also set the pallette from the RC Var
 	memset(&lcd, 0, sizeof lcd);
 	lcd_begin();
 	vram_dirty();

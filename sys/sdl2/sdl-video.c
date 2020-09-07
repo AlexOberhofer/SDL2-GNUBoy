@@ -45,7 +45,9 @@ void vid_init()
 	if (!vmode[0] || !vmode[1])
 	{
 		int scale = rc_getint("scale");
+		int pal = rc_getint("palid");
 		if (RENDERTRACE) printf("Fullscreen rc returned: %d\n", rc_getint("fullscreen")); //I dont get why this doesnt work
+		if(RENDERTRACE) printf("Pallette ID: %d\n", pal);
 		if (scale < 1)
 			scale = 1;
 		window_scale = scale;

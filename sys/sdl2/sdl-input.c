@@ -1,8 +1,6 @@
 /*
  * sdl-input.c
  * sdl 2 joystick interfaces
- *
- * Based on SDL Joystick code contributed by David Lau
  * 
  * (C) 2020 Alex Oberhofer <alexmoberhofer@gmail.com>
  *
@@ -67,7 +65,7 @@ void joy_init()
         {
             sdl_joy = SDL_GameControllerOpen(1);
         }
-        
+
         printf("%d:%s\n", 1, SDL_GameControllerNameForIndex(0));
         if (sdl_joy == NULL)
         {

@@ -54,6 +54,7 @@ static char *defaultconfig[] =
 	"set density 4"
 	"source gnuboy.rc",
 	"set filterdmg 0",
+	//"set palid 1",
 	NULL
 };
 
