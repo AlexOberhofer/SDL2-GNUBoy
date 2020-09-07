@@ -17,8 +17,8 @@
 
 #include <SDL2/SDL.h>
 
-#include "../../include/defs.h"
-#include "../../include/rc.h"
+#include "defs.h"
+#include "rc.h"
 
 #define DOTDIR ".gnuboy"
 
