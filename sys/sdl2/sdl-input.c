@@ -28,7 +28,8 @@ const int JOYSTICK_DEAD_ZONE = 8000;
 rcvar_t joy_exports[] =
     {
         RCV_BOOL("joy", &use_joy),
-        RCV_END};
+        RCV_END
+    };
 
 /* Store which direction hat value was sent to the event queue on the last iteraon */
 static int hat_pressed = 0;
@@ -60,6 +61,13 @@ void joy_init()
         printf("Found %d joysticks\n", SDL_NumJoysticks());
         //open the gamepad
         sdl_joy = SDL_GameControllerOpen(0);
+
+        //if an error occurs and we have another gamepad... try it
+        if(sdl_joy == NULL && (SDL_NumJoysticks() > 1))
+        {
+            sdl_joy = SDL_GameControllerOpen(1);
+        }
+        
         printf("%d:%s\n", 1, SDL_GameControllerNameForIndex(0));
         if (sdl_joy == NULL)
         {
@@ -79,6 +87,9 @@ void joy_close()
 }
 
 /* TODO: Really need to clean this up - this will break if you rebind the keys.*/
+/* TODO: Write an effing map function to map sdl keypresses to event codes */
+/* TODO: Write a helper function to build + post events */
+/* TODO: Add a second joystick event handler */
 void ev_poll()
 {
     event_t ev;
