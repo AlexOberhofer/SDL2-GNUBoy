@@ -14,5 +14,6 @@ KNOWN ISSUES:
 - Enabling fullscreen requires a recompile.
 - Keys are not rebindable. Submit a pull request!
 - Scale only works in 1x, 2x, 3x
+- Windows doesn't seem to find the RC files in the exe directory
 
 Feel free to fork or contribute!
