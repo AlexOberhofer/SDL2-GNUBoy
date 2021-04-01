@@ -21,7 +21,7 @@
 
 /* Joystick vars */
 static int use_joy = 1, sdl_joy_num;
-static SDL_Joystick *sdl_joy = NULL;
+static SDL_GameController *sdl_joy = NULL;
 const int JOYSTICK_DEAD_ZONE = 8000;
 
 rcvar_t joy_exports[] =
