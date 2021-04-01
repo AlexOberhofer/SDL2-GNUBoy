@@ -72,6 +72,8 @@ void vid_init()
 		}
 		
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		if (!renderer)
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
 	}
