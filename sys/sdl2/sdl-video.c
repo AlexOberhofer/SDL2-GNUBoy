@@ -15,6 +15,7 @@
 
 #include "fb.h"
 #include "rc.h"
+#include "sys.h"
 
 /* Set to 1 enable debug tracing for rendering */
 #define RENDERTRACE 1
@@ -55,7 +56,7 @@ void vid_init()
 		vmode[1] = 144;
 	}
 
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
 	{
 		printf("SDL_Init failed: %s\n", SDL_GetError());
 		exit(1);
@@ -71,6 +72,8 @@ void vid_init()
 		}
 		
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		if (!renderer)
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
 	}

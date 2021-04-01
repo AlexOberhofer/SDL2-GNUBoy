@@ -13,6 +13,7 @@
 
 #include "input.h"
 #include "rc.h"
+#include "defs.h"
 
 /* Set to 1 enable debug tracing for input */
 #define JOYTRACE 0
@@ -20,7 +21,7 @@
 
 /* Joystick vars */
 static int use_joy = 1, sdl_joy_num;
-static SDL_Joystick *sdl_joy = NULL;
+static SDL_GameController *sdl_joy = NULL;
 const int JOYSTICK_DEAD_ZONE = 8000;
 
 rcvar_t joy_exports[] =
@@ -41,8 +42,8 @@ void joy_init()
     if (!use_joy)
         return;
 
-    //init joystick subsystem
-    if (SDL_Init(SDL_INIT_JOYSTICK < 0))
+    //init gamecontroller (and joystick) subsystem
+    if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0)
     {
         printf("SDL could not initialize Joystick! SDL Error: %s\n", SDL_GetError());
         exit(1);
