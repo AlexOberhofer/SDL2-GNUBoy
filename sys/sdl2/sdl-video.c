@@ -15,6 +15,7 @@
 
 #include "fb.h"
 #include "rc.h"
+#include "sys.h"
 
 /* Set to 1 enable debug tracing for rendering */
 #define RENDERTRACE 1
