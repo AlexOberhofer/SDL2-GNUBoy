@@ -353,6 +353,10 @@ The GNUBoy core is extremely fast and portable. Porting documentation can be fou
 
 Alex Oberhofer
 
+### Contributors
+
+Ryzee119 - SDL subsystem init fixes / Compiler warning cleanup
+
 ## Acknowledgements
 
 Cinoop Project 
