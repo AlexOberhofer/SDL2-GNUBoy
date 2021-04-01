@@ -42,8 +42,8 @@ void joy_init()
     if (!use_joy)
         return;
 
-    //init joystick subsystem
-    if (SDL_Init(SDL_INIT_JOYSTICK < 0))
+    //init gamecontroller (and joystick) subsystem
+    if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0)
     {
         printf("SDL could not initialize Joystick! SDL Error: %s\n", SDL_GetError());
         exit(1);
