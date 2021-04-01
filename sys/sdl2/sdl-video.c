@@ -56,7 +56,7 @@ void vid_init()
 		vmode[1] = 144;
 	}
 
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
 	{
 		printf("SDL_Init failed: %s\n", SDL_GetError());
 		exit(1);
