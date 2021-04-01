@@ -13,6 +13,7 @@
 
 #include "input.h"
 #include "rc.h"
+#include "defs.h"
 
 /* Set to 1 enable debug tracing for input */
 #define JOYTRACE 0
