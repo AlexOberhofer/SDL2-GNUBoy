@@ -62,6 +62,7 @@ byte anydirty;
 
 static int scale = 1;
 static int density = 0;
+static int integer_scale = 0;
 
 static int rgb332;
 
@@ -82,6 +83,7 @@ static int filter[3][4] = {
 rcvar_t lcd_exports[] =
 {
 	RCV_INT("scale", &scale),
+	RCV_INT("integer_scale", &integer_scale),
 	RCV_INT("density", &density),
 	RCV_INT("palid", &pal_id),
 	RCV_BOOL("rgb332", &rgb332),

@@ -51,7 +51,8 @@ static char *defaultconfig[] =
 	"bind ins savestate",
 	"bind del loadstate",
 	"set scale 2",
-	"set density 4"
+	"set density 4",
+	"set integer_scale 0",
 	"source gnuboy.rc",
 	"set filterdmg 0",
 	//"set palid 1",
