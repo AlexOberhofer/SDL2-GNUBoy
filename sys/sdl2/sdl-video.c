@@ -76,6 +76,17 @@ void vid_init()
 			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
+
+		SDL_RenderSetLogicalSize(renderer, vmode[0], vmode[1]);
+		int integer_scale = rc_getint("integer_scale");
+		if (integer_scale)
+		{
+			int window_width, window_height, render_width, render_height;
+			SDL_GetRendererOutputSize(renderer, &window_width, &window_height);
+			SDL_RenderGetLogicalSize(renderer, &render_width, &render_height);
+			SDL_bool makes_sense = (window_width >= render_width && window_height >= render_height);
+			SDL_RenderSetIntegerScale(renderer, makes_sense);
+		}
 	}
 
 	fb.w = vmode[0];
