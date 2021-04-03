@@ -4,6 +4,9 @@
  *
  * (C) 2001 Damian Gryski <dgryski@uwaterloo.ca>
  * (C) 2020 Alex Oberhofer <alexmoberhofer@gmail.com>
+ * 
+ * Contributors:
+ *  - Ryzee119 - SDL Fixes / Integer Scaling
  *
  * Licensed under the GPLv2, or later.
  */

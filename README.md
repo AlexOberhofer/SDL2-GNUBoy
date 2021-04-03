@@ -355,7 +355,7 @@ Alex Oberhofer
 
 ### Contributors
 
-Ryzee119 - SDL subsystem init fixes / Compiler warning cleanup
+Ryzee119 - SDL subsystem init fixes / Compiler warning cleanup / Integer Scaling
 
 ## Acknowledgements
 
