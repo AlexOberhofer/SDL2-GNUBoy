@@ -31,7 +31,9 @@ static volatile int audio_done;
 
 rcvar_t pcm_exports[] =
 	{
+#ifdef SOUND
 		RCV_BOOL("sound", &sound),
+#endif
 		RCV_INT("stereo", &stereo),
 		RCV_INT("samplerate", &samplerate),
 		RCV_END};
