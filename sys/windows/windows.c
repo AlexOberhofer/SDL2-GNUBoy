@@ -12,6 +12,7 @@
 char *strdup();
 
 #include <SDL2/SDL.h>
+#include "rc.h"
 
 void *sys_timer()
 {
@@ -50,25 +51,13 @@ void sys_sanitize(char *s)
 
 void sys_initpath(char *exe)
 {
-	char *buf, *home, *p;
+	char *buf = ".";
 
-	home = strdup(exe);
-	sys_sanitize(home);
-	p = strrchr(home, '/');
-	if (p) *p = 0;
-	else
-	{
-		buf = ".";
+	if (rc_getstr("rcpath") == NULL)
 		rc_setvar("rcpath", 1, &buf);
+
+	if (rc_getstr("savedir") == NULL)
 		rc_setvar("savedir", 1, &buf);
-		return;
-	}
-	buf = malloc(strlen(home) + 8);
-	sprintf(buf, ".;%s/", home);
-	rc_setvar("rcpath", 1, &buf);
-	sprintf(buf, ".", home);
-	rc_setvar("savedir", 1, &buf);
-	free(buf);
 }
 
 void sys_checkdir(char *path, int wr)
