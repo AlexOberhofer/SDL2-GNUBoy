@@ -26,6 +26,7 @@ struct mbc
 	int ramsize;
 	int enableram;
 	int batt;
+	int rumble_state;
 	byte *rmap[0x10], *wmap[0x10];
 };
 

@@ -17,6 +17,7 @@
 #include "input.h"
 #include "rc.h"
 #include "defs.h"
+#include "mem.h"
 
 /* Covert SDL KeyCodes to gnuboy button events
  * This only needs to handle non standard ascii buttons.
@@ -158,6 +159,7 @@ void ev_poll()
 {
     event_t ev;
     SDL_Event event;
+    static SDL_GameController *pad = NULL;
 
     while (SDL_PollEvent(&event))
     {
@@ -201,6 +203,7 @@ void ev_poll()
         /* Handle gamecontroller button events*/
         else if ((event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP) && use_joy)
         {
+            pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
             SDL_GameControllerButton btn = event.cbutton.button;
             const char *buttonstring = SDL_GameControllerGetStringForButton(btn);
 
@@ -213,4 +216,8 @@ void ev_poll()
                 ev_postevent(&ev);
         }
     }
+
+    if (pad != NULL)
+        SDL_GameControllerRumble(pad, (mbc.rumble_state) ? 0xFFFF : 0, (mbc.rumble_state) ? 0xFFFF : 0, 50);
+
 }
