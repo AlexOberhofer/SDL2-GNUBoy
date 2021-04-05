@@ -19,9 +19,14 @@
 #include "defs.h"
 #include "mem.h"
 
-/* Covert SDL KeyCodes to gnuboy button events
- * This only needs to handle non standard ascii buttons.
- */
+//Set to 1 enable debug tracing for input
+#define JOYTRACE 0
+static int joy_enable = 1;
+static int joy_rumble_strength = 100; //0 to 100%
+static int joy_deadzone = 40; //0 to 100%
+
+//Covert SDL KeyCodes to gnuboy button events
+//This only needs to handle non standard ascii buttons.
 static int kb_sdlkeycode_to_gnuboy(SDL_Keycode keycode)
 {
         static const int lookup[48][2] =
@@ -90,7 +95,8 @@ static int kb_sdlkeycode_to_gnuboy(SDL_Keycode keycode)
     return keycode;
 }
 
-/* Joystick vars */
+//The function of K_JOYx can be modified via a rc file. This allows
+//remapping of the gamecontroller inputs. See main.c for default mapping.
 static Sint32 gamecontroller_map[14][2] =
     {
         {K_JOY0, SDL_CONTROLLER_BUTTON_A},
@@ -101,25 +107,19 @@ static Sint32 gamecontroller_map[14][2] =
         {K_JOYDOWN, SDL_CONTROLLER_BUTTON_DPAD_DOWN},
         {K_JOYLEFT, SDL_CONTROLLER_BUTTON_DPAD_LEFT},
         {K_JOYRIGHT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT},
-        {-1, SDL_CONTROLLER_BUTTON_X},
-        {-1, SDL_CONTROLLER_BUTTON_Y},
-        {-1, SDL_CONTROLLER_BUTTON_LEFTSHOULDER},
-        {-1, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER},
-        {-1, SDL_CONTROLLER_BUTTON_LEFTSTICK},
-        {-1, SDL_CONTROLLER_BUTTON_RIGHTSTICK}
+        {K_JOY4, SDL_CONTROLLER_BUTTON_X},
+        {K_JOY5, SDL_CONTROLLER_BUTTON_Y},
+        {K_JOY6, SDL_CONTROLLER_BUTTON_LEFTSHOULDER},
+        {K_JOY7, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER},
+        {K_JOY8, SDL_CONTROLLER_BUTTON_LEFTSTICK},
+        {K_JOY9, SDL_CONTROLLER_BUTTON_RIGHTSTICK}
     };
-
-//Set to 1 enable debug tracing for input
-#define JOYTRACE 0
-static int use_joy = 1;
-static int rumble_strength = 100;
-static SDL_GameController *sdl_joy = NULL;
-const int JOYSTICK_DEAD_ZONE = 8000;
 
 rcvar_t joy_exports[] =
     {
-        RCV_BOOL("joy", &use_joy),
-        RCV_INT("rumble_strength", &rumble_strength),
+        RCV_BOOL("joy", &joy_enable),
+        RCV_INT("joy_rumble_strength", &joy_rumble_strength),
+        RCV_INT("joy_deadzone", &joy_deadzone),
         RCV_END
     };
 
@@ -136,7 +136,7 @@ static int joy_find_gamecontroller_mapping(SDL_GameControllerButton button)
 void joy_init()
 {
     //we obviously have no business being in here
-    if (!use_joy)
+    if (!joy_enable)
         return;
 
     //init gamecontroller (and joystick) subsystem
@@ -146,11 +146,17 @@ void joy_init()
         exit(1);
     }
 
-    if (rumble_strength > 100)
-        rumble_strength = 100;
+    if (joy_rumble_strength > 100)
+        joy_rumble_strength = 100;
+        
+    if (joy_deadzone > 100)
+        joy_deadzone = 100;
 
     if (JOYTRACE)
-        printf("Rumble strength set to %i%%\n", rumble_strength);
+        printf("Rumble strength set to %i%%\n", joy_rumble_strength);
+
+    if (JOYTRACE)
+        printf("Deadzone set to %i%%\n", joy_deadzone);
 
     if (JOYTRACE)
         printf("Joystick initialized Succesfully\n");
@@ -158,9 +164,7 @@ void joy_init()
 
 void joy_close()
 {
-    //free the controller
-    SDL_GameControllerClose(sdl_joy);
-    sdl_joy = NULL;
+    SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
 }
 
 void ev_poll()
@@ -194,23 +198,26 @@ void ev_poll()
             }
             else
             {
-                printf("Pressed unmappable button %s\n", SDL_GetScancodeName(scancode));
+                printf("Pressed unsupported button %s\n", SDL_GetScancodeName(scancode));
             }
         }
         /* Handle gamecontroller hotplugging */
-        else if (event.type == SDL_CONTROLLERDEVICEADDED && use_joy)
+        else if (event.type == SDL_CONTROLLERDEVICEADDED && joy_enable)
         {
             if (JOYTRACE) printf("Controller %d connected\n", event.cdevice.which);
             SDL_GameControllerOpen(event.cdevice.which);
         }
-        else if (event.type == SDL_CONTROLLERDEVICEREMOVED && use_joy)
+        else if (event.type == SDL_CONTROLLERDEVICEREMOVED && joy_enable)
         {
             if (JOYTRACE) printf("Controller %d disconnected\n", event.cdevice.which);
+            if (pad == SDL_GameControllerFromInstanceID(event.cdevice.which))
+                pad = NULL;
             SDL_GameControllerClose(SDL_GameControllerFromInstanceID(event.cdevice.which));
         }
         /* Handle gamecontroller button events*/
-        else if ((event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP) && use_joy)
+        else if ((event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP) && joy_enable)
         {
+            //Update the pad pointer. This ensures that only the controller actively being used rumbles.
             pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
             SDL_GameControllerButton btn = event.cbutton.button;
             const char *buttonstring = SDL_GameControllerGetStringForButton(btn);
@@ -223,13 +230,60 @@ void ev_poll()
             if (ev.code != -1)
                 ev_postevent(&ev);
         }
+        /* Handle gamecontroller axis events. Convert axis to dpad events */
+        else if (event.type == SDL_CONTROLLERAXISMOTION && joy_enable)
+        {
+            //Track the previous hat state so that we only trigger input events on hat changes.
+            static Uint8 old_hat = 0;
+            //Prevent button mashing at the deadzone area.
+            int hysteresis = 2000;
+            int deadzone = joy_deadzone * (0x7FFF / 100);
+            int press_ev = 0, release_ev = 0;
+            SDL_ControllerAxisEvent ae = event.caxis;
+
+            //Create a dpad press event if the axis is greater than the deadzone and that direction has changed since last update.
+            press_ev = (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && ae.value < -deadzone && !(old_hat & SDL_HAT_LEFT))  ? SDL_CONTROLLER_BUTTON_DPAD_LEFT  :
+                       (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && ae.value >  deadzone && !(old_hat & SDL_HAT_RIGHT)) ? SDL_CONTROLLER_BUTTON_DPAD_RIGHT :
+                       (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && ae.value < -deadzone && !(old_hat & SDL_HAT_UP))    ? SDL_CONTROLLER_BUTTON_DPAD_UP    :
+                       (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && ae.value >  deadzone && !(old_hat & SDL_HAT_DOWN))  ? SDL_CONTROLLER_BUTTON_DPAD_DOWN  : 0;
+
+            //Create a dpad release event if the axis is lss than the deadzone (with some hysteresis) and that direction has changed since last update.
+            if (ae.value >= -(deadzone - hysteresis) && ae.value <= (deadzone - hysteresis))
+            {
+                release_ev = (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && (old_hat & SDL_HAT_LEFT))  ? SDL_CONTROLLER_BUTTON_DPAD_LEFT  :
+                             (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && (old_hat & SDL_HAT_RIGHT)) ? SDL_CONTROLLER_BUTTON_DPAD_RIGHT :
+                             (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && (old_hat & SDL_HAT_UP))    ? SDL_CONTROLLER_BUTTON_DPAD_UP    :
+                             (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && (old_hat & SDL_HAT_DOWN))  ? SDL_CONTROLLER_BUTTON_DPAD_DOWN  : 0;
+            }
+
+            //We have a press or release event. Register it in the emulator.
+            if (press_ev || release_ev)
+            {
+                //Is it a press or release event.
+                ev.type = press_ev ? EV_PRESS : EV_RELEASE;
+                //Assign it a gnuboy input code based on the SDL_GAMECONTROLLER_BUTTON.
+                ev.code = joy_find_gamecontroller_mapping(press_ev ? press_ev : release_ev);
+                //Clear or set the old_hat bitmask to update the current state.
+                int new_hat = (ev.code == K_JOYLEFT)  ? SDL_HAT_LEFT  :
+                              (ev.code == K_JOYRIGHT) ? SDL_HAT_RIGHT :
+                              (ev.code == K_JOYUP)    ? SDL_HAT_UP    :
+                              (ev.code == K_JOYDOWN)  ? SDL_HAT_DOWN  : 0;
+                (press_ev) ? (old_hat |= new_hat) : (old_hat &= ~new_hat);
+                if (1)
+                {
+                    printf("Analog stick hat: %s %s\n", (press_ev) ? "Pressed" : "Released",
+                                                        SDL_GameControllerGetStringForButton(press_ev ? press_ev : release_ev));
+                }
+                ev_postevent(&ev);
+            }
+        }
     }
 
     //Will rumble if playing a compatible rom. The rumble strength can be configured by changing the rumble_strength rc var.
     static int old_rumble_state = 0;
-    if (pad != NULL && mbc.type == MBC_RUMBLE && (rumble_strength > 0) && (mbc.rumble_state != old_rumble_state))
+    if (pad != NULL && mbc.type == MBC_RUMBLE && (joy_rumble_strength > 0) && (mbc.rumble_state != old_rumble_state))
     {
-        Uint16 rumble_val = (mbc.rumble_state) ? (655 * rumble_strength) : 0x0000;
+        Uint16 rumble_val = (mbc.rumble_state) ? ((0xFFFF / 100) * joy_rumble_strength) : 0x0000;
         if (SDL_GameControllerRumble(pad, rumble_val, rumble_val, 250) == 0)
         {
             old_rumble_state = mbc.rumble_state;

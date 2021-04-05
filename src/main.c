@@ -58,7 +58,8 @@ static char *defaultconfig[] =
 	"set density 4",
 	//"set fullscreen 1",
 	"set integer_scale 0",
-	"set rumble_strength 100", //0 to 100%
+	"set joy_rumble_strength 100", //0 to 100%
+	"set joy_deadzone 40", //0 to 100%
 	"source gnuboy.rc",
 	"set filterdmg 0",
 	//"set palid 1",
