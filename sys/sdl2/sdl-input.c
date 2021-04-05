@@ -112,12 +112,14 @@ static Sint32 gamecontroller_map[14][2] =
 //Set to 1 enable debug tracing for input
 #define JOYTRACE 0
 static int use_joy = 1;
+static int rumble_strength = 100;
 static SDL_GameController *sdl_joy = NULL;
 const int JOYSTICK_DEAD_ZONE = 8000;
 
 rcvar_t joy_exports[] =
     {
         RCV_BOOL("joy", &use_joy),
+        RCV_INT("rumble_strength", &rumble_strength),
         RCV_END
     };
 
@@ -143,6 +145,12 @@ void joy_init()
         printf("SDL could not initialize Joystick! SDL Error: %s\n", SDL_GetError());
         exit(1);
     }
+
+    if (rumble_strength > 100)
+        rumble_strength = 100;
+
+    if (JOYTRACE)
+        printf("Rumble strength set to %i%%\n", rumble_strength);
 
     if (JOYTRACE)
         printf("Joystick initialized Succesfully\n");
@@ -217,7 +225,15 @@ void ev_poll()
         }
     }
 
-    if (pad != NULL)
-        SDL_GameControllerRumble(pad, (mbc.rumble_state) ? 0xFFFF : 0, (mbc.rumble_state) ? 0xFFFF : 0, 50);
+    //Will rumble if playing a compatible rom. The rumble strength can be configured by changing the rumble_strength rc var.
+    static int old_rumble_state = 0;
+    if (pad != NULL && mbc.type == MBC_RUMBLE && (rumble_strength > 0) && (mbc.rumble_state != old_rumble_state))
+    {
+        Uint16 rumble_val = (mbc.rumble_state) ? (655 * rumble_strength) : 0x0000;
+        if (SDL_GameControllerRumble(pad, rumble_val, rumble_val, 250) == 0)
+        {
+            old_rumble_state = mbc.rumble_state;
+        }
+    }
 
 }
