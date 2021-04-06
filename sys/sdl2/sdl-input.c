@@ -269,7 +269,7 @@ void ev_poll()
                               (ev.code == K_JOYUP)    ? SDL_HAT_UP    :
                               (ev.code == K_JOYDOWN)  ? SDL_HAT_DOWN  : 0;
                 (press_ev) ? (old_hat |= new_hat) : (old_hat &= ~new_hat);
-                if (1)
+                if (JOYTRACE)
                 {
                     printf("Analog stick hat: %s %s\n", (press_ev) ? "Pressed" : "Released",
                                                         SDL_GameControllerGetStringForButton(press_ev ? press_ev : release_ev));
