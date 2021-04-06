@@ -35,8 +35,6 @@ int sys_elapsed(Uint32 *cl)
 	Uint32 now;
 	Uint32 usecs;
 
-	if(*cl <= 0) return;
-
 	now = SDL_GetTicks() * 1000;
 	usecs = now - *cl;
 	*cl = now;
@@ -45,6 +43,8 @@ int sys_elapsed(Uint32 *cl)
 
 void sys_sleep(int us)
 {
+	if(us <= 0) return;
+	
 	SDL_Delay(us/1000);
 }
 
