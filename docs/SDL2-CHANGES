@@ -13,5 +13,13 @@ documents can help in that case.
 KNOWN ISSUES:
 - Scale only works in 1x, 2x, 3x
 - Compiling with sound disabled can cause timing issues 
+- Resizing the window of an application compiled with -DSILENT hangs the emulation thread
+
+1.2.0 changes
+
+- Many SDL Bugfixes
+- Integer scaling (new integer_scale rc variable)
+- Joystick/Gamepad rewrite (new joy_deadzone rc variable)
+- Rumble Support (new joy_rumble_strength rc variable)
 
 Feel free to fork or contribute!
