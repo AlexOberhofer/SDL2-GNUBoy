@@ -28,6 +28,8 @@ int sys_elapsed(Uint32 *cl)
 	Uint32 now;
 	Uint32 usecs;
 
+	if(*cl <= 0) return;
+
 	now = SDL_GetTicks() * 1000;
 	usecs = now - *cl;
 	*cl = now;
