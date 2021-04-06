@@ -90,8 +90,14 @@ int pcm_submit()
 		SDL_Delay(4);
 	audio_done = 0;
 	pcm.pos = 0;
-#endif
+
 	return 1;
+#endif
+
+#ifdef SILENT
+	return 0;
+#endif
+	
 }
 
 void pcm_close()
