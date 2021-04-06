@@ -4,7 +4,7 @@
 #include "rc.h"
 
 extern rcvar_t rcfile_exports[], emu_exports[], loader_exports[],
-	lcd_exports[], rtc_exports[], debug_exports[], sound_exports[], pcm_exports[], vid_exports[];
+	lcd_exports[], rtc_exports[], debug_exports[], sound_exports[], pcm_exports[], vid_exports[], joy_exports[];
 
 
 rcvar_t *sources[] =
@@ -18,6 +18,7 @@ rcvar_t *sources[] =
 	sound_exports,
 	pcm_exports,
 	vid_exports,
+	joy_exports,
 	NULL
 };
 

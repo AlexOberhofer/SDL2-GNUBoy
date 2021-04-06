@@ -17,32 +17,126 @@
 #include "input.h"
 #include "rc.h"
 #include "defs.h"
+#include "mem.h"
 
-/* Set to 1 enable debug tracing for input */
+//Set to 1 enable debug tracing for input
 #define JOYTRACE 0
+static int joy_enable = 1;
+static int joy_rumble_strength = 100; //0 to 100%
+static int joy_deadzone = 40; //0 to 100%
 
+//Covert SDL KeyCodes to gnuboy button events
+//This only needs to handle non standard ascii buttons.
+static int kb_sdlkeycode_to_gnuboy(SDL_Keycode keycode)
+{
+        static const int lookup[48][2] =
+        {
+            //local event, sdl keycode
+            {K_SHIFT, SDLK_LSHIFT},
+            {K_SHIFT, SDLK_RSHIFT},
+            {K_CTRL, SDLK_LCTRL},
+            {K_CTRL, SDLK_RCTRL},
+            {K_ALT, SDLK_LALT},
+            {K_ALT, SDLK_RALT},
+            {K_UP, SDLK_UP},
+            {K_DOWN, SDLK_DOWN},
+            {K_RIGHT, SDLK_RIGHT},
+            {K_LEFT, SDLK_LEFT},
+            {K_INS, SDLK_INSERT},
+            {K_HOME, SDLK_HOME},
+            {K_END, SDLK_END},
+            {K_PRIOR, SDLK_PRIOR},
+            {K_SYSRQ, SDLK_SYSREQ},
+            {K_PAUSE, SDLK_PAUSE},
+            {K_CAPS, SDLK_CAPSLOCK},
+            {K_SCROLL, SDLK_SCROLLLOCK},
+            {K_F1, SDLK_F1},
+            {K_F2, SDLK_F2},
+            {K_F3, SDLK_F3},
+            {K_F4, SDLK_F4},
+            {K_F5, SDLK_F5},
+            {K_F6, SDLK_F6},
+            {K_F7, SDLK_F7},
+            {K_F8, SDLK_F8},
+            {K_F9, SDLK_F9},
+            {K_F10, SDLK_F10},
+            {K_F11, SDLK_F11},
+            {K_F12, SDLK_F12},
+            {K_NUM0, SDLK_KP_0},
+            {K_NUM1, SDLK_KP_1},
+            {K_NUM2, SDLK_KP_2},
+            {K_NUM3, SDLK_KP_3},
+            {K_NUM4, SDLK_KP_4},
+            {K_NUM5, SDLK_KP_5},
+            {K_NUM6, SDLK_KP_6},
+            {K_NUM7, SDLK_KP_7},
+            {K_NUM8, SDLK_KP_8},
+            {K_NUM9, SDLK_KP_9},
+            {K_NUMPLUS, SDLK_KP_PLUS},
+            {K_NUMMINUS, SDLK_KP_MINUS},
+            {K_NUMMUL, SDLK_KP_MULTIPLY},
+            {K_NUMDIV, SDLK_KP_DIVIDE},
+            {K_NUMDOT, SDLK_KP_PERIOD},
+            {K_NUMENTER, SDLK_KP_ENTER},
+            {K_NUMLOCK, SDLK_NUMLOCKCLEAR},
+            {'/', SDLK_KP_DIVIDE}
+        };
 
-/* Joystick vars */
-static int use_joy = 1, sdl_joy_num;
-static SDL_GameController *sdl_joy = NULL;
-const int JOYSTICK_DEAD_ZONE = 8000;
+    //Already a standard ascii character. Just leave
+    if (keycode < MAX_KEYS)
+        return keycode;
+
+    //Find the matching gnuboy event from the sdl keycode then return it
+    for (int i = 0; i < sizeof(lookup) / sizeof(lookup[0]); i++)
+    {
+        if (lookup[i][1] == keycode)
+            return lookup[i][0];
+    }
+    return keycode;
+}
+
+//The function of K_JOYx can be modified via a rc file. This allows
+//remapping of the gamecontroller inputs. See main.c for default mapping.
+static Sint32 gamecontroller_map[14][2] =
+    {
+        {K_JOY0, SDL_CONTROLLER_BUTTON_A},
+        {K_JOY1, SDL_CONTROLLER_BUTTON_B},
+        {K_JOY2, SDL_CONTROLLER_BUTTON_BACK},
+        {K_JOY3, SDL_CONTROLLER_BUTTON_START},
+        {K_JOYUP, SDL_CONTROLLER_BUTTON_DPAD_UP},
+        {K_JOYDOWN, SDL_CONTROLLER_BUTTON_DPAD_DOWN},
+        {K_JOYLEFT, SDL_CONTROLLER_BUTTON_DPAD_LEFT},
+        {K_JOYRIGHT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT},
+        {K_JOY4, SDL_CONTROLLER_BUTTON_X},
+        {K_JOY5, SDL_CONTROLLER_BUTTON_Y},
+        {K_JOY6, SDL_CONTROLLER_BUTTON_LEFTSHOULDER},
+        {K_JOY7, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER},
+        {K_JOY8, SDL_CONTROLLER_BUTTON_LEFTSTICK},
+        {K_JOY9, SDL_CONTROLLER_BUTTON_RIGHTSTICK}
+    };
 
 rcvar_t joy_exports[] =
     {
-        RCV_BOOL("joy", &use_joy),
+        RCV_BOOL("joy", &joy_enable),
+        RCV_INT("joy_rumble_strength", &joy_rumble_strength),
+        RCV_INT("joy_deadzone", &joy_deadzone),
         RCV_END
     };
 
-/* Store which direction hat value was sent to the event queue on the last iteraon */
-static int hat_pressed = 0;
-
-/* used to track what joystick direction to release */
-static int last_joy_sent = -1;
+static int joy_find_gamecontroller_mapping(SDL_GameControllerButton button)
+{
+    for (int i = 0; i < (sizeof(gamecontroller_map) / sizeof(gamecontroller_map[0])); i++)
+    {
+        if (button == gamecontroller_map[i][1])
+            return gamecontroller_map[i][0];
+    }
+    return -1;
+}
 
 void joy_init()
 {
     //we obviously have no business being in here
-    if (!use_joy)
+    if (!joy_enable)
         return;
 
     //init gamecontroller (and joystick) subsystem
@@ -52,471 +146,148 @@ void joy_init()
         exit(1);
     }
 
-    //Check for a joystick
-    if (SDL_NumJoysticks() < 1)
-    {
-        printf("Warning: No joysticks connected!\n");
-        return;
-    }
-    else
-    {
-        printf("Found %d joysticks\n", SDL_NumJoysticks());
-        //open the gamepad
-        sdl_joy = SDL_GameControllerOpen(0);
+    if (joy_rumble_strength > 100)
+        joy_rumble_strength = 100;
+        
+    if (joy_deadzone > 100)
+        joy_deadzone = 100;
 
-        //if an error occurs and we have another gamepad... try it
-        if(sdl_joy == NULL && (SDL_NumJoysticks() > 1))
-        {
-            sdl_joy = SDL_GameControllerOpen(1);
-        }
+    if (JOYTRACE)
+        printf("Rumble strength set to %i%%\n", joy_rumble_strength);
 
-        printf("%d:%s\n", 1, SDL_GameControllerNameForIndex(0));
-        if (sdl_joy == NULL)
-        {
-            printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
-            exit(1);
-        }
-    }
+    if (JOYTRACE)
+        printf("Deadzone set to %i%%\n", joy_deadzone);
 
-    if(JOYTRACE) printf("Joystick initialized Succesfully\n");
+    if (JOYTRACE)
+        printf("Joystick initialized Succesfully\n");
 }
 
 void joy_close()
 {
-    //free the controller
-    SDL_GameControllerClose(sdl_joy);
-    sdl_joy = NULL;
+    SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
 }
 
-/* TODO: Really need to clean this up - this will break if you rebind the keys.*/
-/* TODO: Write an effing map function to map sdl keypresses to event codes */
-/* TODO: Write a helper function to build + post events */
-/* TODO: Add a second joystick event handler */
 void ev_poll()
 {
     event_t ev;
     SDL_Event event;
+    static SDL_GameController *pad = NULL;
 
     while (SDL_PollEvent(&event))
     {
-
         if (event.type == SDL_QUIT)
         {
             exit(1);
         }
 
         /* Keyboard */
-        if (event.type == SDL_KEYDOWN)
+        if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
         {
+            SDL_Scancode scancode = event.key.keysym.scancode;
+            int keycode = kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(scancode));
 
-            uint32_t key = event.key.keysym.scancode;
+            if (scancode == SDL_SCANCODE_ESCAPE)
+                exit(1);
 
-            switch (key)
+            //If the keycode is > MAX_KEYS, its not a standard ascii button and its not in the kb_sdlkeycode_to_gnuboy map.
+            if (keycode < MAX_KEYS)
             {
-            case SDL_SCANCODE_RETURN:
-                ev.type = EV_PRESS;
-                ev.code = K_ENTER;
+                ev.type = (event.type == SDL_KEYDOWN) ? EV_PRESS : EV_RELEASE;
+                ev.code = keycode;
                 ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_X:
-                ev.type = EV_PRESS;
-                ev.code = 'x';
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_ESCAPE:
-                die("Escape Pressed\n");
-                break;
-            case SDL_SCANCODE_A:
-                ev.type = EV_PRESS;
-                ev.code = K_LEFT;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_D:
-                ev.type = EV_PRESS;
-                ev.code = K_RIGHT;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_S:
-                ev.type = EV_PRESS;
-                ev.code = K_DOWN;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_W:
-                ev.type = EV_PRESS;
-                ev.code = K_UP;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_Q:
-                ev.type = EV_PRESS;
-                ev.code = 'q';
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_E:
-                ev.type = EV_PRESS;
-                ev.code = 'e';
-                ev_postevent(&ev);
-                break;
+            }
+            else
+            {
+                printf("Pressed unsupported button %s\n", SDL_GetScancodeName(scancode));
             }
         }
-        else if (event.type == SDL_KEYUP)
+        /* Handle gamecontroller hotplugging */
+        else if (event.type == SDL_CONTROLLERDEVICEADDED && joy_enable)
         {
-
-            uint32_t key = event.key.keysym.scancode;
-
-            switch (key)
-            {
-            case SDL_SCANCODE_RETURN:
-                ev.type = EV_RELEASE;
-                ev.code = K_ENTER;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_X:
-                ev.type = EV_RELEASE;
-                ev.code = 'x';
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_ESCAPE:
-                die("Escape Pressed\n");
-                break;
-            case SDL_SCANCODE_A:
-                ev.type = EV_RELEASE;
-                ev.code = K_LEFT;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_D:
-                ev.type = EV_RELEASE;
-                ev.code = K_RIGHT;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_S:
-                ev.type = EV_RELEASE;
-                ev.code = K_DOWN;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_W:
-                ev.type = EV_RELEASE;
-                ev.code = K_UP;
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_Q:
-                ev.type = EV_RELEASE;
-                ev.code = 'q';
-                ev_postevent(&ev);
-                break;
-            case SDL_SCANCODE_E:
-                ev.type = EV_RELEASE;
-                ev.code = 'e';
-                ev_postevent(&ev);
-                break;
-            }
+            if (JOYTRACE) printf("Controller %d connected\n", event.cdevice.which);
+            SDL_GameControllerOpen(event.cdevice.which);
         }
-
-
-        
-        /*
-        * The joystick impl sucks compared to the gamepad... Maybe I add this back in as a define for 
-        * compatability with older joysticks or gamepads?
-        */
-        if (event.type == SDL_JOYBUTTONDOWN)
+        else if (event.type == SDL_CONTROLLERDEVICEREMOVED && joy_enable)
         {
-            /*switch (event.jbutton.button)
-            {
-            //note: sdl assumes xbox360 style controller... so I've reversed A + B for now.
-            //reversed as in... reverse on 360 pads... correct on the rest of my controllers
-            case SDL_CONTROLLER_BUTTON_A:
-                if(JOYTRACE) printf("You pressed B\n");
-                ev.type = EV_PRESS;
-                ev.code = 'e';
-                ev_postevent(&ev);
-                break;
-            case SDL_CONTROLLER_BUTTON_B:
-                if(JOYTRACE) printf("You pressed A\n");
-                ev.type = EV_PRESS;
-                ev.code = 'q';
-                ev_postevent(&ev);
-                break;
-            case 7: //??wtf
-                if(JOYTRACE) printf("You pressed Start\n");
-                ev.type = EV_PRESS;
-                ev.code = K_ENTER;
-                ev_postevent(&ev);
-                break;
-            case SDL_CONTROLLER_BUTTON_BACK:
-                if(JOYTRACE) printf("You pressed Back\n"); 
-                ev.type = EV_PRESS;
-                ev.code = 'space';
-                //ev_postevent(&ev);
-                break;
-            default:
-                if(JOYTRACE) printf("SDL_JOYBUTTONDOWN: joystick: %d button: %d state: %d\n",
-                       event.jbutton.which, event.jbutton.button, event.jbutton.state);
-                break;
-            }*/
+            if (JOYTRACE) printf("Controller %d disconnected\n", event.cdevice.which);
+            if (pad == SDL_GameControllerFromInstanceID(event.cdevice.which))
+                pad = NULL;
+            SDL_GameControllerClose(SDL_GameControllerFromInstanceID(event.cdevice.which));
         }
-
-        /*if (event.type == SDL_JOYBUTTONUP)
+        /* Handle gamecontroller button events*/
+        else if ((event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP) && joy_enable)
         {
-            switch (event.jbutton.button)
-            {
-            case SDL_CONTROLLER_BUTTON_A:
-                if(JOYTRACE) printf("You released B\n");
-                ev.type = EV_RELEASE;
-                ev.code = 'e';
-                ev_postevent(&ev);
-                break;
-            case SDL_CONTROLLER_BUTTON_B:
-                if(JOYTRACE) printf("You released A\n");
-                ev.type = EV_RELEASE;
-                ev.code = 'q';
-                ev_postevent(&ev);
-                break;
-            case 7: //??wtf
-                if(JOYTRACE) printf("You released start\n");
-                ev.type = EV_RELEASE;
-                ev.code = K_ENTER;
-                ev_postevent(&ev);
-                break;
-            case 6:
-                if(JOYTRACE) printf("You released Back\n");
-                ev.type = EV_RELEASE;
-                ev.code = 'space';
-                //ev_postevent(&ev);
-                break;
-            default:
-                if(JOYTRACE) printf("SDL_JOYBUTTONUP: joystick: %d button: %d state: %d\n",
-                       event.jbutton.which, event.jbutton.button, event.jbutton.state);
-                break;
-            }
-        }*/
+            //Update the pad pointer. This ensures that only the controller actively being used rumbles.
+            pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
+            SDL_GameControllerButton btn = event.cbutton.button;
+            const char *buttonstring = SDL_GameControllerGetStringForButton(btn);
 
-        //note: this can probably be common to each controller setup
-        //dpad when its a "hat" and not 4 buttons
-        if (event.type == SDL_JOYHATMOTION)
-        {
-            if(JOYTRACE) printf("SDL_JOYHATMOTION: joystick: %d hat: %d value: %d\n",
-                           event.jhat.which, event.jhat.hat, event.jhat.value);
+            ev.type = (event.type == SDL_CONTROLLERBUTTONDOWN) ? EV_PRESS : EV_RELEASE;
+            ev.code = joy_find_gamecontroller_mapping(btn);
 
-            if(event.jhat.value == 1) {
-                if(JOYTRACE) printf("Pad Up\n");
-                ev.type = EV_PRESS;
-                ev.code = K_UP;
+            if (JOYTRACE) printf("You %s %s\n", (event.type == SDL_CONTROLLERBUTTONDOWN) ? "pressed" : "released", buttonstring);
+
+            if (ev.code != -1)
                 ev_postevent(&ev);
-                hat_pressed = 1;
-            }
-
-            if(event.jhat.value == 2) {
-                if(JOYTRACE) printf("Pad Right\n");
-                ev.type = EV_PRESS;
-                ev.code = K_RIGHT;
-                ev_postevent(&ev);
-                hat_pressed = 2;
-            }
-
-            if(event.jhat.value == 4) {
-                if(JOYTRACE) printf("Pad Down\n");
-                ev.type = EV_PRESS;
-                ev.code = K_DOWN;
-                ev_postevent(&ev);
-                hat_pressed = 4;
-            }
-
-            if(event.jhat.value == 8) {
-                if(JOYTRACE) printf("Pad Left\n");
-                ev.type = EV_PRESS;
-                ev.code = K_LEFT;
-                ev_postevent(&ev);
-                hat_pressed = 8;
-            }
-
-            if(event.jhat.value == 0) { //release whatever direction we hit on the last run
-                if(JOYTRACE) printf("Release %d\n", hat_pressed);
-                ev.type = EV_RELEASE;
-                switch (hat_pressed) {
-                    case 1: ev.code = K_UP; break;
-                    case 2: ev.code = K_RIGHT; break;
-                    case 4: ev.code = K_DOWN; break;
-                    case 8: ev.code = K_LEFT; break;
-                }
-
-                ev_postevent(&ev);
-            }
         }
-
-        /* Joypad */
-        //Probably going to have to do a separate gamepad impl
-        if(event.type == SDL_JOYAXISMOTION )
+        /* Handle gamecontroller axis events. Convert axis to dpad events */
+        else if (event.type == SDL_CONTROLLERAXISMOTION && joy_enable)
         {
-            //X axis motion
-            if( event.jaxis.axis == 0 )
-            { 
-                //Left of dead zone
-                if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
+            //Track the previous hat state so that we only trigger input events on hat changes.
+            static Uint8 old_hat = 0;
+            //Prevent button mashing at the deadzone area.
+            int hysteresis = 2000;
+            int deadzone = joy_deadzone * (0x7FFF / 100);
+            int press_ev = 0, release_ev = 0;
+            SDL_ControllerAxisEvent ae = event.caxis;
+
+            //Create a dpad press event if the axis is greater than the deadzone and that direction has changed since last update.
+            press_ev = (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && ae.value < -deadzone && !(old_hat & SDL_HAT_LEFT))  ? SDL_CONTROLLER_BUTTON_DPAD_LEFT  :
+                       (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && ae.value >  deadzone && !(old_hat & SDL_HAT_RIGHT)) ? SDL_CONTROLLER_BUTTON_DPAD_RIGHT :
+                       (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && ae.value < -deadzone && !(old_hat & SDL_HAT_UP))    ? SDL_CONTROLLER_BUTTON_DPAD_UP    :
+                       (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && ae.value >  deadzone && !(old_hat & SDL_HAT_DOWN))  ? SDL_CONTROLLER_BUTTON_DPAD_DOWN  : 0;
+
+            //Create a dpad release event if the axis is lss than the deadzone (with some hysteresis) and that direction has changed since last update.
+            if (ae.value >= -(deadzone - hysteresis) && ae.value <= (deadzone - hysteresis))
+            {
+                release_ev = (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && (old_hat & SDL_HAT_LEFT))  ? SDL_CONTROLLER_BUTTON_DPAD_LEFT  :
+                             (ae.axis == SDL_CONTROLLER_AXIS_LEFTX && (old_hat & SDL_HAT_RIGHT)) ? SDL_CONTROLLER_BUTTON_DPAD_RIGHT :
+                             (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && (old_hat & SDL_HAT_UP))    ? SDL_CONTROLLER_BUTTON_DPAD_UP    :
+                             (ae.axis == SDL_CONTROLLER_AXIS_LEFTY && (old_hat & SDL_HAT_DOWN))  ? SDL_CONTROLLER_BUTTON_DPAD_DOWN  : 0;
+            }
+
+            //We have a press or release event. Register it in the emulator.
+            if (press_ev || release_ev)
+            {
+                //Is it a press or release event.
+                ev.type = press_ev ? EV_PRESS : EV_RELEASE;
+                //Assign it a gnuboy input code based on the SDL_GAMECONTROLLER_BUTTON.
+                ev.code = joy_find_gamecontroller_mapping(press_ev ? press_ev : release_ev);
+                //Clear or set the old_hat bitmask to update the current state.
+                int new_hat = (ev.code == K_JOYLEFT)  ? SDL_HAT_LEFT  :
+                              (ev.code == K_JOYRIGHT) ? SDL_HAT_RIGHT :
+                              (ev.code == K_JOYUP)    ? SDL_HAT_UP    :
+                              (ev.code == K_JOYDOWN)  ? SDL_HAT_DOWN  : 0;
+                (press_ev) ? (old_hat |= new_hat) : (old_hat &= ~new_hat);
+                if (JOYTRACE)
                 {
-                    if(JOYTRACE) printf("Joy Left\n");
-                    if(last_joy_sent != -1) 
-                    {
-                        ev.type = EV_RELEASE;
-                        ev.code = last_joy_sent;
-                        ev_postevent(&ev);
-                    }
-                    ev.type = EV_PRESS;
-                    ev.code = K_LEFT;
-                    last_joy_sent = K_LEFT;
-                    ev_postevent(&ev);
+                    printf("Analog stick hat: %s %s\n", (press_ev) ? "Pressed" : "Released",
+                                                        SDL_GameControllerGetStringForButton(press_ev ? press_ev : release_ev));
                 }
-                else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
-                {
-                    if(JOYTRACE) printf("Joy Right\n");
-                    if(last_joy_sent != -1) 
-                    {
-                        ev.type = EV_RELEASE;
-                        ev.code = last_joy_sent;
-                        ev_postevent(&ev);
-                    }
-                    ev.type = EV_PRESS;
-                    ev.code = K_RIGHT;
-                    last_joy_sent = K_RIGHT;
-                    ev_postevent(&ev);
-                }
-                else
-                {
-                    if(JOYTRACE) printf("Reset Joystick L/R\n");
-                    if(last_joy_sent != -1) 
-                    {
-                        ev.type = EV_RELEASE;
-                        ev.code = last_joy_sent;
-                        ev_postevent(&ev);
-                    }
-                }
-            }
-            
-            //Y axis motion
-            if( event.jaxis.axis == 1 )
-            { 
-                //Left of dead zone
-                if( event.jaxis.value < -JOYSTICK_DEAD_ZONE )
-                {
-                    if(JOYTRACE) printf("Joy Up\n");
-                    if(last_joy_sent != -1) 
-                    {
-                        ev.type = EV_RELEASE;
-                        ev.code = last_joy_sent;
-                        ev_postevent(&ev);
-                    }
-                    ev.type = EV_PRESS;
-                    ev.code = K_UP;
-                    ev_postevent(&ev);
-                    last_joy_sent = K_UP;
-                }
-                else if( event.jaxis.value > JOYSTICK_DEAD_ZONE )
-                {
-                    if(JOYTRACE) printf("Joy Down\n");
-                    if(last_joy_sent != -1) 
-                    {
-                        ev.type = EV_RELEASE;
-                        ev.code = last_joy_sent;
-                        ev_postevent(&ev);
-                    }
-                    ev.type = EV_PRESS;
-                    ev.code = K_DOWN;
-                    ev_postevent(&ev);
-                    last_joy_sent = K_DOWN;
-                }
-                else
-                {
-                    if(JOYTRACE) printf("Reset Joystick U/D\n");
-                    /*if(last_joy_sent != -1) {
-                        ev.type = EV_RELEASE;
-                        ev.code = last_joy_sent;
-                        ev_postevent(&ev);
-                    }*/
-
-                }
+                ev_postevent(&ev);
             }
         }
-
-        //I dont even know - ok now I know... add option to change between gamepad impl and joystick impl... probably a define...
-        if (event.type == SDL_CONTROLLERBUTTONDOWN)
-        {
-            char *buttonstring = SDL_GameControllerGetStringForButton(event.cbutton.button);
-            
-            if((strcmp(buttonstring, "start")) == 0) 
-            {
-                if(JOYTRACE) printf("You pressed Start\n");
-                ev.type = EV_PRESS;
-                ev.code = K_ENTER;
-                ev_postevent(&ev);
-            } else if((strcmp(buttonstring, "b")) == 0)
-            {
-                if(JOYTRACE) printf("You released B\n");
-                ev.type = EV_PRESS;
-                ev.code = 'e';
-                ev_postevent(&ev);
-            } else if((strcmp(buttonstring, "a")) == 0)
-            {
-                if(JOYTRACE) printf("You released A\n");
-                ev.type = EV_PRESS;
-                ev.code = 'q';
-                ev_postevent(&ev);
-            } else if((strcmp(buttonstring, "back")) == 0)
-            {
-                if(JOYTRACE) printf("You pressed Back\n");
-                ev.type = EV_PRESS;
-                ev.code = 'x';
-                ev_postevent(&ev);
-            } else {
-                if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
-                   event.cbutton.which,
-                   SDL_GameControllerGetStringForButton(event.cbutton.button),
-                   event.cbutton.state);
-            }         
-        }
-
-        if (event.type == SDL_CONTROLLERBUTTONUP)
-        {
-            char *buttonstring = SDL_GameControllerGetStringForButton(event.cbutton.button);
-
-            if((strcmp(buttonstring, "start")) == 0) 
-            {
-                if(JOYTRACE) printf("You released Start\n");
-                ev.type = EV_RELEASE;
-                ev.code = K_ENTER;
-                ev_postevent(&ev);
-            } else if((strcmp(buttonstring, "b")) == 0)
-            {
-                if(JOYTRACE) printf("You released B\n");
-                ev.type = EV_RELEASE;
-                ev.code = 'e';
-                ev_postevent(&ev);
-            } else if((strcmp(buttonstring, "a")) == 0)
-            {
-                if(JOYTRACE) printf("You released A\n");
-                ev.type = EV_RELEASE;
-                ev.code = 'q';
-                ev_postevent(&ev);
-            } else if((strcmp(buttonstring, "back")) == 0)
-            {
-                if(JOYTRACE) printf("You released Back\n");
-                ev.type = EV_RELEASE;
-                ev.code = 'x';
-                ev_postevent(&ev);
-            } else {
-                if(JOYTRACE) printf("SDL_CONTROLLERBUTTONUP   controller: %d button: %s state: %d\n",
-                   event.cbutton.which,
-                   SDL_GameControllerGetStringForButton(event.cbutton.button),
-                   event.cbutton.state);
-            }
-        }
-
-        /* :\ */
-        if (event.type == SDL_CONTROLLERAXISMOTION)
-        {
-            if(JOYTRACE) printf("SDL_CONTROLLERAXISMOTION controller: %d axis: %-12s value: %d\n",
-                   event.caxis.which,
-                   SDL_GameControllerGetStringForAxis(event.caxis.axis),
-                   event.caxis.value);
-        }
-
-        
     }
+
+    //Will rumble if playing a compatible rom. The rumble strength can be configured by changing the rumble_strength rc var.
+    static int old_rumble_state = 0;
+    if (pad != NULL && mbc.type == MBC_RUMBLE && (joy_rumble_strength > 0) && (mbc.rumble_state != old_rumble_state))
+    {
+        Uint16 rumble_val = (mbc.rumble_state) ? ((0xFFFF / 100) * joy_rumble_strength) : 0x0000;
+        if (SDL_GameControllerRumble(pad, rumble_val, rumble_val, 250) == 0)
+        {
+            old_rumble_state = mbc.rumble_state;
+        }
+    }
+
 }
