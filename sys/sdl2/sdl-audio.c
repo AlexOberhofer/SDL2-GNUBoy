@@ -21,6 +21,10 @@
 
 struct pcm pcm;
 
+#ifndef SOUND
+#define SILENT
+#endif
+
 #ifdef SILENT
 static int sound = 0;
 #endif
