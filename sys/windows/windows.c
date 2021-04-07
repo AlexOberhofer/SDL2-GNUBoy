@@ -36,6 +36,8 @@ int sys_elapsed(Uint32 *cl)
 
 void sys_sleep(int us)
 {
+	if(us <= 0) return;
+
 	/* dbk: for some reason 2000 works..
 	   maybe its just compensation for the time it takes for SDL_Delay to
 	   execute, or maybe sys_timer is too slow */
