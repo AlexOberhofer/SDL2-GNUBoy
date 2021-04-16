@@ -12,8 +12,6 @@ documents can help in that case.
 
 KNOWN ISSUES:
 - Scale only works in 1x, 2x, 3x
-- Compiling with sound disabled can cause timing issues 
-- Resizing the window of an application compiled with -DSILENT hangs the emulation thread
 
 1.2.0 changes
 
