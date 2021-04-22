@@ -19,6 +19,8 @@
 #	include <stdint.h>
 #endif
 
+#include "xz_config.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

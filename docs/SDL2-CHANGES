@@ -11,9 +11,13 @@ comes with no warranty or support, you are on your own if you have issues. Hopef
 documents can help in that case.
 
 KNOWN ISSUES:
-- Enabling fullscreen requires a recompile.
-- Keys are not rebindable. Submit a pull request!
 - Scale only works in 1x, 2x, 3x
-- Windows doesn't seem to find the RC files in the exe directory
+
+1.2.0 changes
+
+- Many SDL Bugfixes
+- Integer scaling (new integer_scale rc variable)
+- Joystick/Gamepad rewrite (new joy_deadzone rc variable)
+- Rumble Support (new joy_rumble_strength rc variable)
 
 Feel free to fork or contribute!

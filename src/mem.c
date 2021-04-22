@@ -361,8 +361,7 @@ void mbc_write(int a, byte b)
 		{
 		case 0x4:
 		case 0x5:
-			/* FIXME - save high bit as rumble state */
-			/* mask off high bit */
+			mbc.rumble_state = ((b & 0x8) > 0);
 			b &= 0x7;
 			break;
 		}

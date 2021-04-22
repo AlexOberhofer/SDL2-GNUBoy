@@ -4,6 +4,9 @@
  *
  * (C) 2001 Damian Gryski <dgryski@uwaterloo.ca>
  * (C) 2020 Alex Oberhofer <alexmoberhofer@gmail.com>
+ * 
+ * Contributors:
+ *  - Ryzee119 - SDL Fixes / Integer Scaling
  *
  * Licensed under the GPLv2, or later.
  */
@@ -15,6 +18,7 @@
 
 #include "fb.h"
 #include "rc.h"
+#include "sys.h"
 
 /* Set to 1 enable debug tracing for rendering */
 #define RENDERTRACE 1
@@ -46,7 +50,7 @@ void vid_init()
 	{
 		int scale = rc_getint("scale");
 		int pal = rc_getint("palid");
-		if (RENDERTRACE) printf("Fullscreen rc returned: %d\n", rc_getint("fullscreen")); //I dont get why this doesnt work
+		if (RENDERTRACE) printf("Fullscreen rc returned: %d\n", rc_getint("fullscreen"));
 		if(RENDERTRACE) printf("Pallette ID: %d\n", pal);
 		if (scale < 1)
 			scale = 1;
@@ -55,7 +59,7 @@ void vid_init()
 		vmode[1] = 144;
 	}
 
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
 	{
 		printf("SDL_Init failed: %s\n", SDL_GetError());
 		exit(1);
@@ -71,8 +75,21 @@ void vid_init()
 		}
 		
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		if (!renderer)
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
+
+		SDL_RenderSetLogicalSize(renderer, vmode[0], vmode[1]);
+		int integer_scale = rc_getint("integer_scale");
+		if (integer_scale)
+		{
+			int window_width, window_height, render_width, render_height;
+			SDL_GetRendererOutputSize(renderer, &window_width, &window_height);
+			SDL_RenderGetLogicalSize(renderer, &render_width, &render_height);
+			SDL_bool makes_sense = (window_width >= render_width && window_height >= render_height);
+			SDL_RenderSetIntegerScale(renderer, makes_sense);
+		}
 	}
 
 	fb.w = vmode[0];

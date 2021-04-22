@@ -12,6 +12,7 @@
 char *strdup();
 
 #include <SDL2/SDL.h>
+#include "rc.h"
 
 void *sys_timer()
 {
@@ -35,6 +36,8 @@ int sys_elapsed(Uint32 *cl)
 
 void sys_sleep(int us)
 {
+	if(us <= 0) return;
+
 	/* dbk: for some reason 2000 works..
 	   maybe its just compensation for the time it takes for SDL_Delay to
 	   execute, or maybe sys_timer is too slow */
@@ -50,25 +53,13 @@ void sys_sanitize(char *s)
 
 void sys_initpath(char *exe)
 {
-	char *buf, *home, *p;
+	char *buf = ".";
 
-	home = strdup(exe);
-	sys_sanitize(home);
-	p = strrchr(home, '/');
-	if (p) *p = 0;
-	else
-	{
-		buf = ".";
+	if (rc_getstr("rcpath") == NULL)
 		rc_setvar("rcpath", 1, &buf);
+
+	if (rc_getstr("savedir") == NULL)
 		rc_setvar("savedir", 1, &buf);
-		return;
-	}
-	buf = malloc(strlen(home) + 8);
-	sprintf(buf, ".;%s/", home);
-	rc_setvar("rcpath", 1, &buf);
-	sprintf(buf, ".", home);
-	rc_setvar("savedir", 1, &buf);
-	free(buf);
 }
 
 void sys_checkdir(char *path, int wr)

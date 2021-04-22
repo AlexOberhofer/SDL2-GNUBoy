@@ -4,6 +4,9 @@
  *
  * (C) 2001 Laguna
  * (C) 2020 Alex Oberhofer <alexmoberhofer@gmail.com>
+ * 
+ * Contributors:
+ *  - Ryzee119 - SDL Fixes
  *
  * Licensed under the GPLv2, or later.
  */
@@ -18,6 +21,10 @@
 
 struct pcm pcm;
 
+#ifndef SOUND
+#define SILENT
+#endif
+
 #ifdef SILENT
 static int sound = 0;
 #endif
@@ -31,7 +38,9 @@ static volatile int audio_done;
 
 rcvar_t pcm_exports[] =
 	{
+#ifdef SOUND
 		RCV_BOOL("sound", &sound),
+#endif
 		RCV_INT("stereo", &stereo),
 		RCV_INT("samplerate", &samplerate),
 		RCV_END};
@@ -85,8 +94,14 @@ int pcm_submit()
 		SDL_Delay(4);
 	audio_done = 0;
 	pcm.pos = 0;
-#endif
+
 	return 1;
+#endif
+
+#ifdef SILENT
+	return 0;
+#endif
+	
 }
 
 void pcm_close()

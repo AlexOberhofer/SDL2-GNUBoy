@@ -43,6 +43,8 @@ int sys_elapsed(Uint32 *cl)
 
 void sys_sleep(int us)
 {
+	if(us <= 0) return;
+	
 	SDL_Delay(us/1000);
 }
 

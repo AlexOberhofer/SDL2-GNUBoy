@@ -25,6 +25,10 @@ static char *defaultconfig[] =
 	"bind down +down",
 	"bind left +left",
 	"bind right +right",
+	"bind w +up",
+	"bind s +down",
+	"bind a +left",
+	"bind d +right",
 	"bind q +a",
 	"bind e +b",
 	"bind enter +start",
@@ -51,7 +55,11 @@ static char *defaultconfig[] =
 	"bind ins savestate",
 	"bind del loadstate",
 	"set scale 2",
-	"set density 4"
+	"set density 4",
+	//"set fullscreen 1",
+	"set integer_scale 0",
+	"set joy_rumble_strength 100", //0 to 100%
+	"set joy_deadzone 40", //0 to 100%
 	"source gnuboy.rc",
 	"set filterdmg 0",
 	//"set palid 1",

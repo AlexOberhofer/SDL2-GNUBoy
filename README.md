@@ -3,7 +3,6 @@
 # Overview 
 
 ![GNU/Linux](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/GNU/Linux/badge.svg)<br>
-![OSX](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/OSX/badge.svg)<br>
 ![Windows MinGW-w64](https://github.com/AlexOberhofer/SDL2-GNUBoy/workflows/Windows%20MinGW-w64/badge.svg)<br>
 
 
@@ -29,6 +28,17 @@ Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions) <br>
 *Note* The stability of these builds may vary <br>
 
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
+
+v1.2.0
+
+Thanks to [Ryzee119](https://github.com/Ryzee119) for his contributions! 
+
+- Many SDL bug fixes
+- Fullscreen / RC file fixes
+- Key rebinding now works
+- Integer scaling (new integer_scale rc variable)
+- Joystick/Gamepad rewrite (new joy_deadzone rc variable)
+- Rumble Support (new joy_rumble_strength rc variable)
 
 v1.1.1
 
@@ -83,7 +93,7 @@ SDL2GNUBoy has been compiled and tested on the following platforms:
 - Mac
 - Linux (x86)
 - Linux (ARM)
-- WSL (Support is not great as the SDL timing functionality doesnt seem to work)
+- WSL
 
 ## SDL2GNUBoy v1.0 Metrics
 
@@ -124,7 +134,7 @@ slower than these numbers suggest.
 
 # Status
 
-Version 1.1 cutoff has been done. Investigating other SDL features I can add in a new release.
+Version 1.2.0 is being prepped for a new release.
 
 ## Whats been done
 
@@ -132,9 +142,9 @@ Version 1.1 cutoff has been done. Investigating other SDL features I can add in 
 
 - Cross compiles on Linux into a Windows executable
 
-- SDL2 key implementation (currently not rebindable)
+- SDL2 key implementation
 
-- SDL2 Gamepad rough implementation
+- SDL2 Gamepad implementation
 
 - SDL1.2 rendering ported to SDL2 (Now uses gpu if possible and supports scaling)
 
@@ -146,10 +156,6 @@ Version 1.1 cutoff has been done. Investigating other SDL features I can add in 
 - Porting: The codebase is currently buildable on Windows/MacOS/*nix. Emscripten next?
 
 - SDL Sound rewrite
-
-- SDL Keys rewrite (To support key rebinding)
-
-- Fix fullscreen flag
 
 - Fix Sound MacOS (I doubt this gets done unless someone with a Mac can debug/fix the SDL sound on osx)
 
@@ -353,6 +359,10 @@ The GNUBoy core is extremely fast and portable. Porting documentation can be fou
 ### SDL2 GNUBoy
 
 Alex Oberhofer
+
+### Contributors
+
+Ryzee119 - SDL fixes / Compiler warning cleanup / Integer Scaling / Gamepad implementation
 
 ## Acknowledgements
 
