@@ -12,3 +12,5 @@ config.*
 *.zip
 *.sav
 *.rtc
+*.rc
+.idea
