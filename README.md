@@ -93,7 +93,7 @@ SDL2GNUBoy has been compiled and tested on the following platforms:
 - Mac
 - Linux (x86)
 - Linux (ARM)
-- WSL (Support is not great as the SDL timing functionality doesnt seem to work)
+- WSL
 
 ## SDL2GNUBoy v1.0 Metrics
 
