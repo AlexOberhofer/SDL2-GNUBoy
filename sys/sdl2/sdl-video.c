@@ -21,12 +21,12 @@
 #include "sys.h"
 
 /* Set to 1 enable debug tracing for rendering */
-#define RENDERTRACE 1
+#define RENDERTRACE 0
 
 static SDL_Window *window;
 static SDL_Texture *texture;
 static SDL_Renderer *renderer;
-int fullscreen = 0; //set to 1 if you want fullscreen
+int fullscreen = 0;
 
 struct fb fb;
 
