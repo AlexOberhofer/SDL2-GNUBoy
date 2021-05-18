@@ -9,12 +9,12 @@ AS = $(CC)
 INSTALL = /usr/bin/install -c
 
 CFLAGS = -Wall -O3 -I./include
-LDFLAGS = $(CFLAGS)  -s
+LDFLAGS = $(CFLAGS)
 ASFLAGS = $(CFLAGS)
 
 TARGETS =  mac-sdl2gnuboy
 
-SYS_DEFS = -DIS_LITTLE_ENDIAN -DSILENT 
+SYS_DEFS = -DIS_LITTLE_ENDIAN -DSOUND 
 SYS_OBJS = sys/nix/nix.o
 SYS_INCS = -I/usr/local/include  -I./sys/nix
 
