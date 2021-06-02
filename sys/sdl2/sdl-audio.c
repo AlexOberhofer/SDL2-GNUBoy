@@ -35,6 +35,7 @@ static int sound = 1;
 static int samplerate = 44100;
 static int stereo = 1;
 static volatile int audio_done;
+SDL_AudioDeviceID device;
 
 rcvar_t pcm_exports[] =
 	{
@@ -57,30 +58,29 @@ void pcm_init()
 {
 #ifdef SOUND
 	int i;
-	SDL_AudioSpec as;
+	SDL_AudioSpec want, obtained;
 
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-	as.freq = samplerate;
-	as.format = AUDIO_U8;
-	as.channels = 1 + stereo;
-	as.samples = samplerate / 60;
-	for (i = 1; i < as.samples; i <<= 1)
+	want.freq = samplerate;
+	want.format = AUDIO_U8;
+	want.channels = 1 + stereo;
+	want.samples = samplerate / 60;
+	for (i = 1; i < want.samples; i <<= 1)
 		;
-	as.samples = i;
-	as.callback = audio_callback;
-	as.userdata = 0;
-	if (SDL_OpenAudio(&as, 0) == -1)
-		return;
+	want.samples = i;
+	want.callback = audio_callback;
+	want.userdata = 0;
+	device = SDL_OpenAudioDevice(NULL, 0, &want, &obtained, 0);
 
-	pcm.hz = as.freq;
-	pcm.stereo = as.channels - 1;
-	pcm.len = as.size;
+	pcm.hz = obtained.freq;
+	pcm.stereo = obtained.channels - 1;
+	pcm.len = obtained.size;
 	pcm.buf = malloc(pcm.len);
 	pcm.pos = 0;
 	memset(pcm.buf, 0, pcm.len);
 #endif
-	SDL_PauseAudio(0);
+	SDL_PauseAudioDevice(device, 0);
 }
 
 int pcm_submit()
@@ -108,6 +108,6 @@ void pcm_close()
 {
 #ifdef SOUND
 	if (sound)
-		SDL_CloseAudio();
+		SDL_CloseAudioDevice(device);
 #endif
 }
