@@ -30,6 +30,12 @@ Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions) <br>
 
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
 
+For bleeding edge SDL2-GNUBoy - build the master branch. Some stable versions also have branches to build from if need be. Otherwise check the release tab for Windows binaries or build it "the unix way" for linux / bsd / osx.
+
+v1.2.1 (Coming Soon)
+- Audio Bugfixes (No more popping noise on startup)
+- Audio Interface updates
+
 v1.2.0
 
 Thanks to [Ryzee119](https://github.com/Ryzee119) for his contributions! 
@@ -156,10 +162,6 @@ Version 1.2.0 is being prepped for a new release.
 
 - Porting: The codebase is currently buildable on Windows/MacOS/*nix. Emscripten next?
 
-- SDL Sound rewrite
-
-- Fix Sound MacOS (I doubt this gets done unless someone with a Mac can debug/fix the SDL sound on osx)
-
 - Add handler for zip files
 
 
@@ -168,6 +170,23 @@ Version 1.2.0 is being prepped for a new release.
 Build scripts are provided for both native unix applications and for cross compiling via mingw-w64 gcc
 
 Build instructions are provided for both below:
+
+## Mac
+
+See the "Linux section" except for a few differences. The Mac build uses Clang by default. Build has been tested on both Intel and M1 Macintoshes. 
+
+Installing SDL2:
+
+```
+$ brew install sdl2
+```
+
+Building Mac Binar:y
+
+```
+$ make osx
+```
+ 
 
 ## Linux 
 
