@@ -65,7 +65,8 @@ void pcm_init()
 
 		device = SDL_OpenAudioDevice(NULL, 0, &want, &obtained, 0);
 
-		if(device == 0) {
+		if(device == 0) 
+		{
 			printf("SDL could not open audio device: %s\n", SDL_GetError());
 			exit(1);
 		}
@@ -82,7 +83,6 @@ void pcm_init()
 
 int pcm_submit()
 {
-	
 	if (!pcm.buf)
 		return 0;
 	if (pcm.pos < pcm.len)
@@ -100,7 +100,6 @@ int pcm_submit()
 	pcm.pos = 0;
 
 	return 1;
-	
 }
 
 void pcm_close()
