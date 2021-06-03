@@ -88,15 +88,17 @@ void pcm_init()
 int pcm_submit()
 {
 #ifdef SOUND
-	if(audio_started == 0) { 
-		SDL_PauseAudioDevice(device, 0);
-		audio_started = 1;
-	}
 	
 	if (!pcm.buf)
 		return 0;
 	if (pcm.pos < pcm.len)
 		return 1;
+
+	if(audio_started == 0) { 
+		SDL_PauseAudioDevice(device, 0);
+		audio_started = 1;
+	}
+
 	while (!audio_done)
 		SDL_Delay(4);
 	audio_done = 0;
