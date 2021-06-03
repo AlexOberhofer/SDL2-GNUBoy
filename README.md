@@ -30,7 +30,7 @@ Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions) <br>
 
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
 
-For bleeding edge SDL2-GNUBoy - build the master branch. Some stable versions also have branches to build from if need be. Otherwise check the release tab for Windows binaries or build it "the unix way" for linux / bsd / osx.
+For bleeding edge SDL2-GNUBoy - build the master branch. Some stable versions also have branches to build from if need be. Otherwise check the release tab for Windows binaries or build it "the unix way" for *nix / BSD / OSX.
 
 v1.2.1 (Coming Soon)
 - Audio Bugfixes (No more popping noise on startup)
@@ -86,6 +86,10 @@ The emulator currently fails only one CPU instruction via blarggs test rom (Wind
 
 <img align="center" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blargg.PNG">
 
+## SDL2GNUBoy v1.2.1 Metrics
+
+Now compiles for Apple M1 chip.
+
 ## SDL2GNUBoy v1.1.0 Metrics
 
 GNUboy performs well on modern x86 processors, and thanks to SDL, it uses your graphics card for the rendering.
@@ -97,7 +101,8 @@ Roughly 30% CPU usage on my Raspberry Pi 4
 SDL2GNUBoy has been compiled and tested on the following platforms:
 
 - Windows
-- Mac
+- Mac (x86)
+- Mac (Apple 
 - Linux (x86)
 - Linux (ARM)
 - WSL
@@ -141,9 +146,11 @@ slower than these numbers suggest.
 
 # Status
 
-Version 1.2.0 is being prepped for a new release.
+Version 1.2.1 is being developed currently. See the master branch for bleeding edge SDL2-GNUBoy.
 
 ## Whats been done
+
+(At this point - this is only a subset of what actually has been done here... but below is a sample)
 
 - Builds and Runs on Linux (Tested and developed on Manjaro)
 
