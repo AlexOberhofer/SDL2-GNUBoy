@@ -37,6 +37,8 @@ static int stereo = 1;
 static volatile int audio_done;
 SDL_AudioDeviceID device;
 
+static int audio_started = 0;
+
 rcvar_t pcm_exports[] =
 	{
 #ifdef SOUND
@@ -70,7 +72,7 @@ void pcm_init()
 		;
 	want.samples = i;
 	want.callback = audio_callback;
-	want.userdata = 0;
+
 	device = SDL_OpenAudioDevice(NULL, 0, &want, &obtained, 0);
 
 	pcm.hz = obtained.freq;
@@ -80,12 +82,17 @@ void pcm_init()
 	pcm.pos = 0;
 	memset(pcm.buf, 0, pcm.len);
 #endif
-	SDL_PauseAudioDevice(device, 0);
+	
 }
 
 int pcm_submit()
 {
 #ifdef SOUND
+	if(audio_started == 0) { 
+		SDL_PauseAudioDevice(device, 0);
+		audio_started = 1;
+	}
+	
 	if (!pcm.buf)
 		return 0;
 	if (pcm.pos < pcm.len)
