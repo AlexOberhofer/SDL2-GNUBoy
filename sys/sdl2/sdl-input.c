@@ -305,16 +305,6 @@ int confirm_exit()
             { 0, 1, "Resume" },
     };
 
-    const SDL_MessageBoxColorScheme colorScheme = {
-            {
-                    { 255,   0,   0 }, //bg
-                    {   0, 255,   0 }, //text
-                    { 255, 255,   0 }, //button border
-                    {   0,   0, 255 }, //button bg
-                    { 255,   0, 255 } //selected
-            }
-    };
-
     const SDL_MessageBoxData messageboxdata = {
             SDL_MESSAGEBOX_INFORMATION, /* .flags */
             NULL, /* .window */
@@ -322,7 +312,7 @@ int confirm_exit()
             "Are you sure you want to quit?", /* .message */
             SDL_arraysize(buttons), /* .numbuttons */
             buttons, /* .buttons */
-            &colorScheme /* .colorScheme */
+            NULL /* .colorScheme */
     };
 
     if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0)
