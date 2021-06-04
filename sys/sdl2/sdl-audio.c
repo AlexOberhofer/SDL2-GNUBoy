@@ -107,3 +107,15 @@ void pcm_close()
 	if (sound)
 		SDL_CloseAudioDevice(device);
 }
+
+void pcm_pause()
+{
+    if(sound)
+        SDL_PauseAudioDevice(device, 1);
+}
+
+void pcm_resume()
+{
+    if(sound)
+        SDL_PauseAudioDevice(device, 0);
+}

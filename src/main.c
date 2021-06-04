@@ -20,7 +20,6 @@
 
 static char *defaultconfig[] =
 {
-	"bind esc quit",
 	"bind up +up",
 	"bind down +down",
 	"bind left +left",
