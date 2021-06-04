@@ -14,8 +14,11 @@ void vid_settitle(char *title);
 void pcm_init();
 int pcm_submit();
 void pcm_close();
+void pcm_pause();
+void pcm_resume();
 
 void ev_poll();
+int confirm_exit();
 
 void sys_checkdir(char *path, int wr);
 void sys_sleep(int us);

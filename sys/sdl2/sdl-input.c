@@ -18,6 +18,7 @@
 #include "rc.h"
 #include "defs.h"
 #include "mem.h"
+#include "sys.h"
 
 //Set to 1 enable debug tracing for input
 #define JOYTRACE 0
@@ -176,9 +177,9 @@ void ev_poll()
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
-        {
-            exit(1);
-        }
+            if(confirm_exit() == 0 )
+                exit(1);
+
 
         /* Keyboard */
         if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
@@ -186,8 +187,9 @@ void ev_poll()
             SDL_Scancode scancode = event.key.keysym.scancode;
             int keycode = kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(scancode));
 
-            if (scancode == SDL_SCANCODE_ESCAPE)
-                exit(1);
+            if (scancode == SDL_SCANCODE_ESCAPE && event.type == SDL_KEYDOWN)
+                if(confirm_exit() == 0 )
+                    exit(1);
 
             //If the keycode is > MAX_KEYS, its not a standard ascii button and its not in the kb_sdlkeycode_to_gnuboy map.
             if (keycode < MAX_KEYS)
@@ -290,4 +292,54 @@ void ev_poll()
         }
     }
 
+}
+
+//Confirm exit upon window close or escape press
+int confirm_exit()
+{
+    pcm_pause();
+    int buttonid;
+
+    const SDL_MessageBoxButtonData buttons[] = {
+            { 0, 0, "Quit" },
+            { 0, 1, "Resume" },
+    };
+
+    const SDL_MessageBoxColorScheme colorScheme = {
+            {
+                    { 255,   0,   0 }, //bg
+                    {   0, 255,   0 }, //text
+                    { 255, 255,   0 }, //button border
+                    {   0,   0, 255 }, //button bg
+                    { 255,   0, 255 } //selected
+            }
+    };
+
+    const SDL_MessageBoxData messageboxdata = {
+            SDL_MESSAGEBOX_INFORMATION, /* .flags */
+            NULL, /* .window */
+            "SDL2-GNUBoy", /* .title */
+            "Are you sure you want to quit?", /* .message */
+            SDL_arraysize(buttons), /* .numbuttons */
+            buttons, /* .buttons */
+            &colorScheme /* .colorScheme */
+    };
+
+    if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0)
+    {
+        if(JOYTRACE)
+            SDL_Log("Error displaying message box");
+    }
+
+    if (buttonid != -1)
+    {
+        if(JOYTRACE)
+            SDL_Log("selection was %s, with id %d", buttons[buttonid].text, buttons[buttonid].buttonid);
+
+        pcm_resume();
+        return buttons[buttonid].buttonid;
+    }
+
+    pcm_resume();
+    return -1;
 }
