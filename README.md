@@ -88,7 +88,25 @@ The emulator currently fails only one CPU instruction via blarggs test rom (Wind
 
 ## SDL2GNUBoy v1.2.1 Metrics
 
-Now compiles for Apple M1 chip.
+Improvements for v1.2.1: 
+
+- Now compiles for Apple M1 chip.
+- SDL2 audio bugfixes
+- Better controller support + rumble (v1.2.0)
+
+<div align="center">
+    Pokemon Pinball (Now with rumble) <br>
+    <img alt="Pinball" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pinball.gif">
+</div>
+
+
+SDL2GNUBoy has been compiled and tested on the following platforms:
+
+- Windows (x86/ARM)
+- Mac (x86/ARM)
+- Linux (x86/ARM)
+- WSL 1
+- WSL 2 (YMMV)
 
 ## SDL2GNUBoy v1.1.0 Metrics
 
@@ -97,15 +115,6 @@ GNUboy performs well on modern x86 processors, and thanks to SDL, it uses your g
 Less than 1% CPU usage on my Ryzen 3600x in Linux or Windows.
 
 Roughly 30% CPU usage on my Raspberry Pi 4
-
-SDL2GNUBoy has been compiled and tested on the following platforms:
-
-- Windows
-- Mac (x86)
-- Mac (Apple 
-- Linux (x86)
-- Linux (ARM)
-- WSL
 
 ## SDL2GNUBoy v1.0 Metrics
 
