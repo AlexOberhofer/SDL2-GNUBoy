@@ -83,8 +83,9 @@ The original core of GNUBoy is mainly unmodified except for a number of bugfixes
 A number of cpu buxfixes were ported from [here](https://github.com/mattkj/super-go-play/tree/master/gnuboy-go/components/gnuboy)
 
 The emulator currently fails only one CPU instruction via blarggs test rom (Windows executable running in wine on Linux):
-
-<img align="center" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blargg.PNG">
+<div align="center">
+    <img src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blargg.PNG">
+</div>
 
 ## SDL2GNUBoy v1.2.1 Metrics
 
