@@ -22,4 +22,5 @@ set fullscreen 0
 set integer_scale 1
 set savedir ./
 set joy_rumble_strength 100
+set alert_on_quit 1
 set samplerate 44100

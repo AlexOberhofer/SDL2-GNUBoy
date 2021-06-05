@@ -25,6 +25,7 @@
 static int joy_enable = 1;
 static int joy_rumble_strength = 100; //0 to 100%
 static int joy_deadzone = 40; //0 to 100%
+static int alert = 0;
 
 //Covert SDL KeyCodes to gnuboy button events
 //This only needs to handle non standard ascii buttons.
@@ -121,6 +122,7 @@ rcvar_t joy_exports[] =
         RCV_BOOL("joy", &joy_enable),
         RCV_INT("joy_rumble_strength", &joy_rumble_strength),
         RCV_INT("joy_deadzone", &joy_deadzone),
+        RCV_INT("alert_on_quit", &alert),
         RCV_END
     };
 
@@ -177,9 +179,15 @@ void ev_poll()
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
-            if(confirm_exit() == 0 )
+        {
+            if(alert > 0 ) {
+                if(confirm_exit() == 0 ) {
+                    exit(1);
+                }
+            } else {
                 exit(1);
-
+            }
+        }
 
         /* Keyboard */
         if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
@@ -188,8 +196,15 @@ void ev_poll()
             int keycode = kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(scancode));
 
             if (scancode == SDL_SCANCODE_ESCAPE && event.type == SDL_KEYDOWN)
-                if(confirm_exit() == 0 )
+            {
+                if(alert > 0 ) {
+                    if(confirm_exit() == 0 ) {
+                        exit(1);
+                    }
+                } else {
                     exit(1);
+                }
+            }
 
             //If the keycode is > MAX_KEYS, its not a standard ascii button and its not in the kb_sdlkeycode_to_gnuboy map.
             if (keycode < MAX_KEYS)
