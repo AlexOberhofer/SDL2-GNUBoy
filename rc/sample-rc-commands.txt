@@ -1,0 +1,68 @@
+###############################################################################
+# Sample rc file for gnuboy
+#
+# You may want to rename this to gnuboy.rc to use it.
+# Lines that begin with # are comments.
+#
+# NOTE: Original gnuboy documentation
+#
+###############################################################################
+
+
+# Some keybindings
+
+bind q quit
+bind r reset
+
+bind d +a
+bind s +b
+
+# Normal speed/fast forward
+# Note that these only work with sound disabled
+bind - "set framelen 16743"
+bind + "set framelen 0"
+
+
+# Set video mode to 400x300x16bpp
+set vmode 400 300 16
+
+
+# Enable full 2x screen scaling
+# This will not work if your video mode is smaller than 320x288!
+set scale 2
+set density 2
+
+# Enable integer scale lock
+set integer_scale 1
+
+# Set fullscreen
+#set fullscreen 1
+
+# Disable sound
+#set sound 0
+
+# Enable stereo sound. Doesn't work on all systems
+#set stereo true
+
+# Path settings - uncomment to use them!
+
+#set rcpath c:/gnuboy
+#set savedir c:/gnuboy/saves
+
+# Set GB palette
+set dmg_bgp  0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+set dmg_wndp 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+set dmg_obp0 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+set dmg_obp1 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+
+# Configure rumble strength
+set joy_rumble_strength 100
+
+# Enable alert box on quit 
+set alert_on_quit 1
+
+
+#
+# You get the idea by now...
+# See docs/ for more information on rc commands and vars.
+#
