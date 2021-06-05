@@ -12,5 +12,5 @@ config.*
 *.zip
 *.sav
 *.rtc
-*.rc
+gnuboy.rc
 .idea
