@@ -2,6 +2,7 @@
 #define VID_H
 
 /* stuff implemented by the different sys/ backends */
+/* For porting to new architectures / systems -> Implement these methods */
 
 void vid_begin();
 void vid_end();
@@ -32,10 +33,7 @@ void kb_init();
 void kb_poll();
 void kb_close();
 
-
-/* FIXME these have different prototype for obsolete ( == M$ ) platforms */
-#include <sys/time.h>
-int sys_elapsed(struct timeval *prev);
+int sys_elapsed(int *prev);
 void sys_initpath();
 
 #endif

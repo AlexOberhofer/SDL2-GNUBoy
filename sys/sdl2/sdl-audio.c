@@ -13,9 +13,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
 #include <SDL2/SDL.h>
+
 #include "rc.h"
 #include "pcm.h"
+#include "sys.h"
 
 struct pcm pcm;
 
@@ -95,7 +98,8 @@ int pcm_submit()
 	}
 
 	while (!audio_done)
-		SDL_Delay(4);
+		sys_sleep(1000);
+
 	audio_done = 0;
 	pcm.pos = 0;
 
