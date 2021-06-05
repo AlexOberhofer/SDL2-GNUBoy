@@ -11,22 +11,8 @@
 #include "fb.h"
 
 // Important! Colors are defined in reversed order: 0xBBGGRR !!!
-// From super-go-play gnuboy port https://github.com/mattkj/super-go-play/commit/02323642716d3086bd99975a8dd3d981a5d60db6
-#define GB_DEFAULT_PALETTE { 0xd5f3ef, 0x7ab6a3, 0x3b6137, 0x161c04 }
-#define GB_2BGRAYS_PALETTE { 0xffffff, 0xb6b6b6, 0x676767, 0x000000 }
-#define GB_LINKSAW_PALETTE { 0xb5ffff, 0x7bc67b, 0x428c6b, 0x21395a }
-#define GB_NSUPRGB_PALETTE { 0xc6e7f7, 0x498ed6, 0x2537a6, 0x501e33 }
-#define GB_NGBARNE_PALETTE { 0x6bb5ac, 0x488476, 0x3f503f, 0x373124 }
-#define GB_GRAPEFR_PALETTE { 0xddf5ff, 0x6bb2f4, 0x9165b7, 0x6c2965 }
-#define GB_MEGAMAN_PALETTE { 0xcecece, 0xdf9e6f, 0x8e6742, 0x332510 }
-#define GB_POKEMON_PALETTE { 0xffefff, 0x8cb5f7, 0x9c7384, 0x101018 }
-
-//amo defined pallettes
-#define GB_GNUBOY_LEGACY { 0x98d0e0, 0x68a0b0, 0x60707C, 0x2C3C3C } /* Here is the pre 1.1.x pallette */
-#define GB_AMO_PAL { 0x0fbc9b, 0x0fac8b, 0x306230, 0x0f380f }
-
-static int pallettes[10][4] = { GB_DEFAULT_PALETTE, GB_2BGRAYS_PALETTE, GB_LINKSAW_PALETTE, GB_NSUPRGB_PALETTE, GB_NGBARNE_PALETTE,
-								 GB_GRAPEFR_PALETTE, GB_MEGAMAN_PALETTE, GB_POKEMON_PALETTE, GB_GNUBOY_LEGACY, GB_AMO_PAL };
+//#define GB_GNUBOY_LEGACY { 0x98d0e0, 0x68a0b0, 0x60707C, 0x2C3C3C } /* Here is the pre 1.1.x palette */
+#define GB_SDL2GNUBOY_PALETTE { 0x0fbc9b, 0x0fac8b, 0x306230, 0x0f380f } /* Newer style green palette*/
 
 struct lcd lcd;
 
@@ -69,9 +55,7 @@ static int rgb332;
 static int sprsort = 1;
 static int sprdebug;
 
-static int pal_id = 0; //pallette id
-
-static int dmg_pal[4][4] = {GB_AMO_PAL, GB_AMO_PAL, GB_AMO_PAL, GB_AMO_PAL }; /* amo: finally restored my favorite green filter! :D*/
+static int dmg_pal[4][4] = {GB_SDL2GNUBOY_PALETTE, GB_SDL2GNUBOY_PALETTE, GB_SDL2GNUBOY_PALETTE, GB_SDL2GNUBOY_PALETTE };
 
 static int usefilter, filterdmg;
 static int filter[3][4] = {
@@ -85,7 +69,6 @@ rcvar_t lcd_exports[] =
 	RCV_INT("scale", &scale),
 	RCV_INT("integer_scale", &integer_scale),
 	RCV_INT("density", &density),
-	RCV_INT("palid", &pal_id),
 	RCV_BOOL("rgb332", &rgb332),
 	RCV_VECTOR("dmg_bgp", dmg_pal[0], 4),
 	RCV_VECTOR("dmg_wndp", dmg_pal[1], 4),
@@ -861,7 +844,6 @@ void pal_dirty()
 
 void lcd_reset()
 {
-	//TODO: also set the pallette from the RC Var
 	memset(&lcd, 0, sizeof lcd);
 	lcd_begin();
 	vram_dirty();
