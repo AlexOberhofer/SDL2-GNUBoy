@@ -1,6 +1,3 @@
-# Launch MYSYS2 as MYSYS2 MINGW64 to run
-# install mingw64-gcc + sdl2
-
 prefix = /usr/local
 exec_prefix = ${prefix}
 bindir = ${exec_prefix}/bin
@@ -19,10 +16,10 @@ TARGETS =  sdl2gnuboy.exe
 SYS_DEFS = -DIS_LITTLE_ENDIAN  -DALT_PATH_SEP
 
 SYS_OBJS = sys/windows/windows.o sys/windows/resource.o
-SYS_INCS = -I/usr/local/include  -I./sys/windows 
+SYS_INCS = -I/usr/local/include  -I./sys/windows -I./lib/sdl2-mingw64/SDL2-2.0.14/x86_64-w64-mingw32/include 
 
 SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o sys/sdl2/sdl-input.o
-SDL_LIBS = -L/usr/lib -lSDL2 -lpthread
+SDL_LIBS = -L/usr/lib -L./lib/sdl2-mingw64/SDL2-2.0.14/x86_64-w64-mingw32/lib -lSDL2 -lpthread
 SDL_CFLAGS = -I/usr/include/SDL2 
 
 
@@ -46,7 +43,7 @@ main.o: Version
 	$(MYCC) -c $< -o $@
 
 %.o: %.rc
-	windres -o $@ $<
+	x86_64-w64-mingw32-windres -o $@ $<
 
 sdl2gnuboy.exe: $(OBJS) $(SYS_OBJS) $(SDL_OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) $(SYS_OBJS) $(SDL_OBJS) -o $@ $(SDL_LIBS)
@@ -56,3 +53,7 @@ joytest:
 
 clean:
 	rm -f *gnuboy *.exe gmon.out *.o sys/*.o sys/*/*.o lib/*/*.o asm/*/*.o $(OBJS)
+
+
+
+
