@@ -11,6 +11,11 @@ windows:
 	make -f makefile.windows
 	rm -f sys/*/*.o src/*.o lib/*/*.o
 
+.PHONY: mingw
+mingw:
+	make -f makefile.mingw
+	rm -f sys/*/*.o src/*.o lib/*/*.o
+
 .PHONY: osx
 osx:
 	make -f makefile.osx

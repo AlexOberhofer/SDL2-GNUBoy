@@ -20,7 +20,7 @@ jobs:
     - name: sdl setup script
       run: ./sdl2-setup.sh
     - name: Build Windows exe
-      run: make windows
+      run: make mingw
     - name: Package Windows
       run: ./package.sh
     - uses: actions/upload-artifact@v2
