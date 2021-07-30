@@ -321,20 +321,19 @@ int confirm_exit()
     };
 
     const SDL_MessageBoxData messageboxdata = {
-            SDL_MESSAGEBOX_INFORMATION, /* .flags */
-            NULL, /* .window */
-            "SDL2-GNUBoy", /* .title */
-            "Are you sure you want to quit?", /* .message */
-            SDL_arraysize(buttons), /* .numbuttons */
-            buttons, /* .buttons */
-            NULL /* .colorScheme */
+            SDL_MESSAGEBOX_INFORMATION,
+            NULL, 
+            "SDL2-GNUBoy", 
+            "Are you sure you want to quit?",
+            SDL_arraysize(buttons),
+            buttons,
+            NULL 
     };
 
     if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0)
-    {
         if(JOYTRACE)
             SDL_Log("Error displaying message box");
-    }
+    
 
     if (buttonid != -1)
     {

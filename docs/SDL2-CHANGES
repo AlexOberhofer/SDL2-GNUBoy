@@ -13,6 +13,11 @@ documents can help in that case.
 KNOWN ISSUES:
 - Scale only works in 1x, 2x, 3x
 
+1.2.1 changes
+- Updates to SDL sound code
+- Documentation / rc file samples
+
+
 1.2.0 changes
 
 - Many SDL Bugfixes

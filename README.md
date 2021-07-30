@@ -32,7 +32,7 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 
 For bleeding edge SDL2-GNUBoy - build the master branch. Some stable versions also have branches to build from if need be. Otherwise check the release tab for Windows binaries or build it "the unix way" for *nix / BSD / OSX.
 
-v1.2.1 (Coming Soon)
+v1.2.1
 - Audio Bugfixes (No more popping noise on startup)
 - Audio Interface updates
 
@@ -106,28 +106,7 @@ SDL2GNUBoy has been compiled and tested on the following platforms:
 - Windows (x86/ARM)
 - Mac (x86/ARM)
 - Linux (x86/ARM)
-- WSL 1
-- WSL 2 (YMMV)
-
-## SDL2GNUBoy v1.1.0 Metrics
-
-GNUboy performs well on modern x86 processors, and thanks to SDL, it uses your graphics card for the rendering.
-
-Less than 1% CPU usage on my Ryzen 3600x in Linux or Windows.
-
-Roughly 30% CPU usage on my Raspberry Pi 4
-
-## SDL2GNUBoy v1.0 Metrics
-
-Here are a few demos running game intro loops and a unix process monitor (htop):
-
-*Note:* Captures are from a Manjaro VM running on VMWare on Windows 10 <br>
-<center> <h4>Classic Gameboy: Pokemon Red</h4><br>
-<img alt="Zelda" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/red.gif"></center><br>
-<center> <h4>Gameboy Color: Pokemon Crystal</h4><br>
-<img alt="Zelda" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/crystal.gif"></center><br>
-
-
+- WSL 
 
 ## Legacy Metrics
 
@@ -162,25 +141,34 @@ Version 1.2.1 is being developed currently. See the master branch for bleeding e
 
 (At this point - this is only a subset of what actually has been done here... but below is a sample)
 
-- Builds and Runs on Linux (Tested and developed on Manjaro)
+- Builds and Runs on Linux
 
 - Cross compiles on Linux into a Windows executable
 
-- SDL2 key implementation
+- SDL2 input implementation
 
-- SDL2 Gamepad implementation
+- SDL1.2 rendering ported to SDL2
 
-- SDL1.2 rendering ported to SDL2 (Now uses gpu if possible and supports scaling)
-
-- SDL1.2 sound ported to SDL2 (Needs a bit of work but its functional)
+- SDL1.2 sound ported to SDL2 
 
 
 ## Todo
 
-- Porting: The codebase is currently buildable on Windows/MacOS/*nix. Emscripten next?
+- Porting: Emscripten?
 
-- Add handler for zip files
+- Add handler for zip files (non-zlib)
 
+# Configuring
+
+Sample configuration files are provided in the /rc/ directory of this repository.
+
+Setup configuration from sample (From repository root)
+
+```
+$ cp ./rc/gnuboy.rc.sample ./gnuboy.rc
+```
+
+Example commands and color pallettes are also available in the /rc/ directory.
 
 # Building
 
