@@ -67,12 +67,10 @@ void vid_init()
 	else
 	{
 		if (RENDERTRACE) printf("Fullscreen set to: %d\n", fullscreen);
-		if(fullscreen > 0) 
-		{
-			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_FULLSCREEN);
-		} else {
-			window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vmode[0] * window_scale, vmode[1] * window_scale, SDL_WINDOW_RESIZABLE);
-		}
+
+		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN: SDL_WINDOW_RESIZABLE;
+		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+			vmode[0] * window_scale, vmode[1] * window_scale, fullscreen_flag);
 		
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		if (!renderer)

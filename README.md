@@ -35,6 +35,7 @@ For bleeding edge SDL2-GNUBoy - build the master branch. Some stable versions al
 v1.2.1
 - Audio Bugfixes (No more popping noise on startup)
 - Audio Interface updates
+- Optional confirmation window when closing emulator session
 
 v1.2.0
 
@@ -76,7 +77,7 @@ v1.0
 
 # Performance
 
-The original core of GNUBoy is mainly unmodified except for a number of bugfixes I have ported into this fork. 
+The emulation core of GNUBoy is mainly unmodified except for a number of bugfixes I have ported into this fork. 
 
 ## Accuracy
 
@@ -287,14 +288,6 @@ $ ./sdl2gnuboy.exe ./rom
 # Controls (Keyboard)
 
 Controls are as follows:
-
-```
-P - PAUSE GAME (currently unsupported)
-```
-
-```
-R - RESUME GAME (currently unsupported)
-```
 
 ```
 ESC - QUIT 

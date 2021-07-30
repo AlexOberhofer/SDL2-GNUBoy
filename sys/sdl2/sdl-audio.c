@@ -26,8 +26,8 @@ static int samplerate = 44100;
 static int stereo = 1;
 static int sound = 0;
 static int audio_started = 0;
-
 static volatile int audio_done;
+
 static SDL_AudioDeviceID device;
 
 rcvar_t pcm_exports[] =

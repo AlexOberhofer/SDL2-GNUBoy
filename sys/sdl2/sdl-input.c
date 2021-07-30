@@ -27,6 +27,15 @@ static int joy_rumble_strength = 100; //0 to 100%
 static int joy_deadzone = 40; //0 to 100%
 static int alert = 0;
 
+rcvar_t joy_exports[] =
+    {
+        RCV_BOOL("joy", &joy_enable),
+        RCV_INT("joy_rumble_strength", &joy_rumble_strength),
+        RCV_INT("joy_deadzone", &joy_deadzone),
+        RCV_INT("alert_on_quit", &alert),
+        RCV_END
+    };
+
 //Covert SDL KeyCodes to gnuboy button events
 //This only needs to handle non standard ascii buttons.
 static int kb_sdlkeycode_to_gnuboy(SDL_Keycode keycode)
@@ -117,15 +126,6 @@ static Sint32 gamecontroller_map[14][2] =
         {K_JOY9, SDL_CONTROLLER_BUTTON_RIGHTSTICK}
     };
 
-rcvar_t joy_exports[] =
-    {
-        RCV_BOOL("joy", &joy_enable),
-        RCV_INT("joy_rumble_strength", &joy_rumble_strength),
-        RCV_INT("joy_deadzone", &joy_deadzone),
-        RCV_INT("alert_on_quit", &alert),
-        RCV_END
-    };
-
 static int joy_find_gamecontroller_mapping(SDL_GameControllerButton button)
 {
     for (int i = 0; i < (sizeof(gamecontroller_map) / sizeof(gamecontroller_map[0])); i++)
@@ -180,10 +180,9 @@ void ev_poll()
     {
         if (event.type == SDL_QUIT)
         {
-            if(alert > 0 ) {
-                if(confirm_exit() == 0 ) {
+            if(alert > 0) { //TODO: fixme - Dialog doesn't work in fullscreen
+                if(!confirm_exit()) 
                     exit(1);
-                }
             } else {
                 exit(1);
             }
@@ -197,10 +196,9 @@ void ev_poll()
 
             if (scancode == SDL_SCANCODE_ESCAPE && event.type == SDL_KEYDOWN)
             {
-                if(alert > 0 ) {
-                    if(confirm_exit() == 0 ) {
+                if(alert > 0) { //TODO: fixme - Dialog doesn't work in fullscreen
+                    if(!confirm_exit())
                         exit(1);
-                    }
                 } else {
                     exit(1);
                 }

@@ -11,7 +11,7 @@ comes with no warranty or support, you are on your own if you have issues. Hopef
 documents can help in that case.
 
 KNOWN ISSUES:
-- Scale only works in 1x, 2x, 3x
+- Alert window doesn't work correctly in fullscreen mode
 
 1.2.1 changes
 - Updates to SDL sound code
