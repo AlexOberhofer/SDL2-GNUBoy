@@ -15,17 +15,17 @@ mkdir ./lib/sdl2-mingw64/
 cd ./lib/sdl2-mingw64/
 
 #mingw headers
-wget https://www.libsdl.org/release/SDL2-devel-2.0.14-mingw.tar.gz
+wget https://www.libsdl.org/release/SDL2-devel-2.0.16-mingw.tar.gz
 
-tar -xvzf SDL2-devel-2.0.14-mingw.tar.gz
+tar -xvzf SDL2-devel-2.0.16-mingw.tar.gz
 
-rm SDL2-devel-2.0.14-mingw.tar.gz
+rm SDL2-devel-2.0.16-mingw.tar.gz
 
 cd ../..
 
 #SDL dll
-wget https://www.libsdl.org/release/SDL2-2.0.14-win32-x64.zip
+wget https://www.libsdl.org/release/SDL2-2.0.16-win32-x64.zip
 
-unzip SDL2-2.0.14-win32-x64.zip 
+unzip SDL2-2.0.16-win32-x64.zip 
 
-rm SDL2-2.0.14-win32-x64.zip 
+rm SDL2-2.0.16-win32-x64.zip 
