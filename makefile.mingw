@@ -48,9 +48,6 @@ main.o: Version
 sdl2gnuboy.exe: $(OBJS) $(SYS_OBJS) $(SDL_OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) $(SYS_OBJS) $(SDL_OBJS) -o $@ $(SDL_LIBS)
 
-joytest: 
-	$(LD) $(CFLAGS) $(LDFLAGS) $(SYS_INCS)  ./src/joytest.c ./src/events.c ./include/sys.h sys/sdl2/sdl-input.c sys/sdl2/sdl-video.c -o joytest.exe $(SDL_LIBS)
-
 clean:
 	rm -f *gnuboy *.exe gmon.out *.o sys/*.o sys/*/*.o lib/*/*.o asm/*/*.o $(OBJS)
 
