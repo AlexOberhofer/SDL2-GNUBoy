@@ -15,7 +15,7 @@ TARGETS =  sdl2gnuboy.exe
 
 SYS_DEFS = -DIS_LITTLE_ENDIAN  -DALT_PATH_SEP
 
-SYS_OBJS = sys/windows/windows.o sys/windows/resource.o
+SYS_OBJS = sys/windows/windows.o sys/windows/resource.o sys/dummy/io.o
 SYS_INCS = -I/usr/local/include  -I./sys/windows -I./lib/sdl2-mingw64/SDL2-2.0.16/x86_64-w64-mingw32/include 
 
 SDL_OBJS = sys/sdl2/sdl-video.o sys/sdl2/sdl-audio.o sys/sdl2/sdl-input.o
@@ -27,7 +27,7 @@ all: $(TARGETS)
 
 XZ_OBJS = lib/xz/xz_crc32.o lib/xz/xz_crc64.o lib/xz/xz_dec_lzma2.o lib/xz/xz_dec_stream.o lib/xz/xz_dec_bcj.o
 
-OBJS = ./src/lcd.o ./src/refresh.o ./src/lcdc.o ./src/palette.o ./src/cpu.o ./src/mem.o ./src/rtc.o ./src/hw.o ./src/sound.o \
+OBJS = ./src/lcd.o ./src/refresh.o ./src/lcdc.o ./src/palette.o ./src/cpu.o ./src/io.o ./src/mem.o ./src/rtc.o ./src/hw.o ./src/sound.o \
 	./src/events.o ./src/keytable.o \
 	./src/loader.o ./src/save.o ./src/debug.o ./src/emu.o ./src/main.o \
 	./src/rccmds.o ./src/rckeys.o ./src/rcvars.o ./src/rcfile.o ./src/exports.o \

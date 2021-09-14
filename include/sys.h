@@ -33,6 +33,8 @@ void kb_init();
 void kb_poll();
 void kb_close();
 
+int io_setup(const char* link);
+
 int sys_elapsed(int *prev);
 void sys_initpath();
 

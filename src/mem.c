@@ -10,6 +10,7 @@
 #include "lcd.h"
 #include "lcdc.h"
 #include "sound.h"
+#include "io.h"
 
 struct mbc mbc;
 struct rom rom;
@@ -149,13 +150,14 @@ void ioreg_write(byte r, byte b)
 		REG(r) = b;
 		pad_refresh();
 		break;
+
+	case RI_SB:
+		REG(RI_SB) = b;
+		break;
 	case RI_SC:
-		/* FIXME - this is a hack for stupid roms that probe serial */
 		if ((b & 0x81) == 0x81)
 		{
-			R_SB = 0xff;
-			hw_interrupt(IF_SERIAL, IF_SERIAL);
-			hw_interrupt(0, IF_SERIAL);
+			io_send(REG(RI_SB));
 		}
 		R_SC = b; /* & 0x7f; */
 		break;
