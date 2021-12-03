@@ -1,0 +1,32 @@
+bind up +up
+bind down +down
+bind left +left
+bind right +right
+bind w +up
+bind s +down
+bind a +left
+bind d +right
+bind q +a
+bind e +b
+bind enter +start
+bind shift +select
+bind x +select
+bind tab +select
+bind ctrl quit
+bind ins savestate
+bind del loadstate
+set joy 1
+set scale 3
+set sound 1
+set density 4
+set fullscreen 0
+set integer_scale 1
+set savedir ./saves/
+set joy_rumble_strength 100
+set alert_on_quit 1
+set samplerate 88200
+
+set dmg_bgp  0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+set dmg_wndp 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+set dmg_obp0 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+set dmg_obp1 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
