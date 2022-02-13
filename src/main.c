@@ -322,7 +322,7 @@ int main(int argc, char *argv[])
 
 	if (!io_setup(link))
 	{
-		die("Link mode not supported\n");
+		printf("WARNING: Link mode not supported\n");
 	}
 
 	vid_init();
