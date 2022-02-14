@@ -23,12 +23,7 @@ void io_none_nop()
 void io_none_send(un8 byte)
 {
 	/* FIXME - this is a hack for stupid roms that probe serial */
-	if ((byte & 0x81) == 0x81)
-	{
-		R_SB = 0xff;
-		hw_interrupt(IF_SERIAL, IF_SERIAL);
-		hw_interrupt(0, IF_SERIAL);
-	}
-	R_SC = byte; /* & 0x7f; */
-
+	R_SB = 0xff;
+	hw_interrupt(IF_SERIAL, IF_SERIAL);
+	hw_interrupt(0, IF_SERIAL);
 }
