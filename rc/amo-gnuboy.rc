@@ -26,6 +26,9 @@ set joy_rumble_strength 100
 set alert_on_quit 1
 set samplerate 88200
 
+set bootrom_dmg ./gb_bios.bin
+set bootrom_cgb ./gbc_bios.bin
+
 set dmg_bgp  0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
 set dmg_wndp 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
 set dmg_obp0 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
