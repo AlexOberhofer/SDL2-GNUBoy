@@ -108,8 +108,12 @@ static FILE* rom_loadfile(char *fn, byte** data, int *len)
 	if (strcmp(fn, "-")) f = fopen(fn, "rb");
 	else f = stdin;
 
-	if (!f) die("cannot open rom file: %s\n", fn);
-
+	if (!f)
+	{
+		printf("WARNING: BIOS SPECIFIED BUT CANNOT OPEN ROM FILE: %s\n", fn);
+		return NULL;
+	} 
+	
 	*data = loadfile(f, len);
 	*data = decompress(*data, len);
 
@@ -128,6 +132,9 @@ int bootrom_load()
 		return 0;
 
 	f = rom_loadfile(bootroms[hw.cgb], &data, &len);
+
+	if(!f) return 0;
+	
 	bootrom.bank = realloc(data, 16384);
 	memset(bootrom.bank[0]+len, 0xff, 16384-len);
 	memcpy(bootrom.bank[0]+0x100, rom.bank[0]+0x100, 0x100);
