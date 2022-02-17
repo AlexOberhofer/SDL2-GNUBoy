@@ -32,7 +32,7 @@ struct fb fb;
 
 static int vmode[3] = {0, 0, 16};
 
-static byte pix[160 * 144 * 4];
+static byte pix[160 * 144 * sizeof(uint32_t)];
 
 rcvar_t vid_exports[] =
 {
@@ -69,12 +69,15 @@ void vid_init()
 		if (RENDERTRACE) printf("Fullscreen set to: %d\n", fullscreen);
 
 		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN: SDL_WINDOW_RESIZABLE;
+
 		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
 			vmode[0] * window_scale, vmode[1] * window_scale, fullscreen_flag);
 		
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
 		if (!renderer)
-			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE|SDL_RENDERER_PRESENTVSYNC);
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+			
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA32, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
 
@@ -142,7 +145,7 @@ void vid_end()
 	if(fb.enabled)
 	{
 		SDL_RenderClear(renderer);
-		SDL_UpdateTexture(texture, NULL, pix, vmode[0] * 4);
+		SDL_UpdateTexture(texture, NULL, pix, vmode[0] * sizeof(uint32_t));
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 	}
