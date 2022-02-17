@@ -40,6 +40,9 @@ void mem_updatemap()
 {
 	int n;
 	byte **map;
+
+	mbc.rombank &= (mbc.romsize - 1);
+	mbc.rambank &= (mbc.ramsize - 1);
 	
 	map = mbc.rmap;
 	/* don't unmap bootrom unless RI_BOOT was locked */
@@ -446,8 +449,7 @@ void mbc_write(int a, byte b)
 		}
 		break;
 	}
-	mbc.rombank &= (mbc.romsize - 1);
-	mbc.rambank &= (mbc.ramsize - 1);
+
 	/* printf("%02X\n", mbc.rombank); */
 	mem_updatemap();
 }
