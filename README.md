@@ -15,7 +15,7 @@ or someone interested in learning about C, SDL, or emulator development.
 Fork or contribute! Based on GNUBoy and licensed under GNU GPLv2
 
 <div align="center">
-    <img alt="Blue" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?blue.PNG">
+    <img alt="Blue" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/blue.PNG">
 </div>
 
 # Releases
@@ -71,9 +71,9 @@ v1.0
 
 |  GB | GBC  |
 |---|---|
-| <img alt="Dr Mario" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?drmario.PNG"> | <img alt="Lemmings" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?lemmings.PNG"> |
-|<img alt="Super Mario :amd" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?supermarioland.PNG">|<img alt="Pokemon Yellow" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?pkmnyellow.PNG">| 
-|   <img alt="Tetris" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?tetris.PNG">|<img alt="Pokemom Crystal" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?pkmncrystal.PNG">|
+| <img alt="Dr Mario" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/drmario.PNG"> | <img alt="Lemmings" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/lemmings.PNG"> |
+|<img alt="Super Mario :amd" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/supermarioland.PNG">|<img alt="Pokemon Yellow" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/pkmnyellow.PNG">| 
+|   <img alt="Tetris" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/tetris.PNG">|<img alt="Pokemom Crystal" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/pkmncrystal.PNG">|
 
 </div>
 
@@ -87,7 +87,7 @@ A number of cpu buxfixes were ported from [here](https://github.com/mattkj/super
 
 The emulator currently fails only one CPU instruction via blarggs test rom (Windows executable running in wine on Linux):
 <div align="center">
-    <img src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?blargg.PNG">
+    <img src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/blargg.PNG">
 </div>
 
 ## SDL2GNUBoy v1.2.1
@@ -100,7 +100,7 @@ Improvements for v1.2.1:
 
 <div align="center">
     Pokemon Pinball (Now with rumble) <br>
-    <img alt="Pinball" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img?pinball.gif">
+    <img alt="Pinball" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/pinball.gif">
 </div>
 
 
