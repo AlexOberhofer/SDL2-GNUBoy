@@ -5,9 +5,9 @@
 #include "hw.h"
 #include "regs.h"
 #include "debug.h"
+#include "sys.h"
 
 #include <unistd.h>
-#include <stdio.h>
 #include <poll.h>
 
 #include <fcntl.h>
@@ -31,7 +31,7 @@ void io_network_try_open();
 void io_network_try_open_local_server();
 void io_network_try_open_remote_connection();
 void io_network_send(un8);
-void io_network_send_mode(un8* mode, un8* byte);
+void io_network_send_mode(int socket, un8* mode, un8* byte);
 int  io_network_ready();
 void io_network_recv();
 un8  io_network_trigger_int(un8 byte);
@@ -120,14 +120,6 @@ void io_network_try_open_remote_connection()
 		serv_addr.sin_port = htons(remote_port);
 		debugf("opened remote socket: %d\n", remote_port);
 
-		/*if(inet_pton(AF_INET, remote_s, &serv_addr.sin_addr) <= 0)
-		{
-			close(remote_socket);
-			remote_socket = -1;
-			debugf("failed to create inet %s\n", remote_s);
-			return;
-		}*/
-
 		if (!(hp = gethostbyname(remote_s)))
         {
 			close(remote_socket);
@@ -145,6 +137,7 @@ void io_network_try_open_remote_connection()
 			debugf("failed to connect %d\n", errno); // this (error: 111, connection refused) might be fine if the emu instance was started first
 			return;
 		}
+
 	}
 }
 
@@ -206,28 +199,24 @@ void io_network_send(un8 byte)
 {
 	un8 mode;
 
-	debugf("io_network_send\n");
-
 	mode = (un8) SEND_ACTIVE;
-	io_network_send_mode(&mode, &byte);
+	io_network_send_mode(remote_socket, &mode, &byte);
 }
 
-void io_network_send_mode(un8* mode, un8* byte)
+void io_network_send_mode(int socket, un8* mode, un8* byte)
 {
-	int polled, can_write, poll_err, poll_hup;
+	int polled, can_write, poll_err, poll_hup, n_bytes;
 	struct pollfd poll_s;
-	char data[2] = {*mode, *byte};
+	unsigned char data[2] = {*mode, *byte};
 
-	debugf("io_network_send_mode: %d %d\n", *mode, *byte);
-
-	if(remote_socket <= 0)
+	if(socket <= 0)
 	{
 		io_network_try_open();
 	}
 
-	if(remote_socket > 0)
+	if(socket > 0)
 	{
-		poll_s.fd = remote_socket;
+		poll_s.fd = socket;
 		poll_s.events = POLLOUT;
 		poll_s.revents = 0;
 
@@ -236,15 +225,34 @@ void io_network_send_mode(un8* mode, un8* byte)
 		poll_err = poll_s.revents & POLLERR;
 		poll_hup = poll_s.revents & POLLHUP;
 
-		debugf("io_pipe_network_mode: %d %d %d %d\n", polled, can_write, poll_err, poll_hup);
-
 		if (poll_err || poll_hup)
 		{
 			io_reset();
 		}
 		else if (polled && can_write)
 		{
-			send(remote_socket, data, 2, 0);
+			send(socket, data, 2, 0);
+
+			if(*mode) {
+				debugf("Sending %d %c\n", data[1], data[1]);
+
+				n_bytes = read(socket, data, 2);
+
+				if (n_bytes == 2)
+				{
+					debugf("Reading  %d %c\n", data[1], data[1]);
+					io_network_trigger_int(data[1]);
+				}
+				else
+				{
+					io_reset();
+				}
+
+			} else {
+				sys_sleep(25); // TODO if for some reason the second gameboy answers to fast "Mario Tennis" will think the link is interrupted, WHY? I  don't know, might have to do with the fact that this implementation transfers data in one cycle unlike the original GB and GBC
+				debugf("Answering %d %c\n", data[1], data[1]);
+			}
+
 		}
 	}
 }
@@ -261,10 +269,9 @@ void io_network_recv()
 	int polled_c, can_read_c, poll_err_c, poll_hup_c;
 	struct pollfd server_poll_s;
 	struct pollfd client_poll_s;
-	char data[2] = {'\0', '\0'};
+	unsigned char data[2] = {'\0', '\0'};
 	int n_bytes = 0;
-
-	//debugf("io_network_recv\n");
+	int on = 1;
 
 	if ((server_sock != -1 && client_sock == -1) || 1)
 	{
@@ -290,6 +297,13 @@ void io_network_recv()
 				io_reset();
 				return;
 			}
+
+			if (ioctl(client_sock, FIONBIO, (char *) &on) < 0)
+			{
+				close(client_sock);
+				fprintf(stderr, "link: failed to set client to non blocking\n");
+				exit(1);
+			}
 			debugf("link: accepted %d\n", client_sock);
 			io_network_try_open_remote_connection();
 		}
@@ -306,8 +320,6 @@ void io_network_recv()
 		poll_err_c = client_poll_s.revents & POLLERR;
 		poll_hup_c = client_poll_s.revents & POLLHUP;
 
-		debugf("io_network_ready: %d %d %d %d\n", polled_c, can_read_c, poll_err_c, poll_hup_c);
-
 		if (poll_err_c || poll_hup_c)
 		{
 			io_reset();
@@ -315,18 +327,19 @@ void io_network_recv()
 		else if (polled_c && can_read_c)
 		{
 			n_bytes = read(client_sock, data, 2);
-			debugf("read: %d - %d - %d - '%s' - %d - %d - %d\n", client_sock, EBADF == n_bytes, n_bytes, data, (int)data[0], (int)data[1], errno);
 
 			if (n_bytes > 0)
 			{
+				debugf("Received %d %c\n", byte, byte);
+				
 				un8 own_data = io_network_trigger_int(data[1]);
 				if (data[0] & 1)
 				{
 					un8 mode = (un8) SEND_PASSIVE;
-					io_network_send_mode(&mode, &own_data);
+					io_network_send_mode(client_sock, &mode, &own_data);
 				}
 			}
-			else if (n_bytes == 0) // (read(...) == 0) == EOF => reset io stack
+			else if (n_bytes == 0)
 			{
 				io_reset();
 			}
@@ -338,6 +351,7 @@ un8 io_network_trigger_int(un8 byte)
 {
 	un8 old_data = R_SB;
 	R_SB = byte;
+	R_SC = ((~128) & R_SC);
 	hw_interrupt(IF_SERIAL, IF_SERIAL);
 	hw_interrupt(0, IF_SERIAL);
 	return old_data;

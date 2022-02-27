@@ -41,10 +41,8 @@ void mem_updatemap()
 {
 	int n;
 	byte **map;
-
 	mbc.rombank &= (mbc.romsize - 1);
 	mbc.rambank &= (mbc.ramsize - 1);
-	
 	map = mbc.rmap;
 	/* don't unmap bootrom unless RI_BOOT was locked */
 	if (REG(RI_BOOT) & 1) map[0x0] = rom.bank[0];
@@ -126,7 +124,7 @@ void ioreg_write(byte r, byte b)
 			return;
 		}
 	}
-	
+
 	switch(r)
 	{
 	case RI_TIMA:
@@ -167,11 +165,11 @@ void ioreg_write(byte r, byte b)
 		REG(RI_SB) = b;
 		break;
 	case RI_SC:
-		if ((b & 0x81) == 0x81)
+		if ( ((b & 0x81) == 0x81) || ((b & 0x83) == 0x83))
 		{
+			R_SC = b; /* & 0x7f; */
 			io_send(REG(RI_SB));
 		}
-		R_SC = b; /* & 0x7f; */
 		break;
 	case RI_DIV:
 		REG(r) = 0;
