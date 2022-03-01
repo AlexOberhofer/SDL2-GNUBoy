@@ -25,6 +25,7 @@ set savedir ./saves/
 set joy_rumble_strength 100
 set alert_on_quit 1
 set samplerate 88200
+set altenter 1
 
 set bootrom_dmg ./gb_bios.bin
 set bootrom_cgb ./gbc_bios.bin

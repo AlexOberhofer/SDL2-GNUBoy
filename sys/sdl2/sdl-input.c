@@ -22,10 +22,12 @@
 
 //Set to 1 enable debug tracing for input
 #define JOYTRACE 0
+
 static int joy_enable = 1;
 static int joy_rumble_strength = 100; //0 to 100%
 static int joy_deadzone = 40; //0 to 100%
 static int alert = 0;
+static int alt_enter = 0;
 
 rcvar_t joy_exports[] =
     {
@@ -33,6 +35,7 @@ rcvar_t joy_exports[] =
         RCV_INT("joy_rumble_strength", &joy_rumble_strength),
         RCV_INT("joy_deadzone", &joy_deadzone),
         RCV_INT("alert_on_quit", &alert),
+        RCV_INT("altenter", &alt_enter),
         RCV_END
     };
 
@@ -40,7 +43,7 @@ rcvar_t joy_exports[] =
 //This only needs to handle non standard ascii buttons.
 static int kb_sdlkeycode_to_gnuboy(SDL_Keycode keycode)
 {
-        static const int lookup[48][2] =
+        static const int lookup[49][2] =
         {
             //local event, sdl keycode
             {K_SHIFT, SDLK_LSHIFT},
@@ -90,6 +93,7 @@ static int kb_sdlkeycode_to_gnuboy(SDL_Keycode keycode)
             {K_NUMDOT, SDLK_KP_PERIOD},
             {K_NUMENTER, SDLK_KP_ENTER},
             {K_NUMLOCK, SDLK_NUMLOCKCLEAR},
+            {K_TAB, SDLK_TAB},
             {'/', SDLK_KP_DIVIDE}
         };
 
@@ -176,16 +180,26 @@ void ev_poll()
     SDL_Event event;
     static SDL_GameController *pad = NULL;
 
-    while (SDL_PollEvent(&event))
+    while(SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
         {
-            if(alert > 0) { //TODO: fixme - Dialog doesn't work in fullscreen
+            if(alert > 0) 
+            {
                 if(!confirm_exit()) 
                     exit(1);
-            } else {
+            } 
+            else 
+            {
                 exit(1);
             }
+        }
+
+        //Fullscreen mode toggle   
+        if(alt_enter)
+        {
+            if(kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(event.key.keysym.scancode) == K_TAB) && event.type == SDL_KEYDOWN)
+                vid_fullscreen_toggle();
         }
 
         /* Keyboard */
@@ -196,10 +210,13 @@ void ev_poll()
 
             if (scancode == SDL_SCANCODE_ESCAPE && event.type == SDL_KEYDOWN)
             {
-                if(alert > 0) { //TODO: fixme - Dialog doesn't work in fullscreen
+                if(alert > 0) 
+                { 
                     if(!confirm_exit())
                         exit(1);
-                } else {
+                } 
+                else 
+                {
                     exit(1);
                 }
             }

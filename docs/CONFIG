@@ -390,6 +390,9 @@ runtime with the Alt+Enter key combination. Unfortunately, this does
 not yet work on Windows; we hope to fix this limitation in the
 future.
 
+**NOTE** This functionality is now available using the TAB key. For
+backwards compatibility - the rc variable is still called altenter
+
 
   DMG PALETTE SELECTION
 

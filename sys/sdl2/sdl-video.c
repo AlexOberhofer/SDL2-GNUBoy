@@ -68,7 +68,7 @@ void vid_init()
 	{
 		if (RENDERTRACE) printf("Fullscreen set to: %d\n", fullscreen);
 
-		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN: SDL_WINDOW_RESIZABLE;
+		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN_DESKTOP: SDL_WINDOW_RESIZABLE;
 
 		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
 			vmode[0] * window_scale, vmode[1] * window_scale, fullscreen_flag);
@@ -137,6 +137,21 @@ void vid_settitle(char *title)
 void vid_begin()
 {
 	fb.ptr = pix;
+}
+
+void vid_fullscreen_toggle()
+{
+	if(!fullscreen)
+	{
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		fullscreen = 1;
+	} 
+	else 
+	{
+		SDL_SetWindowFullscreen(window, 0);
+		fullscreen = 0;
+	}
+	
 }
 
 void vid_end()
