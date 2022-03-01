@@ -248,7 +248,7 @@ void cpu_reset()
 	IME = 0;
 	IMA = 0;
 	
-	PC = 0x0100;
+	PC = bootrom.bank ? 0 : 0x0100;
 	SP = 0xFFFE;
 	AF = 0x01B0;
 	BC = 0x0013;

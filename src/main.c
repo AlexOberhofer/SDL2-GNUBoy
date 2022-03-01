@@ -62,6 +62,8 @@ static char *defaultconfig[] =
 	"set joy_deadzone 40", //0 to 100%
 	"set alert_on_quit 0",
 	"source gnuboy.rc",
+	"bootrom_dmg \"\"",
+	"bootrom_gbc \"\"",
 	NULL
 };
 
