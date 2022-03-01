@@ -352,7 +352,7 @@ Back - SELECT
 The GNUBoy core is extremely fast and portable. Porting documentation can be found in the docs folder.
 
 ### Repository Directory
-  - /lib - Libary Code
+  - /lib - Library Code
   - /sys - System dependent code
   - /src - Core emulator logic
   - /include - GNUBoy Header files
