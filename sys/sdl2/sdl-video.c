@@ -48,10 +48,9 @@ void vid_init()
 
 	if (!vmode[0] || !vmode[1])
 	{
-		int scale = rc_getint("scale");
-		int pal = rc_getint("palid");
+		int scale = rc_getint("scale");		
 		if (RENDERTRACE) printf("Fullscreen rc returned: %d\n", rc_getint("fullscreen"));
-		if(RENDERTRACE) printf("Pallette ID: %d\n", pal);
+		
 		if (scale < 1)
 			scale = 1;
 		window_scale = scale;

@@ -61,6 +61,7 @@ static char *defaultconfig[] =
 	"set joy_rumble_strength 100", //0 to 100%
 	"set joy_deadzone 40", //0 to 100%
 	"set alert_on_quit 0",
+	"set altenter 1",
 	"source gnuboy.rc",
 	"bootrom_dmg \"\"",
 	"bootrom_gbc \"\"",

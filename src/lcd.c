@@ -570,7 +570,7 @@ void lcd_begin()
 
 void lcd_refreshline()
 {
-	int i, work_scale;
+	int i;
 	byte scalebuf[160*4*4], *dest;
 	static int WL = 0;
 
