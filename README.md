@@ -15,7 +15,7 @@ or someone interested in learning about C, SDL, or emulator development.
 Fork or contribute! Based on GNUBoy and licensed under GNU GPLv2
 
 <div align="center">
-    <img alt="Blue" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blue.PNG">
+    <img alt="Blue" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/blue.PNG">
 </div>
 
 # Releases
@@ -31,6 +31,9 @@ Builds: (https://github.com/AlexOberhofer/SDL2-GNUBoy/actions) <br>
 SDL2 GNUboy pre-compiled binaries will be provided with each release. The source is also provided on the release page and the binaries can be built from the source or from this repository.
 
 For bleeding edge SDL2-GNUBoy - build the master branch. Some stable versions also have branches to build from if need be. Otherwise check the release tab for Windows binaries or build it "the unix way" for *nix / BSD / OSX.
+
+v1.2.2
+- In development
 
 v1.2.1
 - Audio Bugfixes (No more popping noise on startup)
@@ -49,7 +52,6 @@ Thanks to [Ryzee119](https://github.com/Ryzee119) for his contributions!
 - Rumble Support (new joy_rumble_strength rc variable)
 
 v1.1.1
-
 - Joystick/Gamepad Support 
 - New GB classic pallette (Can be changed with rc file)
 - Renderer + Keyboard bugfixes
@@ -69,9 +71,9 @@ v1.0
 
 |  GB | GBC  |
 |---|---|
-| <img alt="Dr Mario" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/drmario.PNG"> | <img alt="Lemmings" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/lemmings.PNG"> |
-|<img alt="Super Mario :amd" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/supermarioland.PNG">|<img alt="Pokemon Yellow" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pkmnyellow.PNG">| 
-|   <img alt="Tetris" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/tetris.PNG">|<img alt="Pokemom Crystal" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pkmncrystal.PNG">|
+| <img alt="Dr Mario" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/drmario.PNG"> | <img alt="Lemmings" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/lemmings.PNG"> |
+|<img alt="Super Mario :amd" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/supermarioland.PNG">|<img alt="Pokemon Yellow" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/pkmnyellow.PNG">| 
+|   <img alt="Tetris" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/tetris.PNG">|<img alt="Pokemom Crystal" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/pkmncrystal.PNG">|
 
 </div>
 
@@ -85,10 +87,10 @@ A number of cpu buxfixes were ported from [here](https://github.com/mattkj/super
 
 The emulator currently fails only one CPU instruction via blarggs test rom (Windows executable running in wine on Linux):
 <div align="center">
-    <img src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/blargg.PNG">
+    <img src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/blargg.PNG">
 </div>
 
-## SDL2GNUBoy v1.2.1 Metrics
+## SDL2GNUBoy v1.2.1
 
 Improvements for v1.2.1: 
 
@@ -98,7 +100,7 @@ Improvements for v1.2.1:
 
 <div align="center">
     Pokemon Pinball (Now with rumble) <br>
-    <img alt="Pinball" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/pinball.gif">
+    <img alt="Pinball" src="https://github.com/AlexOberhofer/SDL2-GNUBoy/raw/master/docs/img/pinball.gif">
 </div>
 
 
@@ -109,34 +111,9 @@ SDL2GNUBoy has been compiled and tested on the following platforms:
 - Linux (x86/ARM)
 - WSL 
 
-## Legacy Metrics
-
-Pre - fork GNUBoy performance metrics:
-
-*Note*: The ASM code has now been removed from this repository
-
-```
-  PERFORMANCE
-
-Here are some performance estimates i've gathered (given in percent
-cpu utilization, running at full 60 fps)...
-
-                                 Optimized C        Assembly
-  AMD K6-2/450                       12%               8%
-  Pentium/75                     (too slow)           70%
-  SGI O2                             25%            (no asm)
-  SGI Indy                           70%            (no asm)
-  Sun Ultra60                       3-20%           (no asm)
-  IBM S/390                      about 0.3%         (no asm)
-
-Note that these figures were computed before sound was implemented.
-Until the sound code is further optimized, gnuboy may run somewhat
-slower than these numbers suggest.
-```
-
 # Status
 
-Version 1.2.1 is being developed currently. See the master branch for bleeding edge SDL2-GNUBoy.
+Version 1.2.1 has been released. See the master branch for bleeding edge SDL2-GNUBoy.
 
 ## Whats been done
 
@@ -374,33 +351,10 @@ The GNUBoy core is extremely fast and portable. Porting documentation can be fou
 
 ## Developers
 
-### SDL2 GNUBoy
-
 Alex Oberhofer
-
-### Contributors
-
-Ryzee119 - SDL fixes / Compiler warning cleanup / Integer Scaling / Gamepad implementation
 
 ## Acknowledgements
 
-Cinoop Project 
-
-CTurt - [Github](https://github.com/CTurt)
-
-* [Github](https://github.com/CTurt/Cinoop) 
-
-* [Website](https://cturt.github.io/cinoop.html)
-
-GNUBoy
+See CREDITS for full list of contributors.
 
 Thank you to the original GNUBoy developers. Please see the history branch for their versions. Legacy documentation can be found in the docs folder.
-
-* [Original Forked Repo](https://github.com/AlexOberhofer/sdl2gnuboy)
-
-* [Website](https://sourceforge.net/projects/gnuboy/)
-
-Thanks to rofl0r for xz compression, build fixes, code cleanup, and more. See his code below:
-
-* [Updated GNUBoy Repository](https://github.com/rofl0r/gnuboy)
-
