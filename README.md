@@ -115,15 +115,13 @@ SDL2GNUBoy has been compiled and tested on the following platforms:
 
 # Status
 
-Version 1.2.1 has been released. See the master branch for bleeding edge SDL2-GNUBoy.
+Version 1.2.2 is in development. See the master branch for bleeding edge SDL2-GNUBoy.
 
 ## Whats been done
 
 (At this point - this is only a subset of what actually has been done here... but below is a sample)
 
-- Builds and Runs on Linux
-
-- Cross compiles on Linux into a Windows executable
+- Multiplatform builds
 
 - SDL2 input implementation
 
@@ -149,6 +147,15 @@ $ cp ./rc/gnuboy.rc.sample ./gnuboy.rc
 ```
 
 Example commands and color pallettes are also available in the /rc/ directory.
+
+# Configuring Boot ROM
+
+The following bootrom files have been tested, but others may work.
+
+|  Platform | Name | SHA1  |
+|---|---|---|
+| GB | gb_bios.bin | 4ED31EC6B0B175BB109C0EB5FD3D193DA823339F |
+| GBC | gbc_bios.bin | 1293D68BF9643BC4F36954C1E80E38F39864528D |
 
 # Building
 
