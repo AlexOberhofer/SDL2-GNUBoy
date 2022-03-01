@@ -11,7 +11,6 @@ bind e +b
 bind enter +start
 bind shift +select
 bind x +select
-bind tab +select
 bind ctrl quit
 bind ins savestate
 bind del loadstate
@@ -25,7 +24,7 @@ set savedir ./saves/
 set joy_rumble_strength 100
 set alert_on_quit 1
 set samplerate 44100
-set altenter 1
+bind tab altenter
 
 set bootrom_dmg ./gb_bios.bin
 set bootrom_cgb ./gbc_bios.bin

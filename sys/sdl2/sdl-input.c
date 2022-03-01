@@ -27,7 +27,6 @@ static int joy_enable = 1;
 static int joy_rumble_strength = 100; //0 to 100%
 static int joy_deadzone = 40; //0 to 100%
 static int alert = 0;
-static int alt_enter = 0;
 
 rcvar_t joy_exports[] =
     {
@@ -35,7 +34,6 @@ rcvar_t joy_exports[] =
         RCV_INT("joy_rumble_strength", &joy_rumble_strength),
         RCV_INT("joy_deadzone", &joy_deadzone),
         RCV_INT("alert_on_quit", &alert),
-        RCV_INT("altenter", &alt_enter),
         RCV_END
     };
 
@@ -193,13 +191,6 @@ void ev_poll()
             {
                 exit(1);
             }
-        }
-
-        //Fullscreen mode toggle   
-        if(alt_enter)
-        {
-            if(kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(event.key.keysym.scancode) == K_TAB) && event.type == SDL_KEYDOWN)
-                vid_fullscreen_toggle();
         }
 
         /* Keyboard */

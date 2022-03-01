@@ -33,7 +33,9 @@ SDL2 GNUboy pre-compiled binaries will be provided with each release. The source
 For bleeding edge SDL2-GNUBoy - build the master branch. Some stable versions also have branches to build from if need be. Otherwise check the release tab for Windows binaries or build it "the unix way" for *nix / BSD / OSX.
 
 v1.2.2
-- In development
+- GameBoy and GameBoy Color Bios
+- SDL video bugfixes
+- Restored fullscreen toggle
 
 v1.2.1
 - Audio Bugfixes (No more popping noise on startup)

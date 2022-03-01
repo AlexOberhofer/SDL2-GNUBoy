@@ -390,9 +390,11 @@ runtime with the Alt+Enter key combination. Unfortunately, this does
 not yet work on Windows; we hope to fix this limitation in the
 future.
 
-**NOTE** This functionality is now available using the TAB key. For
-backwards compatibility - the rc variable is still called altenter
+**NOTE** This functionality is now available using the TAB key by default.
+For backwards compatibility - the rc variable is still called altenter.
+It can be bound to any key. See the example below:
 
+ bind tab altenter
 
   DMG PALETTE SELECTION
 
