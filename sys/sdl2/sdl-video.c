@@ -30,7 +30,7 @@ int fullscreen = 0;
 
 struct fb fb;
 
-static int vmode[3] = {0, 0, 16};
+static int vmode[3] = {0, 0, 32};
 
 static byte pix[160 * 144 * sizeof(uint32_t)];
 

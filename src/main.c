@@ -59,6 +59,7 @@ static char *defaultconfig[] =
 	"set scale 2",
 	"set density 4",
 	"set integer_scale 1",
+	"set altenter 1",
 	"set joy_rumble_strength 100", //0 to 100%
 	"set joy_deadzone 40", //0 to 100%
 	"set alert_on_quit 0",

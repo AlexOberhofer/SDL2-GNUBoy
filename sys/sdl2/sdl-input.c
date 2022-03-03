@@ -27,6 +27,7 @@ static int joy_enable = 1;
 static int joy_rumble_strength = 100; //0 to 100%
 static int joy_deadzone = 40; //0 to 100%
 static int alert = 0;
+static int altenter = 0;
 
 rcvar_t joy_exports[] =
     {
@@ -34,6 +35,7 @@ rcvar_t joy_exports[] =
         RCV_INT("joy_rumble_strength", &joy_rumble_strength),
         RCV_INT("joy_deadzone", &joy_deadzone),
         RCV_INT("alert_on_quit", &alert),
+        RCV_INT("altenter", &altenter),
         RCV_END
     };
 
@@ -198,6 +200,11 @@ void ev_poll()
         {
             SDL_Scancode scancode = event.key.keysym.scancode;
             int keycode = kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(scancode));
+
+            //Handle alt enter
+            if(altenter && event.type == SDL_KEYDOWN)
+                if((event.key.keysym.sym == SDLK_RETURN) && (event.key.keysym.mod & KMOD_ALT))
+                    vid_fullscreen_toggle();
 
             if (scancode == SDL_SCANCODE_ESCAPE && event.type == SDL_KEYDOWN)
             {
