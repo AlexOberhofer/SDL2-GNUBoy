@@ -101,6 +101,7 @@ static int cmd_loadstate(int argc, char **argv)
 static int cmd_alt_enter() 
 {
 	vid_fullscreen_toggle();
+	return 0;
 }
 
 
