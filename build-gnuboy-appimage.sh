@@ -8,6 +8,8 @@ cd build
 
 cp ../sys/linux/AppRun ./
 
+chmod a+x AppRun
+
 cp ../sys/linux/gameboy.png ./
 
 cp ../sys/linux/sdl2gnuboy.desktop ./
