@@ -8,6 +8,9 @@ find_package(SDL2 REQUIRED)
 include_directories(./include)
 include_directories(./lib)
 include_directories(./)
+include_directories("/usr/local/include/")
+
+include_directories(${SDL2_INCLUDE_DIR})
 
 add_definitions(-DIS_LITTLE_ENDIAN  -DIS_LINUX -D_GNU_SOURCE=1 -D_REENTRANT)
 
