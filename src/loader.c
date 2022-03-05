@@ -108,11 +108,7 @@ static FILE* rom_loadfile(char *fn, byte** data, int *len)
 	if (strcmp(fn, "-")) f = fopen(fn, "rb");
 	else f = stdin;
 
-	if (!f)
-	{
-		printf("WARNING: BIOS SPECIFIED BUT CANNOT OPEN ROM FILE: %s\n", fn);
-		return NULL;
-	} 
+	if(!f) return NULL;
 	
 	*data = loadfile(f, len);
 	*data = decompress(*data, len);
