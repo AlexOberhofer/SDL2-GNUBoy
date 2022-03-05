@@ -488,7 +488,7 @@ void spr_enum()
 		ts[i] = VS[l];
 		VS[l].x = 160;
 	}
-	memcpy(VS, ts, sizeof VS);
+	memcpy(VS, ts, sizeof ts);
 }
 
 void spr_scan()
@@ -572,7 +572,8 @@ void lcd_refreshline()
 {
 	int i;
 	byte scalebuf[160*4*4], *dest;
-	
+	static int WL = 0;
+
 	if (!fb.enabled) return;
 	
 	if (!(R_LCDC & 0x80))
@@ -587,12 +588,18 @@ void lcd_refreshline()
 	T = Y >> 3;
 	U = X & 7;
 	V = Y & 7;
+	if (L == 0) { WY = R_WY; WL = 0; }
 	
 	WX = R_WX - 7;
 	if (WY>L || WY<0 || WY>143 || WX<-7 || WX>159 || !(R_LCDC&0x20))
 		WX = 160;
-	WT = (L - WY) >> 3;
-	WV = (L - WY) & 7;
+	else {
+		/* in order to have these offsets correct we need to count
+		   the number of lines that displayed a window */
+		WT = WL >> 3;
+		WV = WL & 7;
+		++WL;
+	}
 
 	spr_enum();
 

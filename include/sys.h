@@ -11,6 +11,7 @@ void vid_preinit();
 void vid_close();
 void vid_setpal(int i, int r, int g, int b);
 void vid_settitle(char *title);
+void vid_fullscreen_toggle();
 
 void pcm_init();
 int pcm_submit();

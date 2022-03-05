@@ -1,4 +1,7 @@
+This CREDITS file originates from the original GNUBoy sources. Contributions from all authors may or may not
+still be included in this source tree. However, their contributions are still important historically to gnuboy.
 
+Original GNUBoy Credits:
 
 Gilgamesh --
 concept
@@ -63,3 +66,21 @@ public domain "inflate" decompressor
 Hii (author of TGB) --
 lots of info on various memory mappers
 
+SDL2-GNUBoy Credits:
+
+Alex Oberhofer:
+SDL2-GNUBoy maintainer
+SDL2 Port
+CPU logic fix backports.
+
+rofl0r (https://github.com/rofl0r/gnuboy):
+xz compression
+build fixes
+code cleanup / 64 bit conversion.
+upstream maintainer for backports
+
+Ryzee119
+SDL Fixes
+Compiler warning cleanup
+Integer scaling
+Gamepad / Keyboard implementation

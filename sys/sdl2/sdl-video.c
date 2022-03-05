@@ -30,9 +30,9 @@ int fullscreen = 0;
 
 struct fb fb;
 
-static int vmode[3] = {0, 0, 16};
+static int vmode[3] = {0, 0, 32};
 
-static byte pix[160 * 144 * 4];
+static byte pix[160 * 144 * sizeof(uint32_t)];
 
 rcvar_t vid_exports[] =
 {
@@ -48,10 +48,9 @@ void vid_init()
 
 	if (!vmode[0] || !vmode[1])
 	{
-		int scale = rc_getint("scale");
-		int pal = rc_getint("palid");
+		int scale = rc_getint("scale");		
 		if (RENDERTRACE) printf("Fullscreen rc returned: %d\n", rc_getint("fullscreen"));
-		if(RENDERTRACE) printf("Pallette ID: %d\n", pal);
+		
 		if (scale < 1)
 			scale = 1;
 		window_scale = scale;
@@ -68,15 +67,18 @@ void vid_init()
 	{
 		if (RENDERTRACE) printf("Fullscreen set to: %d\n", fullscreen);
 
-		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN: SDL_WINDOW_RESIZABLE;
+		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN_DESKTOP: SDL_WINDOW_RESIZABLE;
+
 		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
 			vmode[0] * window_scale, vmode[1] * window_scale, fullscreen_flag);
 		
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
 		if (!renderer)
 			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+			
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA32, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
 
 		SDL_RenderSetLogicalSize(renderer, vmode[0], vmode[1]);
 		int integer_scale = rc_getint("integer_scale");
@@ -136,13 +138,28 @@ void vid_begin()
 	fb.ptr = pix;
 }
 
+void vid_fullscreen_toggle()
+{
+	if(!fullscreen)
+	{
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		fullscreen = 1;
+	} 
+	else 
+	{
+		SDL_SetWindowFullscreen(window, 0);
+		fullscreen = 0;
+	}
+	
+}
+
 void vid_end()
 {
 	fb.ptr = pix;
 	if(fb.enabled)
 	{
 		SDL_RenderClear(renderer);
-		SDL_UpdateTexture(texture, NULL, pix, vmode[0] * 4);
+		SDL_UpdateTexture(texture, NULL, pix, vmode[0] * sizeof(uint32_t));
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 	}

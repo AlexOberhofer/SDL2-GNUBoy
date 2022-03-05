@@ -8,6 +8,7 @@
 #include "emu.h"
 #include "loader.h"
 #include "split.h"
+#include "sys.h"
 
 
 /*
@@ -97,6 +98,12 @@ static int cmd_loadstate(int argc, char **argv)
 	return 0;
 }
 
+static int cmd_alt_enter() 
+{
+	vid_fullscreen_toggle();
+	return 0;
+}
+
 
 
 /*
@@ -114,6 +121,7 @@ rccmd_t rccmds[] =
 	RCC("quit", cmd_quit),
 	RCC("savestate", cmd_savestate),
 	RCC("loadstate", cmd_loadstate),
+	RCC("altenter", cmd_alt_enter),
 	
 	RCC("+up", cmd_up),
 	RCC("-up", cmd_up),
