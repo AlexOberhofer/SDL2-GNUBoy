@@ -3,10 +3,8 @@
  *
  * System interface for *nix systems.
  */
-#undef _GNU_SOURCE
-#define _GNU_SOURCE
-#undef _BSD_SOURCE
-#define _BSD_SOURCE
+#undef _DEFAULT_SOURCE
+#define _DEFAULT_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
