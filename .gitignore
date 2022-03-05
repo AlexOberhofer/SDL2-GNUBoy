@@ -18,3 +18,4 @@ gnuboy.rc
 build/*
 saves/*
 cmake-*
+*.AppImage
