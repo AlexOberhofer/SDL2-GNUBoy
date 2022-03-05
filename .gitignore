@@ -15,3 +15,5 @@ config.*
 gnuboy.rc
 .idea
 *.bin
+build/*
+saves/*
