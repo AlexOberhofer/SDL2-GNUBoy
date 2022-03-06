@@ -3,8 +3,10 @@ project(sdl2gnuboy)
 
 if(MSVC OR MSYS OR MINGW)
         set(TARGET_NAME sdl2gnuboy.exe)
+        set(PLATFORM_IMPL sys/windows/windows.c)
 else()
         set(TARGET_NAME sdl2gnuboy)
+        set(PLATFORM_IMPL sys/nix/nix.c)
 endif()
 
 
@@ -26,6 +28,6 @@ add_executable(${TARGET_NAME} sys/sdl2/sdl-video.c sys/sdl2/sdl-audio.c sys/sdl2
         ./src/events.c ./src/keytable.c ./src/loader.c ./src/save.c ./src/debug.c
         ./src/emu.c ./src/main.c ./src/rccmds.c ./src/rckeys.c ./src/rcvars.c ./src/rcfile.c ./src/exports.c
         ./src/split.c ./src/path.c ./lib/gz/inflate.c lib/xz/xz_crc32.c lib/xz/xz_crc64.c lib/xz/xz_dec_lzma2.c
-        lib/xz/xz_dec_stream.c lib/xz/xz_dec_bcj.c sys/nix/nix.c)
+        lib/xz/xz_dec_stream.c lib/xz/xz_dec_bcj.c ${PLATFORM_IMPL})
 
 target_link_libraries(${TARGET_NAME} ${SDL2_LIBRARIES})
