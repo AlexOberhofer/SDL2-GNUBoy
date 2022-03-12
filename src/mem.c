@@ -15,7 +15,15 @@
 struct mbc mbc;
 struct rom rom;
 struct ram ram;
+struct rom bootrom;
 
+void mem_mapbootrom() 
+{
+	if (!bootrom.bank) 
+		return;
+
+	mbc.rmap[0x0] = bootrom.bank[0];
+}
 
 /*
  * In order to make reads and writes efficient, we keep tables
@@ -33,9 +41,13 @@ void mem_updatemap()
 {
 	int n;
 	byte **map;
+
+	mbc.rombank &= (mbc.romsize - 1);
+	mbc.rambank &= (mbc.ramsize - 1);
 	
 	map = mbc.rmap;
-	map[0x0] = rom.bank[0];
+	/* don't unmap bootrom unless RI_BOOT was locked */
+	if (REG(RI_BOOT) & 1) map[0x0] = rom.bank[0];
 	map[0x1] = rom.bank[0];
 	map[0x2] = rom.bank[0];
 	map[0x3] = rom.bank[0];
@@ -200,6 +212,12 @@ void ioreg_write(byte r, byte b)
 		REG(r) = b & 0x07;
 		mem_updatemap();
 		break;
+	case RI_BOOT:
+		if(!(b & 1)) break;
+		if(REG(r) & 1) break;
+		REG(r) = 0xff;
+		mem_updatemap();
+		break;
 	case RI_DMA:
 		hw_dma(b);
 		break;
@@ -244,6 +262,8 @@ byte ioreg_read(byte r)
 {
 	switch(r)
 	{
+	case RI_BOOT:
+		return 0xfe | (REG(r) & 1);
 	case RI_SC:
 		r = R_SC;
 		R_SC &= 0x7f;
@@ -431,8 +451,7 @@ void mbc_write(int a, byte b)
 		}
 		break;
 	}
-	mbc.rombank &= (mbc.romsize - 1);
-	mbc.rambank &= (mbc.ramsize - 1);
+
 	/* printf("%02X\n", mbc.rombank); */
 	mem_updatemap();
 }

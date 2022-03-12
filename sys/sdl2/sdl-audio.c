@@ -53,8 +53,8 @@ void pcm_init()
 
 		if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) 
 		{
-			printf("SDL Audio failed: %s\n", SDL_GetError());
-			exit(1);
+			printf("WARNING: SDL Audio failed: %s\n", SDL_GetError());
+			return;
 		}
 
 		want.freq = samplerate;
@@ -70,8 +70,9 @@ void pcm_init()
 
 		if(device == 0) 
 		{
-			printf("SDL could not open audio device: %s\n", SDL_GetError());
-			exit(1);
+			printf("WARNING: SDL could not open audio device: %s\n", SDL_GetError());
+			pcm_close();
+			return;
 		}
 
 		pcm.hz = obtained.freq;
@@ -91,7 +92,7 @@ int pcm_submit()
 	if (pcm.pos < pcm.len)
 		return 1;
 
-	if(sound && audio_started == 0) 
+	if(sound && !audio_started) 
 	{ 
 		SDL_PauseAudioDevice(device, 0);
 		audio_started = 1;

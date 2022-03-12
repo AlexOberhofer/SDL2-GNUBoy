@@ -54,15 +54,19 @@ static char *defaultconfig[] =
 	"bind 0 \"set saveslot 0\"",
 	"bind ins savestate",
 	"bind del loadstate",
+	"bind tab altenter",
 	"set filterdmg 0",
 	"set sound 1",
 	"set scale 2",
 	"set density 4",
-	"set integer_scale 0",
+	"set integer_scale 1",
+	"set altenter 1",
 	"set joy_rumble_strength 100", //0 to 100%
 	"set joy_deadzone 40", //0 to 100%
 	"set alert_on_quit 0",
 	"source gnuboy.rc",
+	"bootrom_dmg \"\"",
+	"bootrom_gbc \"\"",
 	NULL
 };
 
