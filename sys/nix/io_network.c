@@ -330,7 +330,7 @@ void io_network_recv()
 
 			if (n_bytes > 0)
 			{
-				debugf("Received %d %c\n", byte, byte);
+				debugf("Received %d %c\n", data[1], data[1]);
 				
 				un8 own_data = io_network_trigger_int(data[1]);
 				if (data[0] & 1)
