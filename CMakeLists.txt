@@ -5,10 +5,10 @@ set(TARGET_NAME sdl2gnuboy)
 
 #If Linux / UNIX / BSD / APPLE / etc...
 if(UNIX OR APPLE) 
-        set(PLATFORM_IMPL sys/nix/nix.c)
+        set(PLATFORM_IMPL sys/nix/io_network.c sys/nix/io_none.c sys/nix/io_pipe.c sys/nix/io.c sys/nix/nix.c)
 #If not unix probably windows?
 else() 
-        set(PLATFORM_IMPL sys/windows/windows.c)
+        set(PLATFORM_IMPL sys/windows/windows.c sys/dummy/io.c)
         add_definitions(-DALT_PATH_SEP)
 endif()
 
@@ -33,7 +33,7 @@ add_definitions(-DIS_LITTLE_ENDIAN -D_GNU_SOURCE=1 -D_REENTRANT)
 
 add_executable(${TARGET_NAME} sys/sdl2/sdl-video.c sys/sdl2/sdl-audio.c sys/sdl2/sdl-input.c ./src/lcd.c ./src/refresh.c
         ./src/lcdc.c ./src/palette.c ./src/cpu.c ./src/mem.c ./src/rtc.c ./src/hw.c ./src/sound.c
-        ./src/events.c ./src/keytable.c ./src/loader.c ./src/save.c ./src/debug.c
+        ./src/events.c ./src/keytable.c ./src/loader.c ./src/save.c ./src/debug.c ./src/io.c
         ./src/emu.c ./src/main.c ./src/rccmds.c ./src/rckeys.c ./src/rcvars.c ./src/rcfile.c ./src/exports.c
         ./src/split.c ./src/path.c ./lib/gz/inflate.c lib/xz/xz_crc32.c lib/xz/xz_crc64.c lib/xz/xz_dec_lzma2.c
         lib/xz/xz_dec_stream.c lib/xz/xz_dec_bcj.c ${PLATFORM_IMPL})
