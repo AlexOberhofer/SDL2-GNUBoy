@@ -652,6 +652,44 @@ to (e.g. 0x378 -- be sure to prefix it with 0x for hex!!), and set
 been heavily tested, so it may or may not work for you. Be sure to get
 the port number right or bad things may happen!
 
+  LINK PLAY
+
+For some platforms, gnuboy supports link-cable simulation via network or
+over a file pipe. This works for some but may not work for all games. Below
+are instructions for linking 2 instances of gnuboy.
+
+These examples are for 2 instances on the same machine. However, using the 
+network io driver allows instances on different machines to be connected.
+
+    **NOTE**
+    When linking 2 instances of gnuboy, it is recommended to run each from a 
+    separate directory to avoid clashing file saves, and give each instance of
+    gnuboy its own save file, even if it is just two copies of the same save data.
+
+    Networked:
+
+      For networked play the argument configuration is the following:
+        --link network:<port>:<remote-host>:<remote-port>
+
+      Sample:
+        Instance 1: 
+            $ sdl2gnuboy --link network:8080:localhost:8081 ./my-rom
+        Instance 2: 
+            $ sdl2gnuboy --link network:8081:localhost:8080 ./my-rom
+
+    Piped:
+
+      For piped play the argument configuration is the following:
+        --link pipe:</path/to/pipe/>
+
+      Sample:
+        First create a file to use as a pipe: 
+            $ touch gnuboy.pipe
+
+        Instance 1: 
+            $ sdl2gnuboy --link pipe:gnuboy.pipe ./my-rom
+        Instance 2: 
+            $ sdl2gnuboy --link pipe:gnuboy.pipe ./my-rom
 
   CONCLUSION
 

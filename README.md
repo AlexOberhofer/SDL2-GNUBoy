@@ -36,6 +36,7 @@ v1.2.2
 - GameBoy and GameBoy Color Bios
 - SDL video bugfixes
 - Restored fullscreen toggle
+- Link cable emulation (*nix)
 
 v1.2.1
 - Audio Bugfixes (No more popping noise on startup)
@@ -152,11 +153,12 @@ Example commands and color pallettes are also available in the /rc/ directory.
 
 The following bootrom files have been tested, but others may work.
 
-|  Platform | Name | SHA1  |
-|---|---|---|
-| GB | gb_bios.bin | 4ED31EC6B0B175BB109C0EB5FD3D193DA823339F |
-| GBC | gbc_bios.bin | 1293D68BF9643BC4F36954C1E80E38F39864528D |
-
+|  Platform | Name | SHA1  | Notes |
+|---|---|---|---|
+| GB | dmg_boot.bin | 4ED31EC6B0B175BB109C0EB5FD3D193DA823339F | |
+| GB | mgb_boot.bin | 4E68F9DA03C310E84C523654B9026E51F26CE7F0 | Gameboy Pocket  |
+| GBC | cgb_boot.bin | 1293D68BF9643BC4F36954C1E80E38F39864528D | |
+ 
 # Building
 
 Build scripts are provided for both native unix applications and for cross compiling via mingw-w64 gcc
