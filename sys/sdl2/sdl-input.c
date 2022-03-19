@@ -20,14 +20,14 @@
 #include "mem.h"
 #include "sys.h"
 
-//Set to 1 enable debug tracing for input
-#define JOYTRACE 0
-
 static int joy_enable = 1;
 static int joy_rumble_strength = 100; //0 to 100%
 static int joy_deadzone = 40; //0 to 100%
+static int joy_trace = 0;
 static int alert = 0;
 static int altenter = 0;
+
+
 
 rcvar_t joy_exports[] =
     {
@@ -36,6 +36,7 @@ rcvar_t joy_exports[] =
         RCV_INT("joy_deadzone", &joy_deadzone),
         RCV_INT("alert_on_quit", &alert),
         RCV_INT("altenter", &altenter),
+        RCV_INT("joy_trace", &joy_trace),
         RCV_END
     };
 
@@ -143,14 +144,12 @@ static int joy_find_gamecontroller_mapping(SDL_GameControllerButton button)
 void joy_init()
 {
     //we obviously have no business being in here
-    if (!joy_enable)
-        return;
+    if (!joy_enable) return;
 
     //init gamecontroller (and joystick) subsystem
     if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0)
     {
-        printf("SDL could not initialize Joystick! SDL Error: %s\n", SDL_GetError());
-        exit(1);
+        printf("JOY:    SDL could not initialize Joystick! SDL Error: %s\n", SDL_GetError());
     }
 
     if (joy_rumble_strength > 100)
@@ -159,14 +158,13 @@ void joy_init()
     if (joy_deadzone > 100)
         joy_deadzone = 100;
 
-    if (JOYTRACE)
-        printf("Rumble strength set to %i%%\n", joy_rumble_strength);
+    if (joy_trace)
+    {
+        printf("JOY:    Rumble strength set to: %i%%\n", joy_rumble_strength);
+        printf("JOY:    Deadzone set to: %i%%\n", joy_deadzone);
+        printf("JOY:    Joystick subsystem initialized succesfully\n");
+    }
 
-    if (JOYTRACE)
-        printf("Deadzone set to %i%%\n", joy_deadzone);
-
-    if (JOYTRACE)
-        printf("Joystick initialized Succesfully\n");
 }
 
 void joy_close()
@@ -201,6 +199,9 @@ void ev_poll()
             SDL_Scancode scancode = event.key.keysym.scancode;
             int keycode = kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(scancode));
 
+            printf("KEY:    Pressed: %s\n",
+                   SDL_GetKeyName(SDL_GetKeyFromScancode(event.key.keysym.scancode)));
+
             //Handle alt enter
             if(altenter && event.type == SDL_KEYDOWN)
                 if((event.key.keysym.sym == SDLK_RETURN) && (event.key.keysym.mod & KMOD_ALT))
@@ -228,18 +229,20 @@ void ev_poll()
             }
             else
             {
-                printf("Pressed unsupported button %s\n", SDL_GetScancodeName(scancode));
+                printf("JOY:    Pressed unsupported button %s\n", SDL_GetScancodeName(scancode));
             }
         }
         /* Handle gamecontroller hotplugging */
         else if (event.type == SDL_CONTROLLERDEVICEADDED && joy_enable)
         {
-            if (JOYTRACE) printf("Controller %d connected\n", event.cdevice.which);
+            if(joy_trace) printf("JOY:    Controller connected with index: %d\n", event.cdevice.which);
             SDL_GameControllerOpen(event.cdevice.which);
+            if(joy_trace) printf("JOY:    Opened controller: %s\n",
+                                 SDL_GameControllerNameForIndex(event.cdevice.which));
         }
         else if (event.type == SDL_CONTROLLERDEVICEREMOVED && joy_enable)
         {
-            if (JOYTRACE) printf("Controller %d disconnected\n", event.cdevice.which);
+            if (joy_trace) printf("Controller %d disconnected\n", event.cdevice.which);
             if (pad == SDL_GameControllerFromInstanceID(event.cdevice.which))
                 pad = NULL;
             SDL_GameControllerClose(SDL_GameControllerFromInstanceID(event.cdevice.which));
@@ -255,7 +258,9 @@ void ev_poll()
             ev.type = (event.type == SDL_CONTROLLERBUTTONDOWN) ? EV_PRESS : EV_RELEASE;
             ev.code = joy_find_gamecontroller_mapping(btn);
 
-            if (JOYTRACE) printf("You %s %s\n", (event.type == SDL_CONTROLLERBUTTONDOWN) ? "pressed" : "released", buttonstring);
+            if (joy_trace)
+                printf("JOY:    %s: %s\n", (event.type == SDL_CONTROLLERBUTTONDOWN)
+                    ? "Pressed" : "Released", buttonstring);
 
             if (ev.code != -1)
                 ev_postevent(&ev);
@@ -299,11 +304,11 @@ void ev_poll()
                               (ev.code == K_JOYUP)    ? SDL_HAT_UP    :
                               (ev.code == K_JOYDOWN)  ? SDL_HAT_DOWN  : 0;
                 (press_ev) ? (old_hat |= new_hat) : (old_hat &= ~new_hat);
-                if (JOYTRACE)
-                {
-                    printf("Analog stick hat: %s %s\n", (press_ev) ? "Pressed" : "Released",
+
+                if (joy_trace)
+                    printf("JOY:    Analog stick hat - %s: %s\n", (press_ev) ? "Pressed" : "Released",
                                                         SDL_GameControllerGetStringForButton(press_ev ? press_ev : release_ev));
-                }
+
                 ev_postevent(&ev);
             }
         }
@@ -344,14 +349,12 @@ int confirm_exit()
     };
 
     if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0)
-        if(JOYTRACE)
-            SDL_Log("Error displaying message box");
-    
+        if(joy_trace) printf("MSGBOX: Error displaying message box\n");
 
     if (buttonid != -1)
     {
-        if(JOYTRACE)
-            SDL_Log("selection was %s, with id %d", buttons[buttonid].text, buttons[buttonid].buttonid);
+        if(joy_trace)
+            printf("MSGBOX: Selection was %s, with id %d\n", buttons[buttonid].text, buttons[buttonid].buttonid);
 
         pcm_resume();
         return buttons[buttonid].buttonid;

@@ -20,68 +20,69 @@
 #include "rc.h"
 #include "sys.h"
 
-/* Set to 1 enable debug tracing for rendering */
-#define RENDERTRACE 0
+struct fb fb;
 
 static SDL_Window *window;
 static SDL_Texture *texture;
 static SDL_Renderer *renderer;
-int fullscreen = 0;
 
-struct fb fb;
+static int fullscreen = 0;
+static int scale = 1;
+static int integer_scale = 1;
+static int render_type = 1; // 0: Software || 1: Default HW
+static int render_trace = 0;
 
 static int vmode[3] = {0, 0, 32};
-
 static byte pix[160 * 144 * sizeof(uint32_t)];
 
 rcvar_t vid_exports[] =
 {
 	RCV_VECTOR("vmode", &vmode, 3),
 	RCV_BOOL("fullscreen", &fullscreen),
+    RCV_BOOL("vid_trace", &render_trace),
 	RCV_END
 };
 
 void vid_init()
 {
-	if(RENDERTRACE) printf("vid_init start\n");
-	int window_scale = 0;
-
 	if (!vmode[0] || !vmode[1])
 	{
-		int scale = rc_getint("scale");		
-		if (RENDERTRACE) printf("Fullscreen rc returned: %d\n", rc_getint("fullscreen"));
+		scale = rc_getint("scale");
 		
-		if (scale < 1)
-			scale = 1;
-		window_scale = scale;
+		if (scale < 1) scale = 1;
+
 		vmode[0] = 160;
 		vmode[1] = 144;
 	}
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
 	{
-		printf("SDL_Init failed: %s\n", SDL_GetError());
+		printf("VID:    SDL could not initialize Video! SDL Error: %s\n", SDL_GetError());
 		exit(1);
 	}
 	else
 	{
-		if (RENDERTRACE) printf("Fullscreen set to: %d\n", fullscreen);
+
 
 		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN_DESKTOP: SDL_WINDOW_RESIZABLE;
 
-		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-			vmode[0] * window_scale, vmode[1] * window_scale, fullscreen_flag);
+		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                   vmode[0] * scale, vmode[1] * scale, fullscreen_flag);
 		
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 		if (!renderer)
-			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+        {
+            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+            render_type = 0;
+        }
 			
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA32, SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA32,
+                                    SDL_TEXTUREACCESS_STREAMING, vmode[0], vmode[1]);
 
 		SDL_RenderSetLogicalSize(renderer, vmode[0], vmode[1]);
-		int integer_scale = rc_getint("integer_scale");
+		integer_scale = rc_getint("integer_scale");
 		if (integer_scale)
 		{
 			int window_width, window_height, render_width, render_height;
@@ -107,7 +108,19 @@ void vid_init()
 	fb.enabled = 1;
 	fb.dirty = 0;
 
-	if(RENDERTRACE) printf("vid_init end\n");
+	if(render_trace)
+    {
+        SDL_RendererInfo r_info;
+        SDL_GetRendererInfo(renderer, &r_info);
+
+        printf("VID:    Using render mode: %s\n",
+               (render_type) ? "Hardware Accelerated Renderer" : "Software Renderer");
+        printf("VID:    Using render driver: %s\n", r_info.name);
+        printf("VID:    Using internal resolution: %d x %d\n", vmode[0], vmode[1]);
+        printf("VID:    Fullscreen set to: %d\n", fullscreen);
+        printf("VID:    Scale set to: %d\n", scale);
+        printf("VID:    Integer scale set to: %d\n", integer_scale);
+    }
 
 	joy_init();
 }
