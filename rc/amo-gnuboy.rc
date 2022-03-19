@@ -8,10 +8,20 @@ bind a +left
 bind d +right
 bind q +a
 bind e +b
-bind enter +start
+bind z +start
 bind shift +select
 bind x +select
 bind ctrl quit
+bind joyup +up
+bind joydown +down
+bind joyleft +left
+bind joyright +right
+bind joy0 +b
+bind joy1 +a
+bind joy2 +select
+bind joy3 +start
+bind joy4 +select
+bind joy5 +start
 bind ins savestate
 bind del loadstate
 set joy 1
@@ -23,13 +33,13 @@ set integer_scale 1
 set savedir ./saves/
 set joy_rumble_strength 100
 set alert_on_quit 1
+set altenter 1
 set samplerate 44100
-bind tab altenter
 
 set bootrom_dmg ./gb_bios.bin
 set bootrom_cgb ./gbc_bios.bin
 
-set dmg_bgp  0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
-set dmg_wndp 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
-set dmg_obp0 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
-set dmg_obp1 0x98d0e0 0x68a0b0 0x60707C 0x2C3C3C
+set dmg_bgp  0x6bb5ac 0x488476 0x3f503f 0x373124
+set dmg_wndp 0x6bb5ac 0x488476 0x3f503f 0x373124
+set dmg_obp0 0x6bb5ac 0x488476 0x3f503f 0x373124
+set dmg_obp1 0x6bb5ac 0x488476 0x3f503f 0x373124
