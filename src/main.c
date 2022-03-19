@@ -14,6 +14,7 @@
 #include "emu.h"
 #include "exports.h"
 #include "loader.h"
+#include "io.h"
 
 #include "Version"
 
@@ -118,6 +119,9 @@ static void help(char *name)
 	printf("Usage: %s [options] romfile\n", name);
 	printf("\n"
 "      --source FILE             read rc commands from FILE\n"
+"      --link CONFIG             connect via link cable\n"
+"                                   to connect over TCP/IP: network:<local-port>:<remote-host>:<remote-port> (*nix systems only)\n"
+"                                   to connect over local unix pipe: pipe:<file-path> (*nix systems only)\n"
 "      --bind KEY COMMAND        bind KEY to perform COMMAND\n"
 "      --VAR=VALUE               set rc variable VAR to VALUE\n"
 "      --VAR                     set VAR to 1 (turn on boolean options)\n"
@@ -151,6 +155,8 @@ void doevents()
 		st = (ev.type != EV_RELEASE);
 		rc_dokey(ev.code, st);
 	}
+
+	io_recv();
 }
 
 
@@ -160,6 +166,7 @@ static void shutdown()
 {
 	vid_close();
 	pcm_close();
+	io_shutdown();
 }
 
 void die(char *fmt, ...)
@@ -212,6 +219,7 @@ int main(int argc, char *argv[])
 {
 	int i;
 	char *opt, *arg, *cmd, *s, *rom = 0;
+	char* link = "\0";
 
 	/* Avoid initializing video if we don't have to */
 	for (i = 1; i < argc; i++)
@@ -284,6 +292,11 @@ int main(int argc, char *argv[])
 			free(cmd);
 			free(opt);
 		}
+		else if (!strncmp(argv[i], "--link", 6))
+		{
+			if (i + 1 >= argc) die("missing argument to link\n");
+			link = strdup(argv[++i]);
+		}
 		else if (argv[i][0] == '-' && argv[i][1] == '-')
 		{
 			opt = strdup(argv[i]+2);
@@ -310,6 +323,12 @@ int main(int argc, char *argv[])
 	/* FIXME - make interface modules responsible for atexit() */
 	atexit(shutdown);
 	catch_signals();
+
+	if (!io_setup(link))
+	{
+		printf("WARNING: Link mode not supported\n");
+	}
+
 	vid_init();
 	pcm_init();
 

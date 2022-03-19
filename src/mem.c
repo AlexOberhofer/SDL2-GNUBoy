@@ -10,6 +10,7 @@
 #include "lcd.h"
 #include "lcdc.h"
 #include "sound.h"
+#include "io.h"
 
 struct mbc mbc;
 struct rom rom;
@@ -40,10 +41,8 @@ void mem_updatemap()
 {
 	int n;
 	byte **map;
-
 	mbc.rombank &= (mbc.romsize - 1);
 	mbc.rambank &= (mbc.ramsize - 1);
-	
 	map = mbc.rmap;
 	/* don't unmap bootrom unless RI_BOOT was locked */
 	if (REG(RI_BOOT) & 1) map[0x0] = rom.bank[0];
@@ -125,7 +124,7 @@ void ioreg_write(byte r, byte b)
 			return;
 		}
 	}
-	
+
 	switch(r)
 	{
 	case RI_TIMA:
@@ -161,15 +160,16 @@ void ioreg_write(byte r, byte b)
 		REG(r) = b;
 		pad_refresh();
 		break;
+
+	case RI_SB:
+		REG(RI_SB) = b;
+		break;
 	case RI_SC:
-		/* FIXME - this is a hack for stupid roms that probe serial */
-		if ((b & 0x81) == 0x81)
+		if ( ((b & 0x81) == 0x81) || ((b & 0x83) == 0x83))
 		{
-			R_SB = 0xff;
-			hw_interrupt(IF_SERIAL, IF_SERIAL);
-			hw_interrupt(0, IF_SERIAL);
+			R_SC = b; /* & 0x7f; */
+			io_send(REG(RI_SB));
 		}
-		R_SC = b; /* & 0x7f; */
 		break;
 	case RI_DIV:
 		REG(r) = 0;

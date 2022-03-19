@@ -12,6 +12,7 @@
 #include "sys.h"
 #include "sound.h"
 #include "cpu.h"
+#include "io.h"
 
 
 static int framelen = 16743;
@@ -32,7 +33,7 @@ rcvar_t emu_exports[] =
 
 void emu_init()
 {
-	
+	io_init();
 }
 
 
@@ -49,6 +50,7 @@ void emu_reset()
 	cpu_reset();
 	mbc_reset();
 	sound_reset();
+	io_reset();
 	mem_mapbootrom();
 }
 

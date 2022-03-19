@@ -84,3 +84,7 @@ SDL Fixes
 Compiler warning cleanup
 Integer scaling
 Gamepad / Keyboard implementation
+
+aichingm
+Serial i/o implementation
+Piped + Networked link for *nix
