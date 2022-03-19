@@ -555,12 +555,13 @@ static byte operand_count[256] =
 
 
 /* replace with a real interactive debugger eventually... */
-
 int debug_trace = 0;
+static int trace_type = 1; //1: Each line printed individually || 2: Debug uses a singular buffer
 
 rcvar_t debug_exports[] =
 {
 	RCV_BOOL("trace", &debug_trace),
+    RCV_INT("trace_type", &trace_type),
 	RCV_END
 };
 
@@ -656,7 +657,7 @@ void debug_disassemble(addr a, int c)
 			" IE=%02X IF=%02X LCDC=%02X STAT=%02X LY=%02X LYC=%02X",
 			R_IE, R_IF, R_LCDC, R_STAT, R_LY, R_LYC
 		);
-		printf("\n");
+		printf((trace_type > 1) ? "\r": "\n");
 		fflush(stdout);
 		c--;
 	}

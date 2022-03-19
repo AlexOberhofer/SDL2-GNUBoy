@@ -22,4 +22,5 @@ osx:
 	rm -f sys/*/*.o src/*.o lib/*/*.o
 
 clean:
-	rm -f *gnuboy sdl2gnuboy.exe mac-sdl2gnuboy gmon.out *.o sys/*.o lib/*/*.o sys/*/*.o src/*.o
+	rm -f *gnuboy sdl2gnuboy.exe mac-sdl2gnuboy gmon.out *.o sys/*.o lib/*/*.o sys/*/*.o src/*.o ./build
+	mkdir build

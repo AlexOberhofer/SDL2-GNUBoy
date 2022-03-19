@@ -36,6 +36,9 @@ set alert_on_quit 1
 set altenter 1
 set samplerate 44100
 
+set trace 0
+set trace_type 2
+
 set bootrom_dmg ./gb_bios.bin
 set bootrom_cgb ./gbc_bios.bin
 
