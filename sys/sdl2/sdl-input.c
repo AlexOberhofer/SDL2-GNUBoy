@@ -199,7 +199,8 @@ void ev_poll()
             SDL_Scancode scancode = event.key.keysym.scancode;
             int keycode = kb_sdlkeycode_to_gnuboy(SDL_GetKeyFromScancode(scancode));
 
-            printf("KEY:    Pressed: %s\n",
+
+            if(joy_trace) printf("KEY:    Pressed: %s\n",
                    SDL_GetKeyName(SDL_GetKeyFromScancode(event.key.keysym.scancode)));
 
             //Handle alt enter

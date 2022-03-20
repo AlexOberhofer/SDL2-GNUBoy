@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "defs.h"
 #include "rc.h"
 #include "rckeys.h"
 #include "hw.h"
@@ -104,6 +103,12 @@ static int cmd_alt_enter()
 	return 0;
 }
 
+static int cmd_screenshot()
+{
+    vid_screenshot();
+    return 0;
+}
+
 
 
 /*
@@ -122,6 +127,7 @@ rccmd_t rccmds[] =
 	RCC("savestate", cmd_savestate),
 	RCC("loadstate", cmd_loadstate),
 	RCC("altenter", cmd_alt_enter),
+    RCC("screenshot", cmd_screenshot),
 	
 	RCC("+up", cmd_up),
 	RCC("-up", cmd_up),

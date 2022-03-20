@@ -40,6 +40,7 @@ rcvar_t vid_exports[] =
 	RCV_VECTOR("vmode", &vmode, 3),
 	RCV_BOOL("fullscreen", &fullscreen),
     RCV_BOOL("vid_trace", &render_trace),
+    RCV_INT("render_type", &render_type),
 	RCV_END
 };
 
@@ -62,16 +63,14 @@ void vid_init()
 	}
 	else
 	{
-
-
-		Uint32 fullscreen_flag = (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN_DESKTOP: SDL_WINDOW_RESIZABLE;
-
 		window = SDL_CreateWindow("SDL2 GNUBoy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                   vmode[0] * scale, vmode[1] * scale, fullscreen_flag);
-		
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+                                   vmode[0] * scale, vmode[1] * scale,
+                                  (fullscreen > 0) ? SDL_WINDOW_FULLSCREEN_DESKTOP: SDL_WINDOW_RESIZABLE);
 
-		if (!renderer)
+        if(render_type) renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        else renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+		if (!renderer) //Software fallback
         {
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
             render_type = 0;
@@ -176,5 +175,28 @@ void vid_end()
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 	}
+
+}
+
+
+
+void vid_screenshot()
+{
+    //FIXME: Only works under software rendering
+    //FIXME: Doesnt work correctly over fullscreen in sw rendering
+    if(!render_type && !fullscreen)
+    {
+        SDL_Surface *surface = SDL_GetWindowSurface(window);
+        if(surface)
+        {
+            SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_BGRA32,
+                                 surface->pixels, surface->pitch);
+            SDL_SaveBMP(surface, "screenshot.bmp");
+        }
+        else printf("VID:    SDL Error: %s\n", SDL_GetError());
+
+        SDL_FreeSurface(surface);
+    }
+    else printf("VID:   Screenshot feature unsupported using hardware renderer or fullscreen mode.\n");
 
 }

@@ -11,7 +11,10 @@ void vid_preinit();
 void vid_close();
 void vid_setpal(int i, int r, int g, int b);
 void vid_settitle(char *title);
+
+/* Stuff specific to sdl2-gnuboy video */
 void vid_fullscreen_toggle();
+void vid_screenshot();
 
 void pcm_init();
 int pcm_submit();
