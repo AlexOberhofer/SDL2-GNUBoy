@@ -54,7 +54,6 @@ static char *defaultconfig[] =
 	"bind 0 \"set saveslot 0\"",
 	"bind ins savestate",
 	"bind del loadstate",
-	"bind tab altenter",
 	"set filterdmg 0",
 	"set sound 1",
 	"set scale 2",
